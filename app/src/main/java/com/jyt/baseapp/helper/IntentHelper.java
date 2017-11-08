@@ -3,6 +3,7 @@ package com.jyt.baseapp.helper;
 import android.content.Context;
 import android.content.Intent;
 
+import com.jyt.baseapp.view.activity.PersonCenterActivity;
 import com.jyt.baseapp.view.activity.ResetPsdActivity;
 
 /**
@@ -15,6 +16,10 @@ public class IntentHelper {
     public static void openResetPsdActivity(Context context){
         context.startActivity(getIntent(context, ResetPsdActivity.class));
 
+    }
+
+    public static void openPersonalActivity(Context context){
+        context.startActivity(getIntent(context, PersonCenterActivity.class));
     }
 
 

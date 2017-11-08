@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="15dp">
+
+        <TextView
+            style="@style/commonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="房间列表" />
+
+        <LinearLayout
+            android:id="@+id/v_refreshLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:gravity="center">
+
+            <TextView
+                style="@style/commonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="换一换" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@mipmap/refresh" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <com.jyt.baseapp.view.widget.RefreshRecyclerView
+        android:id="@+id/v_refreshRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.jyt.baseapp.view.widget.RefreshRecyclerView>
+</LinearLayout>

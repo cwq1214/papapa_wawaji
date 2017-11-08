@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.adapter.BaseRcvAdapter;
+import com.jyt.baseapp.util.L;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 
@@ -40,6 +41,8 @@ public class RefreshRecyclerView extends LinearLayout {
 
     public boolean refreshable = true;
 
+    public RefreshListenerAdapter refreshListener;
+
     public RefreshRecyclerView(Context context) {
         this(context, null);
     }
@@ -49,31 +52,29 @@ public class RefreshRecyclerView extends LinearLayout {
         LayoutInflater.from(context).inflate(R.layout.layout_refresh_recyclerview, this, true);
         ButterKnife.bind(this);
 
-    }
 
-    public RefreshRecyclerView setEmptyHintText(String text){
-        textEmptyHint.setText(text);
-        return this;
-    }
-
-    public RefreshRecyclerView setLayoutManager(RecyclerView.LayoutManager layoutManager){
-        vRecyclerView.setLayoutManager(layoutManager);
-        return this;
-    }
-
-    public RefreshRecyclerView setAdapter(BaseRcvAdapter adapter){
-        this.adapter = adapter;
-        vRecyclerView.setAdapter(adapter);
-        return this;
-    }
-
-    public RefreshRecyclerView setRefreshListener(final RefreshListenerAdapter refreshListener){
         vRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onRefreshCanceled() {
+                super.onRefreshCanceled();
+                if (refreshListener!=null){
+                    refreshListener.onRefreshCanceled();
+                }
+            }
+
+            @Override
+            public void onLoadmoreCanceled() {
+                super.onLoadmoreCanceled();
+                if (refreshListener!=null){
+                    refreshListener.onLoadmoreCanceled();
+                }
+            }
+
             @Override
             public void onPullingDown(TwinklingRefreshLayout refreshLayout, float fraction) {
                 super.onPullingDown(refreshLayout, fraction);
                 if (refreshListener!=null)
-                refreshListener.onPullingDown(refreshLayout,fraction);
+                    refreshListener.onPullingDown(refreshLayout,fraction);
             }
 
             @Override
@@ -135,12 +136,36 @@ public class RefreshRecyclerView extends LinearLayout {
             public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
                 super.onLoadMore(refreshLayout);
                 if (refreshListener==null){
-                    refreshListener.onFinishLoadMore();
+                    finishLoadMore();
                 }else {
                     refreshListener.onLoadMore(refreshLayout);
                 }
             }
         });
+    }
+
+    public RefreshRecyclerView setEmptyHintText(String text){
+        textEmptyHint.setText(text);
+        return this;
+    }
+
+    public RefreshRecyclerView setLayoutManager(RecyclerView.LayoutManager layoutManager){
+        vRecyclerView.setLayoutManager(layoutManager);
+        return this;
+    }
+
+    public void addItemDecoration(RecyclerView.ItemDecoration itemDecoration){
+        vRecyclerView.addItemDecoration(itemDecoration);
+    }
+
+    public RefreshRecyclerView setAdapter(BaseRcvAdapter adapter){
+        this.adapter = adapter;
+        vRecyclerView.setAdapter(adapter);
+        return this;
+    }
+
+    public RefreshRecyclerView setRefreshListener(final RefreshListenerAdapter refreshListener){
+        this.refreshListener = refreshListener;
         return this;
     }
 
@@ -175,9 +200,17 @@ public class RefreshRecyclerView extends LinearLayout {
         this.refreshable = refreshable;
         vRefreshLayout.setEnableRefresh(refreshable);
     }
+    public void setLoadMoreEnable(boolean refreshable) {
+        this.refreshable = refreshable;
+        vRefreshLayout.setEnableLoadmore(refreshable);
+    }
 
     public RecyclerView getRecyclerView(){
         return vRecyclerView;
+    }
+
+    public TwinklingRefreshLayout getRefreshLayout(){
+        return vRefreshLayout;
     }
 
     public void setDataList(List dataList){

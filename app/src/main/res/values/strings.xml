@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BaseApp</string>
+    <string name="roomStatusText">%1$s    %2$s空闲 / %3$s占用</string>
+    <string name="roomPricy">%1$s币/次</string>
 </resources>

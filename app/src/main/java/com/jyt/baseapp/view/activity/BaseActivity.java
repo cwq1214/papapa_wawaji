@@ -42,6 +42,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     RelativeLayout vActionBar;
     @BindView(R.id.v_main)
     LinearLayout vMain;
+    @BindView(R.id.img_function)
+    ImageView imgFunction;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,7 +54,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         //绑定baseActivity内的控件
         try {
             ButterKnife.bind(this);
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
 
 
         View contentView = getContentView();
@@ -61,7 +64,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         int layoutId = getLayoutId();
         if (layoutId != 0) {
-            vMain.addView(LayoutInflater.from(getContext()).inflate(layoutId,vMain,false));
+            vMain.addView(LayoutInflater.from(getContext()).inflate(layoutId, vMain, false));
         }
 
         //绑定子类控件
@@ -70,7 +73,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         getAnnotation();
 
-        if (!TextUtils.isEmpty(getTitle())){
+        if (!TextUtils.isEmpty(getTitle())) {
             textTitle.setText(getTitle());
         }
         manager.addActivity(this);
@@ -78,13 +81,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void getAnnotation() {
-        if (textTitle==null||imgBack==null||textFunction==null){
+        if (textTitle == null || imgBack == null || textFunction == null) {
             return;
         }
 
         ActivityAnnotation annotation = this.getClass().getAnnotation(ActivityAnnotation.class);
         System.out.println(annotation);
-        if (annotation==null){
+        if (annotation == null) {
             return;
         }
         for (Method method : annotation.annotationType().getDeclaredMethods()) {
@@ -94,22 +97,17 @@ public abstract class BaseActivity extends AppCompatActivity {
             Object invoke = null;
             try {
                 invoke = method.invoke(annotation);
-                if (method.getName().equals("showBack")){
-                    imgBack.setVisibility(((boolean) invoke)? View.VISIBLE: View.GONE);
-                }else
-                if (method.getName().equals("title")){
+                if (method.getName().equals("showBack")) {
+                    imgBack.setVisibility(((boolean) invoke) ? View.VISIBLE : View.GONE);
+                } else if (method.getName().equals("title")) {
                     textTitle.setText((CharSequence) invoke);
-                }else
-                if (method.getName().equals("showFunction")){
-                    textFunction.setVisibility(((boolean) invoke)? View.VISIBLE: View.GONE);
-                }else
-                if (method.getName().equals("functionText")){
+                } else if (method.getName().equals("showFunction")) {
+                    textFunction.setVisibility(((boolean) invoke) ? View.VISIBLE : View.GONE);
+                } else if (method.getName().equals("functionText")) {
                     textFunction.setText((CharSequence) invoke);
+                } else if (method.getName().equals("showActionBar")) {
+                    vActionBar.setVisibility((boolean) invoke ? View.VISIBLE : View.GONE);
                 }
-                else
-                    if (method.getName().equals("showActionBar")){
-                        vActionBar.setVisibility((boolean)invoke?View.VISIBLE:View.GONE);
-                    }
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
@@ -117,48 +115,52 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         }
     }
-    public void setTextTitle(String text){
+
+    public void setTextTitle(String text) {
         textTitle.setText(text);
     }
 
-    public void showBackBtn(){
+    public void showBackBtn() {
         imgBack.setVisibility(View.VISIBLE);
     }
 
-    public void hideBackBtn(){
+    public void hideBackBtn() {
         imgBack.setVisibility(View.INVISIBLE);
 
     }
 
-    public void setFunctionText(String text){
+    public void setFunctionText(String text) {
         textFunction.setText(text);
     }
 
-    public void showFunction(){
+    public void showFunction() {
         textFunction.setVisibility(View.VISIBLE);
     }
 
-    public void hideFunction(){
+    public void hideFunction() {
         textFunction.setVisibility(View.INVISIBLE);
     }
 
     @OnClick(R.id.img_back)
-    public void onBackClick(){
+    public void onBackClick() {
         onBackPressed();
     }
 
+    public void setFunctionImage(int resId){
+        imgFunction.setImageDrawable(getResources().getDrawable(resId));
+    }
 
-    @OnClick(R.id.text_function)
-    public void onFunctionClick(){
+    @OnClick({R.id.text_function,R.id.img_function})
+    public void onFunctionClick() {
 
     }
+
     /**
      * 隐藏ActionBar
      */
-    public void HideActionBar(){
+    public void HideActionBar() {
         vActionBar.setVisibility(View.GONE);
     }
-
 
 
     @Override
@@ -167,7 +169,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         manager.finishActivity(this);
     }
 
-    public Context getContext(){
+    public Context getContext() {
         return this;
     }
 

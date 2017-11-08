@@ -1,4 +1,4 @@
-package com.jyt.baseapp.view.widget;
+package com.jyt.baseapp.view.dialog;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,8 +18,8 @@ public class LoadingDialog extends AlertDialog {
     private String message = null;
 
     public LoadingDialog(Context context) {
-        super(context, R.style.customDialog);
-        message = "请等待";
+        this(context, "请等待");
+
     }
 
     public LoadingDialog(Context context, String message) {
@@ -28,11 +28,6 @@ public class LoadingDialog extends AlertDialog {
         this.setCancelable(true);
     }
 
-    public LoadingDialog(Context context, int theme, String message) {
-        super(context, R.style.customDialog);
-        this.message = message;
-        this.setCancelable(true);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

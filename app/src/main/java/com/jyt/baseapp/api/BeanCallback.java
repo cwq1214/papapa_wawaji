@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.jyt.baseapp.view.widget.LoadingDialog;
+import com.jyt.baseapp.view.dialog.LoadingDialog;
 import com.zhy.http.okhttp.callback.Callback;
 
 

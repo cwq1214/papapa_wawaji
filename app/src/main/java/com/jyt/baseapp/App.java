@@ -2,6 +2,7 @@ package com.jyt.baseapp;
 
 import android.app.Application;
 
+import com.jyt.baseapp.util.ImageLoader;
 import com.jyt.baseapp.util.L;
 import com.orhanobut.hawk.Hawk;
 import com.orhanobut.hawk.LogInterceptor;
@@ -64,6 +65,8 @@ public class App  extends Application{
         }).sslSocketFactory(createSSLSocketFactory());
 
         OkHttpUtils.initClient(builder.build());
+
+        ImageLoader.init(getApplicationContext());
     }
 
     private static SSLSocketFactory createSSLSocketFactory() {

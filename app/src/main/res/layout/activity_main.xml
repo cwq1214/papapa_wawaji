@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    >
     <RelativeLayout
-        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
@@ -13,5 +14,82 @@
             android:layout_marginTop="-20dp"
             android:background="@mipmap/navbg"
             android:scaleType="matrix"></ImageView>
+
+        <ImageView
+            android:id="@+id/img_setting"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:src="@mipmap/setting" />
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/img_personalCenter"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:src="@mipmap/personal" />
+
     </RelativeLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <cn.bingoogolapple.bgabanner.BGABanner
+                android:id="@+id/v_banner"
+                android:layout_width="match_parent"
+                android:layout_height="193dp">
+
+            </cn.bingoogolapple.bgabanner.BGABanner>
+
+            <LinearLayout
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:background="@drawable/bg_4raidus_top_left_top_right"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <android.support.design.widget.TabLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/v_tabLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="43dp"></android.support.design.widget.TabLayout>
+                    <View
+                        android:background="@color/colorPrimary"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"></View>
+                </LinearLayout>
+                <com.jyt.baseapp.view.widget.NoScrollViewPager
+                    android:background="@drawable/bg_4radius_bottom_left_bottom_right"
+                    android:id="@+id/v_viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"></com.jyt.baseapp.view.widget.NoScrollViewPager>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img_showHideBanner"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_half_circle_white"
+            android:src="@mipmap/arrow_down_pink" />
+
+    </RelativeLayout>
+
+
+
+
 </LinearLayout>
