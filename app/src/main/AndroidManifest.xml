@@ -34,6 +34,10 @@
         <activity android:name=".view.activity.OrderListActivity" android:screenOrientation="portrait" android:label="娃娃配送订单"></activity>
         
         <activity android:name=".view.activity.RoomActivity" android:screenOrientation="portrait"></activity>
+
+        <activity android:name=".view.activity.DollDetailActivity"  android:screenOrientation="portrait" android:label="我的娃娃"></activity>
+
+        <activity android:name=".view.activity.VersionInfoActivity" android:screenOrientation="portrait" android:label="版本信息"></activity>
     </application>
 
 </manifest>

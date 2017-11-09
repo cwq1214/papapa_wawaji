@@ -52,7 +52,7 @@ public class WhiteRefreshView extends FrameLayout implements IBottomView, IHeade
 
         LayoutInflater.from(getContext()).inflate(R.layout.widget_white_refresh_view, this, true);
         ButterKnife.bind(this);
-        objectAnimator =  ObjectAnimator.ofFloat(imgLoadingImg,"Rotation",0,360);
+        objectAnimator =  ObjectAnimator.ofFloat(imgLoadingImg,"Rotation",0,180);
         objectAnimator.setDuration(1000);
         objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
 
