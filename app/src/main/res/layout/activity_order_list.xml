@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_white_4radius"
+    android:layout_margin="5dp"
+    >
+    <android.support.design.widget.TabLayout
+        android:id="@+id/v_tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+    </android.support.design.widget.TabLayout>
+    <View
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <com.jyt.baseapp.view.widget.NoScrollViewPager
+        android:id="@+id/v_viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.jyt.baseapp.view.widget.NoScrollViewPager>
+</LinearLayout>

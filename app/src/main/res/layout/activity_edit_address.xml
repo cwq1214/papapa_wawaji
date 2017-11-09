@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:showDividers="middle"
+        android:divider="@drawable/divider_pink"
+        android:background="@drawable/bg_white_4radius"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp">
+
+            <TextView
+                style="@style/commonText"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="收件人" />
+
+            <EditText
+                android:id="@+id/text_name"
+                style="@style/singleLineInputText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="请输入收件人姓名" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp">
+
+            <TextView
+                style="@style/commonText"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="联系电话" />
+
+            <EditText
+                android:id="@+id/text_tel"
+                style="@style/singleLineInputText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="请输入收件人电话"
+                android:inputType="phone" />
+        </LinearLayout>
+
+        <RelativeLayout
+
+            android:id="@+id/v_selAddress"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp">
+
+            <TextView
+                style="@style/commonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="所在地区" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/text_address"
+                    style="@style/commonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="8dp"
+                    android:src="@mipmap/right" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/text_addressDetail"
+            style="@style/commonInputText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="请填写详细地址"
+            android:maxLength="300"
+            android:minHeight="70dp"
+            android:padding="14dp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/bg_white_4radius"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:layout_centerVertical="true"
+            style="@style/commonText"
+            android:text="设为默认"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/img_setDefault"
+            android:layout_width="43dp"
+            android:layout_height="28dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/selector_unsel" />
+    </RelativeLayout>
+</LinearLayout>

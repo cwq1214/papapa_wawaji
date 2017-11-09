@@ -32,6 +32,10 @@ public class MainRefreshBottomView extends FrameLayout implements IBottomView {
     @BindView(R.id.text_domain)
     TextView textDomain;
 
+    String refreshingText = "正在加载。。。";
+    String preRefreshText = "松开立即加载下一批";
+    int refreshingImgResId = R.mipmap.refresh2;
+    int preRefreshImgResId = R.mipmap.loading_down_arrow;
 
     ObjectAnimator objectAnimator;
     public MainRefreshBottomView(@NonNull Context context) {
@@ -78,12 +82,13 @@ public class MainRefreshBottomView extends FrameLayout implements IBottomView {
     }
 
     public void setRefreshingStyle(){
-        imgLoadingImg.setImageDrawable(getResources().getDrawable(R.mipmap.refresh2));
-        textLoadingText.setText("正在加载。。。");
+        imgLoadingImg.setImageDrawable(getResources().getDrawable(refreshingImgResId));
+        textLoadingText.setText(refreshingText);
     }
 
     public void setUnRefreshStyle(){
-        imgLoadingImg.setImageDrawable(getResources().getDrawable(R.mipmap.loading_down_arrow));
-        textLoadingText.setText("松开立即加载下一批");
+        imgLoadingImg.setImageDrawable(getResources().getDrawable(preRefreshImgResId));
+        textLoadingText.setText(preRefreshText);
     }
+
 }

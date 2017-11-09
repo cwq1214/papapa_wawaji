@@ -39,12 +39,14 @@
             android:textSize="14dp" />
 
         <ImageView
-            android:layout_marginRight="10dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:padding="15dp"
             android:id="@+id/img_function"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </LinearLayout>

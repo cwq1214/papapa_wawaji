@@ -24,6 +24,16 @@
         </activity>
 
         <activity android:name=".view.activity.PersonCenterActivity" android:screenOrientation="portrait" ></activity>
+
+        <activity android:name=".view.activity.MyCoinActivity" android:screenOrientation="portrait" android:label="我的娃娃币"></activity>
+
+        <activity android:name=".view.activity.AddressListActivity" android:screenOrientation="portrait" android:label="我的收货地址"></activity>
+
+        <activity android:name=".view.activity.EditAddressActivity" android:screenOrientation="portrait" android:label="编辑地址"></activity>
+
+        <activity android:name=".view.activity.OrderListActivity" android:screenOrientation="portrait" android:label="娃娃配送订单"></activity>
+        
+        <activity android:name=".view.activity.RoomActivity" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

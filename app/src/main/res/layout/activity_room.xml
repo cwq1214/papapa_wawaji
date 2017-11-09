@@ -15,7 +15,7 @@
             android:scaleType="matrix"></ImageView>
 
         <ImageView
-            android:id="@+id/img_back"
+            android:id="@+id/img_back2"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
@@ -37,6 +37,9 @@
         android:layout_margin="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
+        <com.tencent.rtmp.ui.TXCloudVideoView
+            android:id="@+id/v_txCloudVideoView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></com.tencent.rtmp.ui.TXCloudVideoView>
     </RelativeLayout>
 </LinearLayout>

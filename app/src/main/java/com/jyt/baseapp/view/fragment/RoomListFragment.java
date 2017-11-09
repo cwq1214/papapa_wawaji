@@ -1,18 +1,15 @@
 package com.jyt.baseapp.view.fragment;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.os.Parcelable;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.adapter.RoomListAdapter;
+import com.jyt.baseapp.helper.IntentHelper;
 import com.jyt.baseapp.itemDecoration.RcvGridSpaceItemDecoration;
-import com.jyt.baseapp.itemDecoration.SpacesItemDecoration;
 import com.jyt.baseapp.util.DensityUtil;
+import com.jyt.baseapp.view.viewholder.BaseViewHolder;
 import com.jyt.baseapp.view.widget.MainRefreshBottomView;
 import com.jyt.baseapp.view.widget.RefreshRecyclerView;
 
@@ -20,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by chenweiqi on 2017/11/8.
@@ -52,6 +47,13 @@ public class RoomListFragment extends BaseFragment {
         vRefreshRecyclerView.getRecyclerView().setBackground(getResources().getDrawable(R.drawable.bg_4radius_bottom_left_bottom_right));
         vRefreshRecyclerView.getRefreshLayout().setEnableOverScroll(false);
         vRefreshRecyclerView.getRefreshLayout().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
+        adapter.setOnViewHolderClickListener(new BaseViewHolder.OnViewHolderClickListener() {
+            @Override
+            public void onClick(BaseViewHolder holder) {
+                IntentHelper.openRoomActivity(getContext(), null);
+            }
+        });
 
         List list = new ArrayList();
         for (int i=0;i<20;i++){

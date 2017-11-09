@@ -5,11 +5,16 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.jyt.baseapp"
-        minSdkVersion 19
+        minSdkVersion 17
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a"
+        }
+
     }
     buildTypes {
         release {
@@ -17,6 +22,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
 }
 
 dependencies {
@@ -38,5 +45,7 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:2.0.2'
     compile 'cn.bingoogolapple:bga-banner:2.1.7@aar'
     compile 'com.lcodecorex:tkrefreshlayout:1.0.7'
+    compile(name: 'LiteAVSDK_Player_3.5.2170', ext: 'aar')
+
 
 }

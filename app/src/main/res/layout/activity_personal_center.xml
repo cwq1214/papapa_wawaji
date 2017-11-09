@@ -158,7 +158,7 @@
                android:layout_height="wrap_content">
 
                <com.jyt.baseapp.view.widget.LabelAndTextItem
-                   android:id="@+id/v_tpGuidance"
+                   android:id="@+id/v_toGuidance"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    app:labelText="使用说明"

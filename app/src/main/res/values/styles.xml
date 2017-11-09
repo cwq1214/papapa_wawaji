@@ -63,4 +63,29 @@
         <attr name="needInput" format="boolean"></attr>
         <attr name="hintText" format="string"></attr>
     </declare-styleable>
+
+    <!--白色按钮-->
+    <style name="whiteBtn" parent="commonBtn">
+        <item name="android:background">@drawable/bg_white_4radius</item>
+        <item name="android:textColor">#1A1A1A</item>
+    </style>
+    
+    <!--输入框-->
+    <style name="commonInputText">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">#1A1A1A</item>
+        <item name="android:textColorHint">#999999</item>
+        <item name="android:background">@null</item>
+        <item name="android:gravity">left|top</item>
+    </style>
+    <style name="singleLineInputText" parent="commonInputText">
+        <item name="android:singleLine">true</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="smallText">
+        <item name="android:textColor">#666666</item>
+        <item name="android:textSize">10dp</item>
+    </style>
+
 </resources>

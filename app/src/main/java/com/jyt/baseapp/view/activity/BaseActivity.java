@@ -1,5 +1,6 @@
 package com.jyt.baseapp.view.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -101,7 +102,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     imgBack.setVisibility(((boolean) invoke) ? View.VISIBLE : View.GONE);
                 } else if (method.getName().equals("title")) {
                     textTitle.setText((CharSequence) invoke);
-                } else if (method.getName().equals("showFunction")) {
+                } else if (method.getName().equals("showFunctionText")) {
                     textFunction.setVisibility(((boolean) invoke) ? View.VISIBLE : View.GONE);
                 } else if (method.getName().equals("functionText")) {
                     textFunction.setText((CharSequence) invoke);
@@ -133,11 +134,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         textFunction.setText(text);
     }
 
-    public void showFunction() {
+    public void showFunctionText() {
         textFunction.setVisibility(View.VISIBLE);
     }
 
-    public void hideFunction() {
+    public void showFunctionImage(){
+        imgFunction.setVisibility(View.VISIBLE);
+    }
+
+    public void hideFunctionImage(){
+        imgFunction.setVisibility(View.GONE);
+    }
+
+    public void hideFunctionText() {
         textFunction.setVisibility(View.INVISIBLE);
     }
 
@@ -170,6 +179,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public Context getContext() {
+        return this;
+    }
+
+    public Activity getActivity(){
         return this;
     }
 

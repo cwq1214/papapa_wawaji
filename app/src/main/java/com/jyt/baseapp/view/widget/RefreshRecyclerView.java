@@ -122,10 +122,30 @@ public class RefreshRecyclerView extends LinearLayout {
             }
 
             @Override
-            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+            public void onRefresh(final TwinklingRefreshLayout refreshLayout) {
                 super.onRefresh(refreshLayout);
                 if (refreshListener==null){
-                    finishRefreshing();
+                    new Thread(new Runnable(){
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            refreshLayout.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    finishRefreshing();
+                                }
+                            });
+
+
+                        };
+                    }).start();
+
+
+
                 }else {
                     refreshListener.onRefresh(refreshLayout);
                 }
@@ -133,13 +153,32 @@ public class RefreshRecyclerView extends LinearLayout {
             }
 
             @Override
-            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+            public void onLoadMore(final TwinklingRefreshLayout refreshLayout) {
                 super.onLoadMore(refreshLayout);
                 if (refreshListener==null){
-                    finishLoadMore();
+                    new Thread(new Runnable(){
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            refreshLayout.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    finishLoadMore();
+                                }
+                            });
+
+
+                        };
+                    }).start();
                 }else {
                     refreshListener.onLoadMore(refreshLayout);
                 }
+                showEmptyViewWhenListEmpty();
+
             }
         });
     }
@@ -169,7 +208,7 @@ public class RefreshRecyclerView extends LinearLayout {
         return this;
     }
 
-    private void showEmptyViewWhenListEmpty(){
+    public void showEmptyViewWhenListEmpty(){
         if (!isShowEmptyHint()){
             vEmptyView.setVisibility(GONE);
             return;
