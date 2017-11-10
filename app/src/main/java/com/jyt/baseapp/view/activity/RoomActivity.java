@@ -53,6 +53,7 @@ public class RoomActivity extends BaseActivity {
                 vTxCloudVideoView.removeOnLayoutChangeListener(this);
             }
         });
+
     }
 
     @OnClick(R.id.img_back2)
