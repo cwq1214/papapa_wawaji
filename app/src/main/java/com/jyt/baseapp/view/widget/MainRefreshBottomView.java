@@ -46,7 +46,8 @@ public class MainRefreshBottomView extends FrameLayout implements IBottomView {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.widget_refresh_bottom_view, this, true);
         ButterKnife.bind(this);
-        objectAnimator =  ObjectAnimator.ofFloat(imgLoadingImg,"Rotation",0,360);
+        objectAnimator =  ObjectAnimator.ofFloat(imgLoadingImg,"Rotation",0,180);
+        objectAnimator.setDuration(1000);
         objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
     }
 

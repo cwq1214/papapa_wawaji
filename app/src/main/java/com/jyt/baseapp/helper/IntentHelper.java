@@ -1,10 +1,13 @@
 package com.jyt.baseapp.helper;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
 
 import com.jyt.baseapp.view.activity.AddressListActivity;
+import com.jyt.baseapp.view.activity.DollDetailActivity;
 import com.jyt.baseapp.view.activity.EditAddressActivity;
 import com.jyt.baseapp.view.activity.MyCoinActivity;
 import com.jyt.baseapp.view.activity.OrderListActivity;
@@ -35,6 +38,19 @@ public class IntentHelper extends IntentKey{
 
     public static void openAddressListActivity(Context context){
         context.startActivity(getIntent(context, AddressListActivity.class));
+    }
+    public static void openAddressListActivityForResult(Object context,int requestCode){
+        if (context instanceof Activity){
+            ((Activity) context).startActivityForResult(getIntent((Context) context, AddressListActivity.class),requestCode);
+        }else if (context instanceof Fragment){
+            ((Fragment) context).startActivityForResult(getIntent(((Fragment) context).getContext(), AddressListActivity.class),requestCode);
+        }
+    }
+
+    public static void openDollDetailActivity(Context context,Parcelable doll){
+        Intent intent = getIntent(context, DollDetailActivity.class);
+        intent.putExtra(KEY_DOLL,doll);
+        context.startActivity(intent);
     }
 
 

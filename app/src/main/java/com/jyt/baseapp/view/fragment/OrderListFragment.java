@@ -5,9 +5,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.adapter.OrderListAdapter;
+import com.jyt.baseapp.helper.IntentHelper;
+import com.jyt.baseapp.itemDecoration.RecyclerViewDivider;
+import com.jyt.baseapp.view.viewholder.BaseViewHolder;
 import com.jyt.baseapp.view.widget.RefreshRecyclerView;
 import com.jyt.baseapp.view.widget.WhiteRefreshView;
 
@@ -39,9 +43,14 @@ public class OrderListFragment extends BaseFragment {
 
         vRefreshRecyclerView.getRefreshLayout().setHeaderView(headerView );
         vRefreshRecyclerView.getRefreshLayout().setBottomView(bottomView );
-
+        vRefreshRecyclerView.addItemDecoration(new RecyclerViewDivider(getContext(), LinearLayout.VERTICAL,R.drawable.divider_full_pink,false));
         vRefreshRecyclerView.setAdapter(adapter = new OrderListAdapter());
-
+        adapter.setOnViewHolderClickListener(new BaseViewHolder.OnViewHolderClickListener() {
+            @Override
+            public void onClick(BaseViewHolder holder) {
+                IntentHelper.openDollDetailActivity(getContext(),null);
+            }
+        });
 
         List list = new ArrayList();
 
