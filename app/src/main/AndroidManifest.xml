@@ -17,10 +17,7 @@
 
         <activity android:name=".view.activity.ResetPsdActivity" android:screenOrientation="portrait" android:label="忘记密码"></activity>
         <activity android:name=".view.activity.MainActivity" android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"></action>
-                <category android:name="android.intent.category.LAUNCHER"></category>
-            </intent-filter>
+
         </activity>
 
         <activity android:name=".view.activity.PersonCenterActivity" android:screenOrientation="portrait" ></activity>
@@ -33,11 +30,19 @@
 
         <activity android:name=".view.activity.OrderListActivity" android:screenOrientation="portrait" android:label="娃娃配送订单"></activity>
         
-        <activity android:name=".view.activity.RoomActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".view.activity.RoomActivity" android:screenOrientation="portrait" android:label="抓娃娃">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"></action>
+                <category android:name="android.intent.category.LAUNCHER"></category>
+            </intent-filter>
+
+        </activity>
 
         <activity android:name=".view.activity.DollDetailActivity"  android:screenOrientation="portrait" android:label="我的娃娃"></activity>
 
-        <activity android:name=".view.activity.VersionInfoActivity" android:screenOrientation="portrait" android:label="版本信息"></activity>
+        <activity android:name=".view.activity.VersionInfoActivity" android:screenOrientation="portrait" android:label="版本信息">
+
+        </activity>
     </application>
 
 </manifest>

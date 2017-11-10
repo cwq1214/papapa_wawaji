@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    >
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <!--actionbar-->
     <RelativeLayout
         android:background="@color/colorPrimary"
@@ -35,21 +41,24 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_weight="1"
+        android:id="@+id/v_controlLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <RelativeLayout
-            android:layout_margin="5dp"
+            android:background="@drawable/bg_white_4radius"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp">
+
             <com.tencent.rtmp.ui.TXCloudVideoView
+                android:background="#f1f1f1"
                 android:id="@+id/v_txCloudVideoView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="481dp"
-                ></com.tencent.rtmp.ui.TXCloudVideoView>
-    
+                android:minHeight="481dp"></com.tencent.rtmp.ui.TXCloudVideoView>
+
             <!--人数 换房-->
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -57,28 +66,39 @@
                 android:layout_alignParentRight="true"
                 android:background="@drawable/bg_4radius_left_top_left_bottom"
                 android:orientation="horizontal">
-    
+
                 <LinearLayout
+                    android:id="@+id/v_changeRoom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="horizontal">
-    
+
                     <TextView
+                        android:id="@+id/text_roomIndex"
                         android:layout_width="28dp"
                         android:layout_height="28dp"
                         android:background="@drawable/bg_pink_circle_28dp"
                         android:gravity="center"
                         android:text="12"
                         android:textColor="@color/white" />
-    
+
                     <TextView
+                        style="@style/commonText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="换房" />
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="换房"
+                        android:textColor="@color/colorPrimary" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@mipmap/pink_refresh" />
                 </LinearLayout>
             </LinearLayout>
-    
-    
+
         </RelativeLayout>
 
         <ImageView
@@ -89,7 +109,50 @@
             android:layout_centerInParent="true"
             android:src="@mipmap/change_cam" />
 
-
+        <include layout="@layout/layout_bottom_control" />
     </RelativeLayout>
 
-</LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="我的娃娃币"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="50"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="67dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_10radius_white_solide"
+                    android:gravity="center"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="2dp">
+
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="12dp"
+                        android:src="@mipmap/money" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="充值"
+                        android:textColor="#FFCC00"
+                        android:textSize="12dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+</ScrollView>
