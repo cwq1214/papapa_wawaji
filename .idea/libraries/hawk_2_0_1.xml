@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="hawk-2.0.1">
     <CLASSES>
-      <root url="file://$USER_HOME$/.android/build-cache/c3f31e7e6b53b2cab52f2aa504458c8678829d4a/output/res" />
-      <root url="jar://$USER_HOME$/.android/build-cache/c3f31e7e6b53b2cab52f2aa504458c8678829d4a/output/jars/classes.jar!/" />
+      <root url="file://E:/sdk/.android/build-cache/d36b666fd1277c7899b9d3aac232549e42c5797f/output/res" />
+      <root url="jar://E:/sdk/.android/build-cache/d36b666fd1277c7899b9d3aac232549e42c5797f/output/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

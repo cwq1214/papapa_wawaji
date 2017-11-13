@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="bga-banner-2.1.7">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.android/build-cache/b07b2ca87588802ef72f5cd8249e1b68e5f59160/output/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.android/build-cache/b07b2ca87588802ef72f5cd8249e1b68e5f59160/output/res" />
+      <root url="file://E:/sdk/.android/build-cache/d50e7fb05680911ca80d6f31cedc3de583e637e5/output/res" />
+      <root url="jar://E:/sdk/.android/build-cache/d50e7fb05680911ca80d6f31cedc3de583e637e5/output/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
