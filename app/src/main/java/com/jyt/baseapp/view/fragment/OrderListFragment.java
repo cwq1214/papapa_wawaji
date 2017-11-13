@@ -27,9 +27,16 @@ import butterknife.Unbinder;
  */
 
 public class OrderListFragment extends BaseFragment {
+    public static final int TYPE_READY = 0;
+    public static final int TYPE_SEND = 1;
+    public static final int TYPE_FINISH = 2;
+
     @BindView(R.id.v_refreshRecyclerView)
     RefreshRecyclerView vRefreshRecyclerView;
+
     OrderListAdapter adapter;
+    int type;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_order_list;
@@ -52,15 +59,27 @@ public class OrderListFragment extends BaseFragment {
             }
         });
 
+
+        type = getArguments().getInt(IntentHelper.KEY_TYPE,-1);
+
+        switch (type){
+            case TYPE_READY:
+                break;
+            case TYPE_SEND:
+                break;
+            case TYPE_FINISH:
+                break;
+        }
+
         List list = new ArrayList();
 
         for (int i=0;i<10;i++){
             list.add(new Object());
         }
-        adapter.setDataList(list);
-        adapter.notifyDataSetChanged();
-
+        vRefreshRecyclerView.setDataList(list);
         vRefreshRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
     }
+
+
 
 }

@@ -98,7 +98,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    public List<BaseModel> CreateModels() {
+    public List<BaseModel> createModels() {
 
         List base = new ArrayList();
         base.add(loginModel = new LoginLoutModelImpl());

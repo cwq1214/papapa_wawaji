@@ -109,14 +109,13 @@ public class MainActivity extends BaseActivity {
                         imgs.add(imageView);
                     }
                     vBanner.setData(imgs);
-
                 }
             }
         });
     }
 
     @Override
-    public List<BaseModel> CreateModels() {
+    public List<BaseModel> createModels() {
         List models = new ArrayList();
         model = new MainActModelImpl();
         models.add(model);
