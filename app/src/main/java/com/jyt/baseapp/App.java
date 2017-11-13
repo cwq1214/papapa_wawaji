@@ -102,7 +102,7 @@ public class App  extends Application {
             return new X509Certificate[0];
         }
     }
-
+    //asd
     public static App getApplication(){
         return app;
     }
