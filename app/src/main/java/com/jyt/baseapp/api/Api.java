@@ -10,4 +10,12 @@ public class Api {
     public static final String login = "api/login/do_login";
 
     public static final String HomeToy = domain + "api/home/toy";
+
+    public static final String register = "api/login/register";
+
+    //获取验证码
+    public static final String getCode = "api/login/getVerifyCode";
+
+    //首页轮播
+    public static final String getBanner = "api/home";
 }

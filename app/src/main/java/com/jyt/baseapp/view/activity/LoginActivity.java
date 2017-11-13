@@ -107,25 +107,51 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.btn_login)
     public void onLoginClick(){
-        loginModel.loginByMobile(inputPhone.getText().toString(), inputPsd.getText().toString(), new BeanCallback<BaseJson<LoginResult>>() {
+        if ("登录".equals(btnLogin.getText())){
+            loginModel.loginByMobile(inputPhone.getText().toString(), inputPsd.getText().toString(), new BeanCallback<BaseJson<LoginResult>>() {
 
-            @Override
-            public void response(boolean success, BaseJson<LoginResult> response, int id) {
+                @Override
+                public void response(boolean success, BaseJson<LoginResult> response, int id) {
                     if (response.isRet()){
                         //登录成功 保存用户信息
                         UserInfo.setUserInfo(response.getData());
                         IntentHelper.openLoginActivity(getContext());
                     }
-                T.showShort(getContext(),response.getForUser());
-            }
-        });
+                    T.showShort(getContext(),response.getForUser());
+                }
+            });
+        }else {
+            loginModel.register(inputPhone.getText().toString(), inputCode.getText().toString(),inputPsd.getText().toString(), new BeanCallback<BaseJson<LoginResult>>() {
+
+                @Override
+                public void response(boolean success, BaseJson<LoginResult> response, int id) {
+                    if (response.isRet()){
+                        //登录成功 保存用户信息
+                        UserInfo.setUserInfo(response.getData());
+                        IntentHelper.openLoginActivity(getContext());
+                    }
+                    T.showShort(getContext(),response.getForUser());
+                }
+            });
+        }
     }
+
+
 
 
     @OnClick(R.id.btn_getCode)
     public void onGetCodeClick(){
-        countDownUtil.start();
-        btnGetCode.setEnabled(false);
+        loginModel.getVerifyCode(inputPhone.getText().toString(), new BeanCallback<BaseJson>() {
+            @Override
+            public void response(boolean success, BaseJson response, int id) {
+                if (response.isRet()){
+                    countDownUtil.start();
+                    btnGetCode.setEnabled(false);
+                }
+                T.showShort(getContext(),response.getForUser());
+            }
+        });
+
     }
 
     @OnClick(R.id.btn_register)
@@ -166,6 +192,7 @@ public class LoginActivity extends BaseActivity {
         vLoginBtnGroup.setVisibility(isLogin?View.VISIBLE:View.GONE);
         vCodeLayout.setVisibility(!isLogin?View.VISIBLE:View.GONE);
         vPsdLayout.setVisibility(isLogin?View.VISIBLE:View.GONE);
+        btnLogin.setText(isLogin?"登录":"注册");
     }
 
     @Override

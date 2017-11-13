@@ -26,4 +26,14 @@ public class ImageLoader {
     public void load(ImageView imageView, String url){
         Glide.with(appContext).load(url).placeholder(R.mipmap.loadinggif).error(R.mipmap.loadingfailed).centerCrop().into(imageView);
     }
+    public void loadRectangle(ImageView imageView, String url){
+        Glide.with(appContext).load(url).error(R.mipmap.loadingfailed).centerCrop().into(imageView);
+    }
+    public void loadSquare(ImageView imageView, String url){
+        Glide.with(appContext).load(url).placeholder(R.mipmap.loadinggif).error(R.mipmap.loadingfailed).centerCrop().into(imageView);
+    }
+    public void loadHeader(ImageView imageView, String url){
+        Glide.with(appContext).load(url).placeholder(R.mipmap.loadinggif).error(R.mipmap.loadingfailed).centerCrop().into(imageView);
+    }
+
 }

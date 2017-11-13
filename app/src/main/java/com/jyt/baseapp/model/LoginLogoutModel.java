@@ -1,6 +1,8 @@
 package com.jyt.baseapp.model;
 
 
+import android.telecom.Call;
+
 import com.zhy.http.okhttp.callback.Callback;
 
 /**
@@ -16,5 +18,7 @@ public interface LoginLogoutModel extends BaseModel{
     void register(String mobile,String verifyCode,String pwd,Callback callback);
 
     void resetPassword(String mobile,String verifyCode,String pwd,Callback callback);
+
+    void getVerifyCode(String mobile, Callback callback);
 
 }
