@@ -10,8 +10,16 @@ import com.jyt.baseapp.view.viewholder.RoomItemViewHolder;
  */
 
 public class RoomListAdapter extends BaseRcvAdapter {
+
+    private BaseViewHolder.OnViewHolderClickListener ClickListener;
     @Override
     BaseViewHolder CreateViewHolder(ViewGroup parent, int viewType) {
-        return new RoomItemViewHolder(parent);
+        RoomItemViewHolder holder = new RoomItemViewHolder(parent);
+        holder.setOnViewHolderClickListener(ClickListener);
+        return holder;
+    }
+
+    public void setOnViewHolderClickListener(BaseViewHolder.OnViewHolderClickListener listener){
+        ClickListener=listener;
     }
 }

@@ -1,13 +1,10 @@
 package com.jyt.baseapp.view.activity;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.jyt.baseapp.R;
 
@@ -20,10 +17,11 @@ import butterknife.OnClick;
 
 public class VersionInfoActivity extends BaseActivity {
 
-    @BindView(R.id.start)
-    Button start;
-    @BindView(R.id.webView)
-    WebView webView;
+
+    @BindView(R.id.tv_version)
+    TextView mTvVersion;
+    @BindView(R.id.tv_url)
+    TextView mTvUrl;
 
     @Override
     protected int getLayoutId() {
@@ -38,39 +36,18 @@ public class VersionInfoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        webView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-
-                int currentWidth = right-left;
-                webView.setLayoutParams(new LinearLayout.LayoutParams(currentWidth,currentWidth*300/375));
-
-                webView.removeOnLayoutChangeListener(this);
-            }
-        });
-
-        webView.loadUrl("http://60.205.222.162:8081/front/wap/productInfoOfKData");
-//        webView.setInitialScale(50);
-        webView.getSettings().setUseWideViewPort(true);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setLoadWithOverviewMode(true);
-
-        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-
-        webView.setWebViewClient(new WebViewClient(){
-                                     @Override
-                                     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-
-                                         return true;
-                                     }
+        try {
+            PackageManager pm = getContext().getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(getContext().getPackageName(), 0);
+            mTvVersion.setText("啪啪啪抓娃娃 " + pi.versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
 
-                                 }
-        );
     }
 
-    @OnClick(R.id.start)
+    @OnClick(R.id.rl_evaluation)
     public void setStart() {
 
     }

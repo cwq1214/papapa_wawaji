@@ -2,7 +2,6 @@ package com.jyt.baseapp;
 
 import android.app.Application;
 
-import com.google.gson.Gson;
 import com.jyt.baseapp.util.ImageLoader;
 import com.jyt.baseapp.util.L;
 import com.orhanobut.hawk.Hawk;
@@ -102,7 +101,7 @@ public class App  extends Application {
             return new X509Certificate[0];
         }
     }
-    //asd
+
     public static App getApplication(){
         return app;
     }

@@ -9,8 +9,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jyt.baseapp.R;
+import com.jyt.baseapp.bean.json.HomeToyResult;
 import com.jyt.baseapp.util.ImageLoader;
-import com.jyt.baseapp.util.L;
 
 import butterknife.BindView;
 
@@ -18,7 +18,7 @@ import butterknife.BindView;
  * Created by chenweiqi on 2017/11/8.
  */
 
-public class RoomItemViewHolder extends BaseViewHolder {
+public class RoomItemViewHolder extends BaseViewHolder<HomeToyResult> {
     @BindView(R.id.img_goods)
     ImageView imgGoods;
     @BindView(R.id.text_status)
@@ -44,11 +44,19 @@ public class RoomItemViewHolder extends BaseViewHolder {
     }
 
     @Override
-    public void setData(Object data) {
+    public void setData(HomeToyResult data) {
         super.setData(data);
-
+        textName.setText(data.getToyName());
+        textPrice.setText(data.getNeedPay());
+        if (Integer.valueOf(data.getLeisure())==0){
+            textStatus.setText("游戏中 "+data.getLeisure()+"空闲/"+data.getUseing()+"占用");
+            textStatus.setTextColor(itemView.getResources().getColor(R.color.t3Color));
+        }else {
+            textStatus.setText("空闲中 "+data.getLeisure()+"空闲/"+data.getUseing()+"占用");
+            textStatus.setTextColor(itemView.getResources().getColor(R.color.t4Color));
+        }
         String url = "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1510122506&di=fb7a112f7b5d08b696f7762815478c08&src=http://img2.shangxueba.com/img/uploadfile/20141022/12/7244D67D1CE5C5EB8F526A72EB0F0D33.jpg";
 
-        ImageLoader.getInstance().load(imgGoods, url);
+        ImageLoader.getInstance().load(imgGoods, data.getToyImg());
     }
 }

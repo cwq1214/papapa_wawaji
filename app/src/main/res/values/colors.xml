@@ -12,4 +12,9 @@
 
     <color name="disableColor">#9a9a9a</color>
     <color name="enableColor">#F6B6C6</color>
+    <color name="bgColor">#F7F7F7</color>
+    <color name="t1Color">#848484</color>
+    <color name="t2Color">#1A1A1A</color>
+    <color name="t3Color">#FF8460</color>
+    <color name="t4Color">#3CC3F0</color>
 </resources>

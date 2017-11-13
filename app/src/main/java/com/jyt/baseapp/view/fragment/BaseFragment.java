@@ -1,11 +1,16 @@
 package com.jyt.baseapp.view.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.jyt.baseapp.model.BaseModel;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -18,12 +23,17 @@ public abstract class BaseFragment extends Fragment {
 
     protected View rootView;
     Unbinder unbinder;
+
+    List<BaseModel> models;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView==null){
             rootView = inflater.from(getContext()).inflate(getLayoutId(),container,false);
             ButterKnife.bind(this,rootView);
+            models = CreateModels();
+            allModelsStart(getContext());
             firstInit();
         }
 //        unbinder = ButterKnife.bind(this,rootView);
@@ -36,9 +46,35 @@ public abstract class BaseFragment extends Fragment {
 //        if (unbinder!=null){
 //            unbinder.unbind();
 //        }
+        allModelsDestroy();
+
+    }
+
+    public List<BaseModel> CreateModels(){
+        return null;
+    }
+
+    public void allModelsStart(Context context){
+        if (models !=null)
+            for (BaseModel model:
+                    models
+                    ) {
+                model.onStart(context);
+            }
+    }
+
+    public void allModelsDestroy(){
+        if (models !=null)
+            for (BaseModel model:
+                    models
+                    ) {
+                model.onDestroy();
+            }
     }
 
     protected abstract int getLayoutId();
 
     protected abstract void firstInit();
+
+
 }

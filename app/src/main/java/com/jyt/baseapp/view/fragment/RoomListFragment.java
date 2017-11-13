@@ -1,13 +1,18 @@
 package com.jyt.baseapp.view.fragment;
 
-import android.os.Parcelable;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.LinearLayout;
 
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.adapter.RoomListAdapter;
+import com.jyt.baseapp.api.BeanCallback;
+import com.jyt.baseapp.bean.BaseJson;
+import com.jyt.baseapp.bean.json.HomeToyResult;
 import com.jyt.baseapp.helper.IntentHelper;
 import com.jyt.baseapp.itemDecoration.RcvGridSpaceItemDecoration;
+import com.jyt.baseapp.model.BaseModel;
+import com.jyt.baseapp.model.HomeToyModel;
+import com.jyt.baseapp.model.impl.HomeToyModelImpl;
 import com.jyt.baseapp.util.DensityUtil;
 import com.jyt.baseapp.view.viewholder.BaseViewHolder;
 import com.jyt.baseapp.view.widget.MainRefreshBottomView;
@@ -28,12 +33,21 @@ public class RoomListFragment extends BaseFragment {
     @BindView(R.id.v_refreshRecyclerView)
     RefreshRecyclerView vRefreshRecyclerView;
 
+    private String type;
+    private HomeToyModel mToyModel;
 
-    RoomListAdapter adapter;
+    private List<HomeToyResult> mlist;
+    private RoomListAdapter adapter;
+
 
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_room_list;
+    }
+
+
+    public RoomListFragment(int type){
+        this.type=type+"";
     }
 
     @Override
@@ -55,13 +69,29 @@ public class RoomListFragment extends BaseFragment {
             }
         });
 
-        List list = new ArrayList();
-        for (int i=0;i<20;i++){
-            list.add(new Object());
-        }
-
-        adapter.setDataList(list);
+        mlist = new ArrayList();
+        adapter.setDataList(mlist);
         adapter.notifyDataSetChanged();
+        getToyDatas("8");
+
     }
 
+    private void getToyDatas(String count){
+        mToyModel.getHomeToyData(count,type, new BeanCallback<BaseJson<List<HomeToyResult>>>() {
+
+
+            @Override
+            public void response(boolean success, BaseJson<List<HomeToyResult>> response, int id) {
+                mlist=response.getData();
+                adapter.notifyData(mlist);
+            }
+        });
+    }
+
+    @Override
+    public List<BaseModel> CreateModels() {
+        List base = new ArrayList();
+        base.add(mToyModel=new HomeToyModelImpl());
+        return base;
+    }
 }

@@ -92,6 +92,7 @@ public class PersonCenterActivity extends BaseActivity {
             case R.id.v_toFeedback:
                 break;
             case R.id.v_viewVersion:
+                IntentHelper.openVersionInfoActivity(getContext());
                 break;
             case R.id.text_logout:
                 break;

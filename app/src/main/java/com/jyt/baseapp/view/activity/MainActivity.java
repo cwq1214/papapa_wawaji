@@ -14,7 +14,6 @@ import com.jyt.baseapp.view.fragment.RoomListFragment;
 import com.jyt.baseapp.view.widget.NoScrollViewPager;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
@@ -35,6 +34,8 @@ public class MainActivity extends BaseActivity {
     NoScrollViewPager vViewPager;
     @BindView(R.id.img_showHideBanner)
     ImageView imgShowHideBanner;
+    private RoomListFragment dollFragment;
+    private RoomListFragment cabbageFragment;
 
     FragmentViewPagerAdapter adapter;
 
@@ -51,13 +52,13 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        dollFragment=new RoomListFragment(0);
+        cabbageFragment=new RoomListFragment(1);
 
         vViewPager.setAdapter(adapter = new FragmentViewPagerAdapter(getSupportFragmentManager()));
-
-        adapter.addFragment(new RoomListFragment(),"娃娃首页");
-        adapter.addFragment(new RoomListFragment(),"白菜特抓");
-        adapter.addFragment(new RoomListFragment(),"玩家分享");
+        adapter.addFragment(dollFragment,"娃娃首页");
+        adapter.addFragment(cabbageFragment,"白菜特抓");
+        adapter.addFragment(new RoomListFragment(0),"玩家分享");
         adapter.notifyDataSetChanged();
         vTabLayout.setupWithViewPager(vViewPager);
 

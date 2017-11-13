@@ -16,6 +16,7 @@ import com.jyt.baseapp.view.activity.OrderListActivity;
 import com.jyt.baseapp.view.activity.PersonCenterActivity;
 import com.jyt.baseapp.view.activity.ResetPsdActivity;
 import com.jyt.baseapp.view.activity.RoomActivity;
+import com.jyt.baseapp.view.activity.VersionInfoActivity;
 
 /**
  * Created by chenweiqi on 2017/11/6.
@@ -78,6 +79,10 @@ public class IntentHelper extends IntentKey{
         Intent intent = getIntent(context, RoomActivity.class);
         intent.putExtra(KEY_ROOM,room);
         context.startActivity(intent);
+    }
+
+    public static void openVersionInfoActivity(Context context){
+        context.startActivity(getIntent(context, VersionInfoActivity.class));
     }
 
     public static Intent getIntent(){

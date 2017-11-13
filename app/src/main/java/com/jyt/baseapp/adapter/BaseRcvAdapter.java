@@ -54,5 +54,10 @@ public abstract class BaseRcvAdapter extends RecyclerView.Adapter<BaseViewHolder
         }
         return 0;
     }
+
+    public void notifyData(List dataList){
+        this.dataList=dataList;
+        notifyDataSetChanged();
+    }
     abstract BaseViewHolder CreateViewHolder(ViewGroup parent, int viewType);
 }
