@@ -2,6 +2,7 @@ package com.jyt.baseapp;
 
 import android.app.Application;
 
+import com.google.gson.Gson;
 import com.jyt.baseapp.util.ImageLoader;
 import com.jyt.baseapp.util.L;
 import com.orhanobut.hawk.Hawk;
@@ -25,15 +26,18 @@ import okhttp3.OkHttpClient;
  * Created by chenweiqi on 2017/10/30.
  */
 
-public class App  extends Application{
+public class App  extends Application {
     public boolean isDebug() {
         return isDebug;
     }
+
     public void setDebug(boolean debug) {
         isDebug = debug;
     }
 
     private boolean isDebug = false;
+
+    static App app;
 
     @Override
     public void onCreate() {
@@ -41,14 +45,15 @@ public class App  extends Application{
 
 
         initUtil();
+        app = this;
     }
 
 
-    private void initUtil(){
+    private void initUtil() {
         Hawk.init(getApplicationContext()).setLogInterceptor(new LogInterceptor() {
             @Override
             public void onLog(String message) {
-                if (isDebug()){
+                if (isDebug()) {
                     L.e(message);
                 }
             }
@@ -56,8 +61,8 @@ public class App  extends Application{
 
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        LoggerInterceptor interceptor = new LoggerInterceptor("--HTTP--",true);
-        builder.addInterceptor(interceptor ).hostnameVerifier(new HostnameVerifier() {
+        LoggerInterceptor interceptor = new LoggerInterceptor("--HTTP--", true);
+        builder.addInterceptor(interceptor).hostnameVerifier(new HostnameVerifier() {
             @Override
             public boolean verify(String hostname, SSLSession session) {
                 return true;
@@ -82,14 +87,24 @@ public class App  extends Application{
 
         return ssfFactory;
     }
+
     public static class TrustAllCerts implements X509TrustManager {
         @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType) {}
+        public void checkClientTrusted(X509Certificate[] chain, String authType) {
+        }
 
         @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+        public void checkServerTrusted(X509Certificate[] chain, String authType) {
+        }
 
         @Override
-        public X509Certificate[] getAcceptedIssuers() {return new X509Certificate[0];}
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }
     }
+
+    public static App getApplication(){
+        return app;
+    }
+
 }

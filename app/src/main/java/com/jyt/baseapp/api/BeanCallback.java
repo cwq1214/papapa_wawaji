@@ -5,6 +5,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.jyt.baseapp.App;
+import com.jyt.baseapp.bean.BaseJson;
+import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.view.dialog.LoadingDialog;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -12,11 +15,13 @@ import com.zhy.http.okhttp.callback.Callback;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import okhttp3.Call;
 import okhttp3.Request;
 import okhttp3.Response;
 
 
 /**
+ * OkHttpUtil Callback
  * Created by chenweiqi on 2017/1/18.
  */
 public abstract class BeanCallback<T> extends Callback<T> {
@@ -63,7 +68,6 @@ public abstract class BeanCallback<T> extends Callback<T> {
     public T parseNetworkResponse(Response response, int id) throws Exception {
         Type type = this.getClass().getGenericSuperclass();
         String bodyString = response.body().string() ;
-            Log.e("http",bodyString);
             if (type instanceof ParameterizedType) {
                 //如果用户写了泛型，就会进入这里，否者不会执行
                 ParameterizedType parameterizedType = (ParameterizedType) type;
@@ -88,4 +92,27 @@ public abstract class BeanCallback<T> extends Callback<T> {
     }
 
 
+    @Override
+    public void onError(Call call, Exception e, int id) {
+        Type type = this.getClass().getGenericSuperclass();
+        ParameterizedType parameterizedType = (ParameterizedType) type;
+        Type beanType = parameterizedType.getActualTypeArguments()[0];
+
+        try {
+            Object object =  beanType.getClass().newInstance();
+            if (object instanceof BaseJson){
+                ((BaseJson) object).setForUser(e.getMessage());
+            }
+            response(false, (T)object,id);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onResponse(T response, int id) {
+        response(true,response,id);
+    }
+
+    public abstract void response(boolean success,T response,int id);
 }

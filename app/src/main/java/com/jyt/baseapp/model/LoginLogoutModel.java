@@ -1,12 +1,13 @@
 package com.jyt.baseapp.model;
 
-import okhttp3.Callback;
+
+import com.zhy.http.okhttp.callback.Callback;
 
 /**
  * Created by chenweiqi on 2017/11/13.
  */
 
-public interface LoginLogoutModel {
+public interface LoginLogoutModel extends BaseModel{
 
     void loginByMobile(String mobile, String pwd, Callback callback);
 

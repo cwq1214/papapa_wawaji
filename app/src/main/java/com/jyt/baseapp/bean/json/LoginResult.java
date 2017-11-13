@@ -23,4 +23,13 @@ public class LoginResult {
     public void setTokenSession(String tokenSession) {
         this.tokenSession = tokenSession;
     }
+
+
+    @Override
+    public String toString() {
+        return "LoginResult{" +
+                "userId='" + userId + '\'' +
+                ", tokenSession='" + tokenSession + '\'' +
+                '}';
+    }
 }

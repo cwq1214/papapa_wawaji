@@ -2,6 +2,7 @@ package com.jyt.baseapp.util;
 
 import android.text.TextUtils;
 
+import com.jyt.baseapp.bean.json.LoginResult;
 import com.orhanobut.hawk.Hawk;
 
 /**
@@ -31,5 +32,14 @@ public class UserInfo extends UserInfoKey{
 
     public static boolean isLogin(){
         return !TextUtils.isEmpty(getToken());
+    }
+
+    public static void setUserInfo(LoginResult result){
+        setToken(result.getTokenSession());
+
+    }
+
+    public static void clearUserInfo(){
+        setToken(null);
     }
 }

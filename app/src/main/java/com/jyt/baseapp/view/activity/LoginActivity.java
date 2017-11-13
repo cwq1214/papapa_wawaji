@@ -10,11 +10,25 @@ import android.widget.TextView;
 
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.annotation.ActivityAnnotation;
+import com.jyt.baseapp.api.BeanCallback;
+import com.jyt.baseapp.bean.BaseJson;
+import com.jyt.baseapp.bean.json.LoginResult;
 import com.jyt.baseapp.helper.IntentHelper;
+import com.jyt.baseapp.model.BaseModel;
+import com.jyt.baseapp.model.LoginLogoutModel;
+import com.jyt.baseapp.model.impl.LoginLoutModelImpl;
 import com.jyt.baseapp.util.CountDownUtil;
+import com.jyt.baseapp.util.L;
+import com.jyt.baseapp.util.T;
+import com.jyt.baseapp.util.UserInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Call;
+
 
 /**
  * 登录
@@ -54,6 +68,8 @@ public class LoginActivity extends BaseActivity {
     RelativeLayout vRegisterBtnGroup;
 
     CountDownUtil countDownUtil;
+
+    LoginLogoutModel loginModel;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_login;
@@ -80,6 +96,31 @@ public class LoginActivity extends BaseActivity {
             }
         });
     }
+
+    @Override
+    public List<BaseModel> CreateModels() {
+
+        List base = new ArrayList();
+        base.add(loginModel = new LoginLoutModelImpl());
+        return base;
+    }
+
+    @OnClick(R.id.btn_login)
+    public void onLoginClick(){
+        loginModel.loginByMobile(inputPhone.getText().toString(), inputPsd.getText().toString(), new BeanCallback<BaseJson<LoginResult>>() {
+
+            @Override
+            public void response(boolean success, BaseJson<LoginResult> response, int id) {
+                    if (response.isRet()){
+                        //登录成功 保存用户信息
+                        UserInfo.setUserInfo(response.getData());
+                        IntentHelper.openLoginActivity(getContext());
+                    }
+                T.showShort(getContext(),response.getForUser());
+            }
+        });
+    }
+
 
     @OnClick(R.id.btn_getCode)
     public void onGetCodeClick(){

@@ -44,5 +44,7 @@ public class WelComeActivity extends BaseActivity {
             }
         });
         countDownUtil.start();
+
+
     }
 }
