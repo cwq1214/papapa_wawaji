@@ -28,12 +28,18 @@ public class LoginLoutModelImpl implements LoginLogoutModel {
 
     @Override
     public void register(String mobile, String verifyCode, String pwd, Callback callback) {
+        OkHttpUtils.post().url(Api.domain+Api.register).addParams("mobile",mobile).addParams("pwd",pwd).addParams("verifyCode",verifyCode).build().execute(callback);
 
     }
 
     @Override
     public void resetPassword(String mobile, String verifyCode, String pwd, Callback callback) {
 
+    }
+
+    @Override
+    public void getVerifyCode(String mobile, Callback callback) {
+        OkHttpUtils.post().url(Api.domain+Api.getCode).addParams("mobile",mobile).build().execute(callback);
     }
 
     @Override

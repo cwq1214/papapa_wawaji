@@ -5,6 +5,8 @@
     <color name="colorAccent">#F6B6C6</color>
 
     <color name="transparent">#00000000</color>
+    <color name="transparentPink">#99F6B6C6</color>
+
     <color name="gray">#cccccc</color>
     <color name="divider">#e5e5e5</color>
     <color name="background">#f1f4f8</color>

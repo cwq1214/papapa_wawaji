@@ -16,6 +16,7 @@ import com.jyt.baseapp.helper.IntentHelper;
 import com.jyt.baseapp.util.DensityUtil;
 import com.jyt.baseapp.util.ScreenUtils;
 import com.jyt.baseapp.util.UserInfo;
+import com.jyt.baseapp.view.dialog.RechargeCoinDialog;
 import com.jyt.baseapp.view.widget.CircleProgressView;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 
@@ -75,7 +76,7 @@ public class RoomActivity extends BaseActivity {
     FrameLayout vWebviewLayout;
     @BindView(R.id.v_bottomControl)
     RelativeLayout vBottomControl;
-
+    RechargeCoinDialog rechargeCoinDialog;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_room;
@@ -160,6 +161,16 @@ public class RoomActivity extends BaseActivity {
             case R.id.v_changeRoom:
                 break;
             case R.id.v_recharge:
+                rechargeCoinDialog = new RechargeCoinDialog(getContext());
+                rechargeCoinDialog.setOnPriceClick(new RechargeCoinDialog.OnPriceClick() {
+                    @Override
+                    public void onPriceClick(int price) {
+
+                        if (rechargeCoinDialog!=null)
+                            rechargeCoinDialog.dismiss();
+                    }
+                });
+                rechargeCoinDialog.show();
                 break;
             case R.id.img_top:
                 break;

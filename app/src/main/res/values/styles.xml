@@ -17,7 +17,15 @@
         <item name="android:background">@color/transparent</item>
         <item name="android:windowBackground">@color/transparent</item>
     </style>
-
+    
+    <style name="pinkDimDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+    
    <style name="commonBtn">
        <item name="android:gravity">center</item>
        <item name="android:textColor">@color/white</item>
@@ -62,6 +70,12 @@
         <attr name="showRightArrow" format="boolean"></attr>
         <attr name="needInput" format="boolean"></attr>
         <attr name="hintText" format="string"></attr>
+    </declare-styleable>
+
+    <declare-styleable name="RechargeItem">
+        <attr name="coin" format="string"></attr>
+        <attr name="price" format="string"></attr>
+        <attr name="give" format="string"></attr>
     </declare-styleable>
 
     <!--白色按钮-->
