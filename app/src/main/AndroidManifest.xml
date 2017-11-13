@@ -11,6 +11,8 @@
         android:name=".App"
         >
 
+        <activity android:name=".view.activity.WelComeActivity" android:screenOrientation="portrait" android:label=""></activity>
+
         <activity android:name=".view.activity.LoginActivity" android:screenOrientation="portrait" android:label="">
 
         </activity>

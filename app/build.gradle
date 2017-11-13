@@ -46,6 +46,7 @@ dependencies {
     compile 'cn.bingoogolapple:bga-banner:2.1.7@aar'
     compile 'com.lcodecorex:tkrefreshlayout:1.0.7'
     compile(name: 'LiteAVSDK_Player_3.5.2170', ext: 'aar')
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
 
 
 }

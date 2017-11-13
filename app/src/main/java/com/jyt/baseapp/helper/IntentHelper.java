@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import com.jyt.baseapp.view.activity.AddressListActivity;
 import com.jyt.baseapp.view.activity.DollDetailActivity;
 import com.jyt.baseapp.view.activity.EditAddressActivity;
+import com.jyt.baseapp.view.activity.LoginActivity;
+import com.jyt.baseapp.view.activity.MainActivity;
 import com.jyt.baseapp.view.activity.MyCoinActivity;
 import com.jyt.baseapp.view.activity.OrderListActivity;
 import com.jyt.baseapp.view.activity.PersonCenterActivity;
@@ -21,6 +23,14 @@ import com.jyt.baseapp.view.activity.RoomActivity;
 
 public class IntentHelper extends IntentKey{
 
+    public static void openMainActivity(Context context){
+        context.startActivity(getIntent(context, MainActivity.class));
+
+    }
+
+    public static void openLoginActivity(Context context){
+        context.startActivity(getIntent(context, LoginActivity.class));
+    }
 
     public static void openResetPsdActivity(Context context){
         context.startActivity(getIntent(context, ResetPsdActivity.class));

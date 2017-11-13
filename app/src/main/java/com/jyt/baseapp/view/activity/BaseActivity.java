@@ -1,7 +1,10 @@
 package com.jyt.baseapp.view.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +18,12 @@ import android.widget.TextView;
 
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.annotation.ActivityAnnotation;
+import com.jyt.baseapp.model.BaseModel;
 import com.jyt.baseapp.util.FinishActivityManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +51,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     @BindView(R.id.img_function)
     ImageView imgFunction;
 
+    RefreshViewBroadcast refreshViewBroadcast;
+
+    List<BaseModel> models;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +87,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         manager.addActivity(this);
 
+        refreshViewBroadcast = new RefreshViewBroadcast();
+        IntentFilter intentFilter = new IntentFilter("REFRESH_VIEW");
+        registerReceiver(refreshViewBroadcast,intentFilter);
+
+        models = CreateModels();
+        allModelsStart(getContext());
     }
 
     private void getAnnotation() {
@@ -115,6 +129,27 @@ public abstract class BaseActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public List<BaseModel> CreateModels(){
+        return null;
+    }
+
+    public void allModelsStart(Context context){
+        if (models !=null)
+            for (BaseModel model:
+                    models
+                 ) {
+                model.onStart(context);
+            }
+    }
+    public void allModelsDestroy(){
+        if (models !=null)
+            for (BaseModel model:
+                    models
+                    ) {
+                model.onDestroy();
+            }
     }
 
     public void setTextTitle(String text) {
@@ -176,6 +211,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         manager.finishActivity(this);
+        allModelsDestroy();
     }
 
     public Context getContext() {
@@ -189,4 +225,16 @@ public abstract class BaseActivity extends AppCompatActivity {
     abstract protected int getLayoutId();
 
     abstract protected View getContentView();
+
+    protected void onReceiveRefreshViewBroadcast(Context context, Intent intent) {
+
+    }
+
+    class RefreshViewBroadcast extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+        }
+    }
 }

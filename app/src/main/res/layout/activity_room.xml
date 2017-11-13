@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-   android:layout_width="match_parent"
-   android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    >
-    <LinearLayout
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <!--actionbar-->
     <RelativeLayout
         android:background="@color/colorPrimary"
@@ -30,7 +26,7 @@
             android:src="@mipmap/back" />
 
         <ImageView
-            android:id="@+id/img_msg"
+            android:id="@+id/img_help"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignParentRight="true"
@@ -40,119 +36,277 @@
 
     </RelativeLayout>
 
+
     <RelativeLayout
-        android:id="@+id/v_controlLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-
-        <RelativeLayout
-            android:background="@drawable/bg_white_4radius"
+        android:layout_height="match_parent">
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp">
-
-            <com.tencent.rtmp.ui.TXCloudVideoView
-                android:background="#f1f1f1"
-                android:id="@+id/v_txCloudVideoView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="481dp"></com.tencent.rtmp.ui.TXCloudVideoView>
-
-            <!--人数 换房-->
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            >
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/bg_4radius_left_top_left_bottom"
-                android:orientation="horizontal">
+                android:orientation="vertical" android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <RelativeLayout
+                    android:id="@+id/v_controlLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:visibility="visible">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/bg_white_4radius">
+
+                        <com.tencent.rtmp.ui.TXCloudVideoView
+                            android:id="@+id/v_txCloudVideoView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#f1f1f1"
+                            android:minHeight="481dp"></com.tencent.rtmp.ui.TXCloudVideoView>
+
+                        <!--人数 换房-->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/bg_4radius_left_top_left_bottom"
+                            android:orientation="horizontal"
+                            android:paddingBottom="6dp"
+                            android:paddingLeft="8dp"
+                            android:paddingTop="6dp">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="8dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/text_peopleCounts"
+                                    style="@style/commonText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="286人"
+                                    android:textSize="10dp" />
+
+                                <TextView
+                                    style="@style/commonText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:text="在房间"
+                                    android:textSize="10dp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/v_changeRoom"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/text_roomIndex"
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:background="@drawable/bg_pink_circle_28dp"
+                                    android:gravity="center"
+                                    android:text="12"
+                                    android:textColor="@color/white" />
+
+                                <TextView
+                                    style="@style/commonText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:text="换房"
+                                    android:textColor="@color/colorPrimary" />
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@mipmap/pink_refresh" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/img_changeChannel"
+                        android:layout_width="51dp"
+                        android:layout_height="91dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:src="@mipmap/change_cam" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="8dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="我的娃娃币"
+                            android:textColor="@color/white"
+                            android:textSize="12dp" />
+
+                        <TextView
+                            android:id="@+id/text_balance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="3dp"
+                            android:layout_marginTop="3dp"
+                            android:autoText="true"
+                            android:text="50"
+                            android:textColor="@color/white"
+                            android:textSize="18dp" />
+
+                        <LinearLayout
+                            android:id="@+id/v_recharge"
+                            android:layout_width="67dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_10radius_white_solide"
+                            android:gravity="center"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:paddingTop="2dp">
+
+                            <ImageView
+                                android:layout_width="10dp"
+                                android:layout_height="12dp"
+                                android:src="@mipmap/money" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="充值"
+                                android:textColor="#FFCC00"
+                                android:textSize="12dp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/v_playLayout"
+                        android:layout_width="151dp"
+                        android:layout_height="56dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/bg_28radius_white">
+
+                        <ImageView
+                            android:id="@+id/imageView"
+                            android:layout_width="141dp"
+                            android:layout_height="46dp"
+                            android:layout_centerInParent="true"
+                            android:src="@mipmap/play" />
+
+                        <TextView
+                            android:id="@+id/text_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="false"
+                            android:layout_marginLeft="65dp"
+                            android:layout_marginTop="30dp"
+                            android:text="28/次"
+                            android:textColor="@color/white"
+                            android:textSize="10dp" />
+                    </RelativeLayout>
+
+
+                    <ImageView
+                        android:id="@+id/img_sendDanMu"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/bg_56circle"
+                        android:cropToPadding="true"
+                        android:padding="11dp"
+                        android:src="@mipmap/comment" />
+
+
+                </RelativeLayout>
+
+                <!--抓取记录-->
 
                 <LinearLayout
-                    android:id="@+id/v_changeRoom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/text_roomIndex"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:background="@drawable/bg_pink_circle_28dp"
-                        android:gravity="center"
-                        android:text="12"
-                        android:textColor="@color/white" />
-
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:id="@+id/v_grabLayout"
+                    android:divider="@drawable/divider_full_pink"
+                    android:showDividers="middle"
+                    android:background="@drawable/bg_white_4radius"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
                     <TextView
                         style="@style/commonText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:text="换房"
-                        android:textColor="@color/colorPrimary" />
+                        android:text="最近抓中记录"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp" />
+                    <LinearLayout
+                        android:divider="@drawable/divider_pink"
+                        android:showDividers="middle"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <com.jyt.baseapp.view.widget.GrabRecordItemView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"></com.jyt.baseapp.view.widget.GrabRecordItemView>
+                        <com.jyt.baseapp.view.widget.GrabRecordItemView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"></com.jyt.baseapp.view.widget.GrabRecordItemView>
+                    </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@mipmap/pink_refresh" />
                 </LinearLayout>
+
+                <!--商品详情-->
+                <FrameLayout
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/bg_white_4radius"
+                    android:id="@+id/v_webviewLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="539dp"
+                    >
+
+                    <WebView
+                        android:id="@+id/v_webView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"></WebView>
+                </FrameLayout>
+
             </LinearLayout>
+        </ScrollView>
 
-        </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/img_changeChannel"
-            android:layout_width="51dp"
-            android:layout_height="91dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:src="@mipmap/change_cam" />
-
+        <!--底部按钮-->
         <include layout="@layout/layout_bottom_control" />
+
     </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:text="我的娃娃币"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:text="50"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+</LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="67dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_10radius_white_solide"
-                    android:gravity="center"
-                    android:paddingBottom="2dp"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:paddingTop="2dp">
-
-                    <ImageView
-                        android:layout_width="10dp"
-                        android:layout_height="12dp"
-                        android:src="@mipmap/money" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="充值"
-                        android:textColor="#FFCC00"
-                        android:textSize="12dp" />
-                </LinearLayout>
-
-            </LinearLayout>
-        </RelativeLayout>
-
-    </LinearLayout>
-</ScrollView>
