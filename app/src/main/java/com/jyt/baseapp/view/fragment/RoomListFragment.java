@@ -14,14 +14,18 @@ import com.jyt.baseapp.model.BaseModel;
 import com.jyt.baseapp.model.HomeToyModel;
 import com.jyt.baseapp.model.impl.HomeToyModelImpl;
 import com.jyt.baseapp.util.DensityUtil;
+import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.view.viewholder.BaseViewHolder;
 import com.jyt.baseapp.view.widget.MainRefreshBottomView;
 import com.jyt.baseapp.view.widget.RefreshRecyclerView;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by chenweiqi on 2017/11/8.
@@ -65,15 +69,30 @@ public class RoomListFragment extends BaseFragment {
         adapter.setOnViewHolderClickListener(new BaseViewHolder.OnViewHolderClickListener() {
             @Override
             public void onClick(BaseViewHolder holder) {
-                IntentHelper.openRoomActivity(getContext(), null);
+                HomeToyResult homeToyResult = (HomeToyResult) holder.getData();
+                IntentHelper.openRoomActivity(getContext(), homeToyResult);
             }
         });
 
-        mlist = new ArrayList();
-        adapter.setDataList(mlist);
-        adapter.notifyDataSetChanged();
-        getToyDatas("8");
+//        mlist = new ArrayList();
+//        adapter.setDataList(mlist);
+//        adapter.notifyDataSetChanged();
 
+
+
+        vRefreshRecyclerView.setRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                super.onLoadMore(refreshLayout);
+                getToyDatas("8");
+            }
+        });
+        vRefreshRecyclerView.getRefreshLayout().startLoadMore();
+
+    }
+    @OnClick(R.id.v_refreshLayout)
+    public void onRefreshLayoutClick(){
+        getToyDatas("8");
     }
 
     private void getToyDatas(String count){
@@ -82,8 +101,13 @@ public class RoomListFragment extends BaseFragment {
 
             @Override
             public void response(boolean success, BaseJson<List<HomeToyResult>> response, int id) {
-                mlist=response.getData();
-                adapter.notifyData(mlist);
+                if (response.isRet()){
+                    mlist=response.getData();
+                    vRefreshRecyclerView.setDataList(mlist);
+                }
+                vRefreshRecyclerView.finishLoadMore();
+//                T.showShort(getContext(),response.getForUser());
+
             }
         });
     }

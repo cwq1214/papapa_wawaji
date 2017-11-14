@@ -18,4 +18,19 @@ public class Api {
 
     //首页轮播
     public static final String getBanner = "api/home";
+
+    //娃娃详情页
+    public static final String toyDetail = "api/toy/detail";
+
+    //获取娃娃机状态和当前机器的人员数据
+    public static final String getMachineStateAndPeople = "api/toy/get_machine_status";
+
+    //抓娃娃之前请求服务器
+    public static final String getMachineStateBeforeStart = "api/toy/play";
+
+    //抓完娃娃后修改娃娃状态
+    public static final String afterGrabToSetState = "api/toy/finish_play";
+
+    //退出房间
+    public static final String quitRoom = "api/toy/quit";
 }

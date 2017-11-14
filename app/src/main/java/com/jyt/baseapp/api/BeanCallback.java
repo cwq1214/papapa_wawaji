@@ -9,6 +9,7 @@ import com.jyt.baseapp.App;
 import com.jyt.baseapp.bean.BaseJson;
 import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.T;
+import com.jyt.baseapp.util.UserInfo;
 import com.jyt.baseapp.view.dialog.LoadingDialog;
 import com.zhy.http.okhttp.callback.Callback;
 

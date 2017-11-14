@@ -1,15 +1,43 @@
 package com.jyt.baseapp.bean.json;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.List;
+
 /**
  * @author LinWei on 2017/11/13 17:16
  */
-public class HomeToyResult {
+public class HomeToyResult implements Parcelable{
     private String toyId;
     private String toyImg;
     private String toyName;
     private String needPay;
     private String leisure;
     private String useing;
+    private List<Machine> machineList;
+
+    protected HomeToyResult(Parcel in) {
+        toyId = in.readString();
+        toyImg = in.readString();
+        toyName = in.readString();
+        needPay = in.readString();
+        leisure = in.readString();
+        useing = in.readString();
+        machineList = in.createTypedArrayList(Machine.CREATOR);
+    }
+
+    public static final Creator<HomeToyResult> CREATOR = new Creator<HomeToyResult>() {
+        @Override
+        public HomeToyResult createFromParcel(Parcel in) {
+            return new HomeToyResult(in);
+        }
+
+        @Override
+        public HomeToyResult[] newArray(int size) {
+            return new HomeToyResult[size];
+        }
+    };
 
     public String getToyId() {
         return toyId;
@@ -59,24 +87,27 @@ public class HomeToyResult {
         this.useing = useing;
     }
 
-    public static class HomeToyDetailData{
-        private String machineStatus;
-        private String machineId;
+    public List<Machine> getMachineList() {
+        return machineList;
+    }
 
-        public String getMachineStatus() {
-            return machineStatus;
-        }
+    public void setMachineList(List<Machine> machineList) {
+        this.machineList = machineList;
+    }
 
-        public void setMachineStatus(String machineStatus) {
-            this.machineStatus = machineStatus;
-        }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-        public String getMachineId() {
-            return machineId;
-        }
-
-        public void setMachineId(String machineId) {
-            this.machineId = machineId;
-        }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(toyId);
+        dest.writeString(toyImg);
+        dest.writeString(toyName);
+        dest.writeString(needPay);
+        dest.writeString(leisure);
+        dest.writeString(useing);
+        dest.writeTypedList(machineList);
     }
 }

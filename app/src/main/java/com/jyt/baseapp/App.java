@@ -1,14 +1,17 @@
 package com.jyt.baseapp;
 
 import android.app.Application;
+import android.widget.LinearLayout;
 
 import com.jyt.baseapp.util.ImageLoader;
 import com.jyt.baseapp.util.L;
+import com.jyt.baseapp.util.UserInfo;
 import com.orhanobut.hawk.Hawk;
 import com.orhanobut.hawk.LogInterceptor;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.log.LoggerInterceptor;
 
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
@@ -19,7 +22,11 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.Headers;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by chenweiqi on 2017/10/30.
@@ -45,6 +52,7 @@ public class App  extends Application {
 
         initUtil();
         app = this;
+        UserInfo.setToken("2");
     }
 
 
@@ -67,6 +75,19 @@ public class App  extends Application {
                 return true;
             }
         }).sslSocketFactory(createSSLSocketFactory());
+
+
+        //统一请求头添加header
+        builder.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                if (UserInfo.getToken()!=null) {
+                    Request request = chain.request().newBuilder().addHeader("tokenSession", UserInfo.getToken()).build();
+                    return chain.proceed(request);
+                }
+                return chain.proceed(chain.request());
+           }
+        });
 
         OkHttpUtils.initClient(builder.build());
 

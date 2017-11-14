@@ -63,12 +63,12 @@
                         android:layout_margin="5dp"
                         android:background="@drawable/bg_white_4radius">
 
-                        <com.tencent.rtmp.ui.TXCloudVideoView
-                            android:id="@+id/v_txCloudVideoView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#f1f1f1"
-                            android:minHeight="481dp"></com.tencent.rtmp.ui.TXCloudVideoView>
+                        <!--<com.tencent.rtmp.ui.TXCloudVideoView-->
+                            <!--android:id="@+id/v_txCloudVideoView"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:background="#f1f1f1"-->
+                            <!--android:minHeight="481dp"></com.tencent.rtmp.ui.TXCloudVideoView>-->
 
                         <!--人数 换房-->
                         <LinearLayout
@@ -283,21 +283,30 @@
                 </LinearLayout>
 
                 <!--商品详情-->
-                <FrameLayout
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:showDividers="middle"
+                    android:divider="@drawable/divider_full_pink"
                     android:layout_marginTop="5dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:background="@drawable/bg_white_4radius"
                     android:id="@+id/v_webviewLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="539dp"
+                    android:layout_height="match_parent"
+                    android:minHeight="300dp"
                     >
-
+                    <TextView
+                        android:gravity="center"
+                        android:id="@+id/text_toyName"
+                        style="@style/commonText"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp" />
                     <WebView
                         android:id="@+id/v_webView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"></WebView>
-                </FrameLayout>
+                        android:layout_height="wrap_content"></WebView>
+                </LinearLayout>
 
             </LinearLayout>
         </ScrollView>

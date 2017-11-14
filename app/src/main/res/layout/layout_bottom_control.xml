@@ -13,7 +13,7 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_centerHorizontal="true"
-        android:src="@mipmap/arrow_up" />
+        android:src="@drawable/sel_top_control_btn" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -25,14 +25,14 @@
             android:id="@+id/img_left"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:src="@mipmap/arrow_left" />
+            android:background="@drawable/sel_left_control_btn" />
 
         <ImageView
             android:id="@+id/img_right"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_marginLeft="105dp"
-            android:src="@mipmap/arrow_right" />
+            android:src="@drawable/sel_right_control_btn" />
     </LinearLayout>
 
 
@@ -43,7 +43,7 @@
         android:layout_below="@id/img_top"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="35dp"
-        android:src="@mipmap/arrow_down" />
+        android:src="@drawable/sel_bottom_control_btn" />
 
     <RelativeLayout
         android:layout_width="65dp"
