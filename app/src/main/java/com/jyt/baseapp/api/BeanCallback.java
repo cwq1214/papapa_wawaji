@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.jyt.baseapp.App;
 import com.jyt.baseapp.bean.BaseJson;
+import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.view.dialog.LoadingDialog;
 import com.zhy.http.okhttp.callback.Callback;
@@ -82,7 +83,12 @@ public abstract class BeanCallback<T> extends Callback<T> {
                     }
                 }catch (Exception e){
                     e.printStackTrace();
-                    return (T)beanType.getClass().newInstance();
+                    Class c = (Class) ((ParameterizedType) beanType).getRawType();
+                    Object object =c.newInstance();
+                    if (object instanceof BaseJson){
+                        ((BaseJson) object).setForUser(e.getMessage());
+                    }
+                    return (T) object;
                 }
             } else {
                 //默认返回字符串
@@ -97,9 +103,9 @@ public abstract class BeanCallback<T> extends Callback<T> {
         Type type = this.getClass().getGenericSuperclass();
         ParameterizedType parameterizedType = (ParameterizedType) type;
         Type beanType = parameterizedType.getActualTypeArguments()[0];
-
+        Class c = (Class) ((ParameterizedType) beanType).getRawType();
         try {
-            Object object =  beanType.getClass().newInstance();
+            Object object =c.newInstance();
             if (object instanceof BaseJson){
                 ((BaseJson) object).setForUser(e.getMessage());
             }

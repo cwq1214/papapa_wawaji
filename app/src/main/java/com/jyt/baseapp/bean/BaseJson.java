@@ -12,6 +12,9 @@ public class BaseJson <T>{
     private String forUser;
     private String forWorker;
 
+    public BaseJson() {
+    }
+
     public T getData() {
         return data;
     }

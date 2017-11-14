@@ -91,7 +91,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter("REFRESH_VIEW");
         registerReceiver(refreshViewBroadcast,intentFilter);
 
-        models = CreateModels();
+        models = createModels();
         allModelsStart(getContext());
     }
 
@@ -131,7 +131,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public List<BaseModel> CreateModels(){
+    public List<BaseModel> createModels(){
         return null;
     }
 
@@ -212,6 +212,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onDestroy();
         manager.finishActivity(this);
         allModelsDestroy();
+        unregisterReceiver(refreshViewBroadcast);
     }
 
     public Context getContext() {
