@@ -63,12 +63,12 @@
                         android:layout_margin="5dp"
                         android:background="@drawable/bg_white_4radius">
 
-                        <!--<com.tencent.rtmp.ui.TXCloudVideoView-->
-                            <!--android:id="@+id/v_txCloudVideoView"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:background="#f1f1f1"-->
-                            <!--android:minHeight="481dp"></com.tencent.rtmp.ui.TXCloudVideoView>-->
+                        <com.tencent.rtmp.ui.TXCloudVideoView
+                            android:id="@+id/v_txCloudVideoView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#f1f1f1"
+                            android:minHeight="481dp"></com.tencent.rtmp.ui.TXCloudVideoView>
 
                         <!--人数 换房-->
                         <LinearLayout

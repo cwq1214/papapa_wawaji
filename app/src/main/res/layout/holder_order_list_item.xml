@@ -34,14 +34,18 @@
         android:layout_marginTop="10dp">
 
         <FrameLayout
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="@drawable/bg_pink_border_white_solide_3radius">
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="#00F0F0">
 
             <ImageView
                 android:id="@+id/img_goodsImg"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"/>
+            <!--<View-->
+            <!--android:background="@drawable/bg_pink_border_transparent_solide_3radius"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"/>-->
         </FrameLayout>
 
         <LinearLayout
@@ -50,6 +54,12 @@
             android:layout_marginLeft="14dp"
             android:layout_weight="1"
             android:orientation="vertical">
+                <View
+                    android:background="@drawable/bg_pink"
+                    android:layout_height="5dp"
+                    android:layout_width="10dp">
+
+                </View>
 
             <TextView
                 android:id="@+id/text_id"

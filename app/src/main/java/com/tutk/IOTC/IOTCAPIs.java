@@ -17,6 +17,8 @@
 
 package com.tutk.IOTC;
 
+import com.jyt.baseapp.util.L;
+
 public class IOTCAPIs {
 
 	public static final int API_ER_ANDROID_NULL					=-10000;
@@ -267,12 +269,12 @@ public class IOTCAPIs {
 
 	public void loginInfoCB(int nLonInfo) {
 		//This is callback method, we can modify it.
-		System.out.println("[parent] LoginInfo Callback, nLogInfo=" + nLonInfo);
+		L.e(String.format("[parent] LoginInfo Callback, nLogInfo=" + nLonInfo));;
 	};
 
 	public void sessionStatusCB(int nSID, int nErrCode) {
 		//This is callback method, we can modify it.
-		System.out.println("[parent] SessionStatus Callback, nSID="+ nSID + ", nErrCode="+ nErrCode);
+		L.e(String.format("[parent] SessionStatus Callback, nSID="+ nSID + ", nErrCode="+ nErrCode));
 	};
 
 	static { try { System.loadLibrary("IOTCAPIs"); }

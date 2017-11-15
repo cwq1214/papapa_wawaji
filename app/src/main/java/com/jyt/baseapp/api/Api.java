@@ -33,4 +33,19 @@ public class Api {
 
     //退出房间
     public static final String quitRoom = "api/toy/quit";
+
+    //个人首页
+    public static final String personalInfo = "api/user";
+
+    //修改头像 名字
+    public static final String modifyUserNameOrImage = "api/user/update";
+
+    //配送订单列表
+    public static final String orderList = "api/order";
+
+    //订单详情
+    public static final String orderDetail = "api/order/detail";
+
+    //确认订单
+    public static final String receiveOrder = "api/order/comfirm";
 }

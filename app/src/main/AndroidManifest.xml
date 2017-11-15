@@ -20,14 +20,14 @@
         </activity>
 
         <activity android:name=".view.activity.ResetPsdActivity" android:screenOrientation="portrait" android:label="忘记密码"></activity>
-        <activity android:name=".view.activity.MainActivity" android:screenOrientation="portrait">
+        <activity android:name=".view.activity.MainActivity" android:screenOrientation="portrait" android:label="首页">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"></action>
                 <category android:name="android.intent.category.LAUNCHER"></category>
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.activity.PersonCenterActivity" android:screenOrientation="portrait" ></activity>
+        <activity android:name=".view.activity.PersonCenterActivity" android:screenOrientation="portrait" android:label="个人中心"></activity>
 
         <activity android:name=".view.activity.MyCoinActivity" android:screenOrientation="portrait" android:label="我的娃娃币"></activity>
 

@@ -18,6 +18,8 @@
 package com.tutk.IOTC;
 
 
+import com.jyt.baseapp.util.L;
+
 public class AVAPIs {
 	
 	public static final int TIME_DELAY_DELTA				=1;		//ms
@@ -142,7 +144,9 @@ public class AVAPIs {
 	{
 	    byte[] bPwd = viewPwd.getBytes();
 	    byte[] bAcc = viewAcc.getBytes();
-	    return avClientStart(nSID, bAcc, bPwd, timeout_sec, pservType, ChID);
+		int result = avClientStart(nSID, bAcc, bPwd, timeout_sec, pservType, ChID);
+		L.e("avClientStart "+result);
+	    return result;
 	}
 	public native static int  avClientStart2(int nSID,String viewAcc,String viewPwd, int timeout_sec,int[]pservType,int ChID, int[] bResend);
 	public native static void avClientStop(int avIndex);

@@ -1,19 +1,30 @@
 package com.jyt.baseapp.util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.jyt.baseapp.bean.json.LoginResult;
-import com.orhanobut.hawk.Hawk;
+
 
 /**
  * Created by chenweiqi on 2017/11/13.
  */
 
 public class UserInfo extends UserInfoKey{
-    private static UserInfo userInfo = new UserInfo();
+    private static UserInfo userInfo ;
 
-    private UserInfo() {
+    private static SharedPreferences sharedPreferences;
+    private static SharedPreferences.Editor editor;
 
+    private UserInfo(Context context) {
+         sharedPreferences = context.getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+
+        editor = sharedPreferences.edit();
+    }
+
+    public static void init(Context context){
+        userInfo = new UserInfo(context);
     }
 
     public static UserInfo getInstance(){
@@ -21,11 +32,15 @@ public class UserInfo extends UserInfoKey{
     }
 
     public static void setToken(String token){
-        Hawk.put(KEY_TOKEN,token);
+        if (TextUtils.isEmpty(token)){
+            remove(KEY_TOKEN);
+        }else {
+            put(KEY_TOKEN,token);
+        }
     }
 
     public static String getToken(){
-        return Hawk.get(KEY_TOKEN);
+        return get(KEY_TOKEN);
     }
 
 
@@ -38,6 +53,30 @@ public class UserInfo extends UserInfoKey{
         setToken(result.getTokenSession());
 
     }
+
+
+    private static void remove(String key){
+        editor.remove(key);
+        editor.commit();
+    }
+
+    private static void put(String key,String value){
+
+        if (value instanceof String){
+            editor.putString(key, value);
+            editor.commit();
+        }else {
+            throw new RuntimeException("暂不支持次类型储存");
+        }
+    }
+
+    private static String get(String key){
+        return get(key,null);
+    }
+    private static String get(String key,String defValue){
+        return sharedPreferences.getString(key,defValue);
+    }
+
 
     public static void clearUserInfo(){
         setToken(null);

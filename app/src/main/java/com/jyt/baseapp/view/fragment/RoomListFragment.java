@@ -9,6 +9,7 @@ import com.jyt.baseapp.api.BeanCallback;
 import com.jyt.baseapp.bean.BaseJson;
 import com.jyt.baseapp.bean.json.HomeToyResult;
 import com.jyt.baseapp.helper.IntentHelper;
+import com.jyt.baseapp.helper.IntentKey;
 import com.jyt.baseapp.itemDecoration.RcvGridSpaceItemDecoration;
 import com.jyt.baseapp.model.BaseModel;
 import com.jyt.baseapp.model.HomeToyModel;
@@ -37,7 +38,7 @@ public class RoomListFragment extends BaseFragment {
     @BindView(R.id.v_refreshRecyclerView)
     RefreshRecyclerView vRefreshRecyclerView;
 
-    private String type;
+    private int type;
     private HomeToyModel mToyModel;
 
     private List<HomeToyResult> mlist;
@@ -50,12 +51,10 @@ public class RoomListFragment extends BaseFragment {
     }
 
 
-    public RoomListFragment(int type){
-        this.type=type+"";
-    }
-
     @Override
     protected void firstInit() {
+        type = getArguments().getInt(IntentKey.KEY_TYPE);
+
         vRefreshRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         vRefreshRecyclerView.addItemDecoration(new RcvGridSpaceItemDecoration(2,DensityUtil.dpToPx(getContext(),20),true));
         vRefreshRecyclerView.getRefreshLayout().setEnableRefresh(false);
@@ -73,10 +72,6 @@ public class RoomListFragment extends BaseFragment {
                 IntentHelper.openRoomActivity(getContext(), homeToyResult);
             }
         });
-
-//        mlist = new ArrayList();
-//        adapter.setDataList(mlist);
-//        adapter.notifyDataSetChanged();
 
 
 
@@ -96,7 +91,7 @@ public class RoomListFragment extends BaseFragment {
     }
 
     private void getToyDatas(String count){
-        mToyModel.getHomeToyData(count,type, new BeanCallback<BaseJson<List<HomeToyResult>>>() {
+        mToyModel.getHomeToyData(count,type+"", new BeanCallback<BaseJson<List<HomeToyResult>>>() {
 
 
             @Override

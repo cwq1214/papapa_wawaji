@@ -13,17 +13,22 @@
 
 package com.tutk.IOTC;
 
+import com.jyt.baseapp.util.L;
+
 public class Packet {
 
 	public static final short byteArrayToShort_Little(byte byt[], int nBeginPos) {
+        L.e("byteArrayToShort_Little");
 		return (short) ((0xff & byt[nBeginPos]) | ((0xff & byt[nBeginPos + 1]) << 8));
 	}
 
 	public static final int byteArrayToInt_Little(byte byt[], int nBeginPos) {
+        L.e("byteArrayToInt_Little");
 		return (0xff & byt[nBeginPos]) | (0xff & byt[nBeginPos + 1]) << 8 | (0xff & byt[nBeginPos + 2]) << 16 | (0xff & byt[nBeginPos + 3]) << 24;
 	}
 
 	public static final int byteArrayToInt_Little(byte byt[]) {
+        L.e("byteArrayToInt_Little");
 		if (byt.length == 1)
 			return 0xff & byt[0];
 		else if (byt.length == 2)
@@ -35,12 +40,13 @@ public class Packet {
 	}
 
 	public static final long byteArrayToLong_Little(byte byt[], int nBeginPos) {
-
+        L.e("byteArrayToLong_Little");
 		return (0xff & byt[nBeginPos]) | (0xff & byt[nBeginPos + 1]) << 8 | (0xff & byt[nBeginPos + 2]) << 16 | (0xff & byt[nBeginPos + 3]) << 24
 				| (0xff & byt[nBeginPos + 4]) << 32 | (0xff & byt[nBeginPos + 5]) << 40 | (0xff & byt[nBeginPos + 6]) << 48 | (0xff & byt[nBeginPos + 7]) << 56;
 	}
 
 	public static final int byteArrayToInt_Big(byte byt[]) {
+        L.e("byteArrayToInt_Big");
 		if (byt.length == 1)
 			return 0xff & byt[0];
 		else if (byt.length == 2)
@@ -52,28 +58,34 @@ public class Packet {
 	}
 
 	public static final byte[] longToByteArray_Little(long value) {
+        L.e("longToByteArray_Little");
 		return new byte[] { (byte) value, (byte) (value >>> 8), (byte) (value >>> 16), (byte) (value >>> 24), (byte) (value >>> 32), (byte) (value >>> 40),
 				(byte) (value >>> 48), (byte) (value >>> 56) };
 	}
 
 	public static final byte[] intToByteArray_Little(int value) {
+        L.e("intToByteArray_Little");
 		return new byte[] { (byte) value, (byte) (value >>> 8), (byte) (value >>> 16), (byte) (value >>> 24) };
 	}
 
 	public static final byte[] intToByteArray_Big(int value) {
+        L.e("intToByteArray_Big");
 		return new byte[] { (byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value };
 	}
 
 	public static final byte[] shortToByteArray_Little(short value) {
+        L.e("shortToByteArray_Little");
 		return new byte[] { (byte) value, (byte) (value >>> 8) };
 	}
 
 	public static final byte[] shortToByteArray_Big(short value) {
+        L.e("shortToByteArray_Big");
 		return new byte[] { (byte) (value >>> 8), (byte) value };
 	}
 	
 	public static final short[] byteArray2shortArray_Little(byte[] b , int length)
 	{
+        L.e("byteArray2shortArray_Little");
     	short[] buf = new short[length / 2];
         for(int i=0 ; i<length/2 ; i++)
         {
@@ -83,6 +95,7 @@ public class Packet {
 	}
     public static final byte[] shortArray2byteArray_Little(short[] s , int length)
     {
+        L.e("shortArray2byteArray_Little");
     	byte[] buf = new byte[length * 2];
         for(int i=0 ; i<length ; i++)
         {
@@ -97,8 +110,9 @@ public class Packet {
 
 	public static final long bytes2Long(byte[] data, int length){
 
-		byte[] bData = null;
-		bData = reverse(data,length);// c 的特性需要反轉
+        L.e("bytes2Long");
+        byte[] bData = null;
+		bData = reverse(data,length);
 
 		int mask = 0xFF;
 		int temp = 0;
@@ -117,6 +131,7 @@ public class Packet {
 	}
 
 	public static byte[] reverse(byte[] data,int length){
+        L.e("reverse");
 		int nSize = length;
 		byte temp;
 

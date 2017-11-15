@@ -6,8 +6,6 @@ import android.widget.LinearLayout;
 import com.jyt.baseapp.util.ImageLoader;
 import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.UserInfo;
-import com.orhanobut.hawk.Hawk;
-import com.orhanobut.hawk.LogInterceptor;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.log.LoggerInterceptor;
 
@@ -52,19 +50,20 @@ public class App  extends Application {
 
         initUtil();
         app = this;
+        UserInfo.init(getApplicationContext());
         UserInfo.setToken("2");
     }
 
 
     private void initUtil() {
-        Hawk.init(getApplicationContext()).setLogInterceptor(new LogInterceptor() {
-            @Override
-            public void onLog(String message) {
-                if (isDebug()) {
-                    L.e(message);
-                }
-            }
-        }).build();
+//        Hawk.init(getApplicationContext()).setLogInterceptor(new LogInterceptor() {
+//            @Override
+//            public void onLog(String message) {
+//                if (isDebug()) {
+//                    L.e(message);
+//                }
+//            }
+//        }).build();
 
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();

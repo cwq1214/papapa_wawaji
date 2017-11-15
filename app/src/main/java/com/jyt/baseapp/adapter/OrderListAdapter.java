@@ -1,5 +1,6 @@
 package com.jyt.baseapp.adapter;
 
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.jyt.baseapp.view.viewholder.BaseViewHolder;
@@ -10,8 +11,16 @@ import com.jyt.baseapp.view.widget.OrderItemViewHolder;
  */
 
 public class OrderListAdapter extends BaseRcvAdapter{
+
+    BaseViewHolder.OnViewHolderClickListener onConfirmReceiveGoodsClickListener;
     @Override
     BaseViewHolder CreateViewHolder(ViewGroup parent, int viewType) {
-        return new OrderItemViewHolder(parent);
+        OrderItemViewHolder holder = new OrderItemViewHolder(parent);
+        holder.setOnConfirmReceiveGoodsClickListener(onConfirmReceiveGoodsClickListener);
+        return holder;
+    }
+
+    public void setOnConfirmReceiveGoodsClickListener(BaseViewHolder.OnViewHolderClickListener onConfirmReceiveGoodsClickListener) {
+        this.onConfirmReceiveGoodsClickListener = onConfirmReceiveGoodsClickListener;
     }
 }

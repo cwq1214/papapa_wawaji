@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -16,6 +17,7 @@ import com.jyt.baseapp.api.BeanCallback;
 import com.jyt.baseapp.bean.BaseJson;
 import com.jyt.baseapp.bean.json.Banner;
 import com.jyt.baseapp.helper.IntentHelper;
+import com.jyt.baseapp.helper.IntentKey;
 import com.jyt.baseapp.model.BaseModel;
 import com.jyt.baseapp.model.MainActModel;
 import com.jyt.baseapp.model.impl.MainActModelImpl;
@@ -74,13 +76,21 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dollFragment=new RoomListFragment(0);
-        cabbageFragment=new RoomListFragment(1);
+
+        dollFragment=new RoomListFragment();
+        Bundle dollFragmentBundle = new Bundle();
+        dollFragmentBundle.putInt(IntentKey.KEY_TYPE,0);
+        dollFragment.setArguments(dollFragmentBundle);
+
+        cabbageFragment=new RoomListFragment();
+        Bundle cabbageFragmentBundle = new Bundle();
+        cabbageFragmentBundle.putInt(IntentKey.KEY_TYPE,1);
+        cabbageFragment.setArguments(cabbageFragmentBundle);
 
         vViewPager.setAdapter(adapter = new FragmentViewPagerAdapter(getSupportFragmentManager()));
         adapter.addFragment(dollFragment,"娃娃首页");
         adapter.addFragment(cabbageFragment,"白菜特抓");
-        adapter.addFragment(new RoomListFragment(0),"玩家分享");
+        adapter.addFragment(new Fragment(),"玩家分享");
         adapter.notifyDataSetChanged();
         vTabLayout.setupWithViewPager(vViewPager);
 

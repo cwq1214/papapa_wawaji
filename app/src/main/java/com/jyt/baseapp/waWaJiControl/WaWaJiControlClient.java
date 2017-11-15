@@ -82,7 +82,7 @@ public class WaWaJiControlClient {
 
     public void start(String uid, String pwd ){
         WaWaJiControlClient.uid = uid;
-        WaWaJiControlClient.pwd = uid;
+        WaWaJiControlClient.pwd = pwd;
         handler.sendEmptyMessage(0);
 
 

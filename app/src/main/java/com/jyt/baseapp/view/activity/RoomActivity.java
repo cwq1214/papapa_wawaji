@@ -1,12 +1,10 @@
 package com.jyt.baseapp.view.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -25,12 +23,14 @@ import com.jyt.baseapp.model.BaseModel;
 import com.jyt.baseapp.model.RoomModel;
 import com.jyt.baseapp.model.impl.RoomModelImpl;
 import com.jyt.baseapp.util.DensityUtil;
+import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.ScreenUtils;
 import com.jyt.baseapp.util.UserInfo;
 import com.jyt.baseapp.view.dialog.RechargeCoinDialog;
 import com.jyt.baseapp.view.widget.CircleProgressView;
-import com.jyt.baseapp.waWaJiControl.Client;
 import com.jyt.baseapp.waWaJiControl.WaWaJiControlClient;
+import com.tencent.rtmp.TXLivePlayer;
+import com.tencent.rtmp.ui.TXCloudVideoView;
 
 
 import java.util.ArrayList;
@@ -47,8 +47,8 @@ import butterknife.OnTouch;
 public class RoomActivity extends BaseActivity {
     @BindView(R.id.img_help)
     ImageView imgHelp;
-//    @BindView(R.id.v_txCloudVideoView)
-//    TXCloudVideoView vTxCloudVideoView;
+    @BindView(R.id.v_txCloudVideoView)
+    TXCloudVideoView vTxCloudVideoView;
     @BindView(R.id.img_back2)
     ImageView imgBack2;
     @BindView(R.id.text_roomIndex)
@@ -122,21 +122,10 @@ public class RoomActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         waWaJiControlClient = new WaWaJiControlClient(getContext());
-
-//        vTxCloudVideoView.setRenderMode(TXCloudVideoView.ACCESSIBILITY_LIVE_REGION_ASSERTIVE);
-//        vTxCloudVideoView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (ScreenUtils.getScreenWidth(getContext())-dp_5*2)* 481 / 366));
-
-
-//        LinearLayout.LayoutParams vControlLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.getScreenHeight(getContext()) - DensityUtil.dpToPx(getContext(), 50));
-//        vControlLayout.setLayoutParams(vControlLayoutParams);
         int dp_5 = DensityUtil.dpToPx(getContext(),5);
 
-
-
-//        LinearLayout.LayoutParams webLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.getScreenHeight(getContext()) - DensityUtil.dpToPx(getContext(), 50));
-//        webLayoutParams.setMargins(dp_5,dp_5,dp_5,dp_5);
-//        vWebviewLayout.setLayoutParams(webLayoutParams);
-
+        vTxCloudVideoView.setRenderMode(TXCloudVideoView.ACCESSIBILITY_LIVE_REGION_ASSERTIVE);
+        vTxCloudVideoView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (ScreenUtils.getScreenWidth(getContext())-dp_5*2)* 481 / 366));
 
         homeToyResult = getIntent().getParcelableExtra(IntentKey.KEY_ROOM);
         connectRoom();
@@ -177,23 +166,16 @@ public class RoomActivity extends BaseActivity {
         createRechargeDialog(toyDetail.getRule());
 
         vWebView.loadData(toyDetail.getToyDesc(), "text/html", "UTF-8");
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Client.start("4AAZU15J37FG6L4K111A","123456");
 
-            }
-        }.start();
-//        waWaJiControlClient.start(toyDetail.getMachineId(),"123456");
+        waWaJiControlClient.start("4AAZU15J37FG6L4K111A","123456");
     }
 
     public void createIpcam(String url){
-//        //        //创建player对象
-//        TXLivePlayer mLivePlayer = new TXLivePlayer(getContext());
-//////        //关键player对象与界面view
-//        mLivePlayer.setPlayerView(vTxCloudVideoView);
-//        mLivePlayer.startPlay(url, TXLivePlayer.PLAY_TYPE_LIVE_RTMP);
+        //创建player对象
+        TXLivePlayer mLivePlayer = new TXLivePlayer(getContext());
+        //关键player对象与界面view
+        mLivePlayer.setPlayerView(vTxCloudVideoView);
+        mLivePlayer.startPlay(url, TXLivePlayer.PLAY_TYPE_LIVE_RTMP);
 
     }
 
@@ -268,7 +250,7 @@ public class RoomActivity extends BaseActivity {
         }
     }
 
-    @OnTouch({R.id.img_top, R.id.img_left, R.id.img_right, R.id.img_down,})
+    @OnTouch({R.id.img_top, R.id.img_left, R.id.img_right, R.id.img_down,R.id.img_done})
     public boolean onBottomControlTouch(View v, MotionEvent event){
         int action = event.getAction();
 
@@ -284,10 +266,13 @@ public class RoomActivity extends BaseActivity {
             }else if (v==imgDone){
                 waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_CATCH);
             }
+            L.e("touch down");
         }else if (action == MotionEvent.ACTION_UP){
             waWaJiControlClient.action_up();
+            L.e("touch up");
+
         }
-        return false;
+        return true;
     }
 
 }

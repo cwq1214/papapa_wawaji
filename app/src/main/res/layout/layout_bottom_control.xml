@@ -46,6 +46,7 @@
         android:src="@drawable/sel_bottom_control_btn" />
 
     <RelativeLayout
+        android:id="@+id/v_doneLayout"
         android:layout_width="65dp"
         android:layout_height="65dp"
         android:layout_alignParentBottom="false"

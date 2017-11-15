@@ -7,8 +7,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jyt.baseapp.R;
+import com.jyt.baseapp.api.BeanCallback;
+import com.jyt.baseapp.bean.BaseJson;
+import com.jyt.baseapp.bean.json.PersonalInfo;
 import com.jyt.baseapp.helper.IntentHelper;
+import com.jyt.baseapp.model.BaseModel;
+import com.jyt.baseapp.model.PersonalInfoModel;
+import com.jyt.baseapp.model.impl.PersonalInfoModelImpl;
+import com.jyt.baseapp.util.ImageLoader;
+import com.jyt.baseapp.util.UserInfo;
 import com.jyt.baseapp.view.widget.LabelAndTextItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -47,6 +58,7 @@ public class PersonCenterActivity extends BaseActivity {
     @BindView(R.id.text_logout)
     TextView textLogout;
 
+    PersonalInfoModel personalInfoModel;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_personal_center;
@@ -62,13 +74,53 @@ public class PersonCenterActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
 
+        reloadView();
+    }
+    private void reloadView(){
         setFunctionImage(R.mipmap.message);
         showFunctionImage();
-
+        textLogout.setText(UserInfo.isLogin()?"退出登录":"登录");
+        if (UserInfo.isLogin()){
+            getUserInfo();
+        }else {
+            textName.setText("未登录");
+            textRecord.setText("");
+        }
     }
 
-    @OnClick({R.id.v_toBalance, R.id.v_toAddress, R.id.v_toOrder, R.id.img_BGMControl, R.id.img_voiceControl, R.id.v_toGuidance, R.id.v_toAboutUs, R.id.v_toContractUs, R.id.v_toFeedback, R.id.v_viewVersion, R.id.text_logout})
+    private void getUserInfo(){
+        personalInfoModel.getUserInfo( new BeanCallback<BaseJson<PersonalInfo>>() {
+            @Override
+            public void response(boolean success, BaseJson<PersonalInfo> response, int id) {
+                if (response.isRet()){
+                    setUserInfo(response.getData());
+                }
+            }
+        });
+    }
+
+    //根据个人信息填充界面
+    private void setUserInfo(PersonalInfo info){
+        textName.setText(info.getNickname());
+        textRecord.setText(String.format("共抓中  %s 次",info.getUserCode()));
+        ImageLoader.getInstance().loadHeader(imgHeader,info.getUserImg());
+    }
+
+    @Override
+    public List<BaseModel> createModels() {
+        List list =  new ArrayList();
+        list.add(personalInfoModel = new PersonalInfoModelImpl());
+        return list;
+    }
+
+    @OnClick({R.id.img_function,R.id.v_toBalance, R.id.v_toAddress, R.id.v_toOrder, R.id.img_BGMControl, R.id.img_voiceControl, R.id.v_toGuidance, R.id.v_toAboutUs, R.id.v_toContractUs, R.id.v_toFeedback, R.id.v_viewVersion, R.id.text_logout})
     public void onViewClicked(View view) {
+        if (!UserInfo.isLogin()&&(view.getId()==R.id.v_toBalance || view.getId()==R.id.v_toAddress || view.getId()==R.id.v_toOrder || view.getId() == R.id.img_function)){
+            IntentHelper.openLoginActivity(getContext());
+            return;
+        }
+
+
         switch (view.getId()) {
             case R.id.v_toBalance:
                 IntentHelper.openMyCoinActivity(getContext());
@@ -95,6 +147,13 @@ public class PersonCenterActivity extends BaseActivity {
                 IntentHelper.openVersionInfoActivity(getContext());
                 break;
             case R.id.text_logout:
+                if (UserInfo.isLogin()){
+                    UserInfo.clearUserInfo();
+                    reloadView();
+                }else {
+                    IntentHelper.openLoginActivity(getContext());
+                }
+
                 break;
         }
     }
