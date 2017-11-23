@@ -2,8 +2,8 @@ package com.jyt.baseapp.view.activity;
 
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,21 +24,23 @@ import com.jyt.baseapp.model.RoomModel;
 import com.jyt.baseapp.model.impl.RoomModelImpl;
 import com.jyt.baseapp.util.DensityUtil;
 import com.jyt.baseapp.util.L;
-import com.jyt.baseapp.util.ScreenUtils;
+import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.util.UserInfo;
 import com.jyt.baseapp.view.dialog.RechargeCoinDialog;
 import com.jyt.baseapp.view.widget.CircleProgressView;
+import com.jyt.baseapp.view.widget.WaWaPlayerVideoView;
 import com.jyt.baseapp.waWaJiControl.WaWaJiControlClient;
-import com.tencent.rtmp.TXLivePlayer;
-import com.tencent.rtmp.ui.TXCloudVideoView;
+import com.netease.neliveplayer.sdk.NELivePlayer;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
+
 
 /**
  * Created by chenweiqi on 2017/11/8.
@@ -47,8 +49,8 @@ import butterknife.OnTouch;
 public class RoomActivity extends BaseActivity {
     @BindView(R.id.img_help)
     ImageView imgHelp;
-    @BindView(R.id.v_txCloudVideoView)
-    TXCloudVideoView vTxCloudVideoView;
+    @BindView(R.id.v_surfaceView)
+    SurfaceView surfaceView;
     @BindView(R.id.img_back2)
     ImageView imgBack2;
     @BindView(R.id.text_roomIndex)
@@ -107,6 +109,10 @@ public class RoomActivity extends BaseActivity {
 
     String camUrl;
 
+    //网易播放器
+    private WaWaPlayerVideoView mLivePlayer = null;
+
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_room;
@@ -124,12 +130,17 @@ public class RoomActivity extends BaseActivity {
         waWaJiControlClient = new WaWaJiControlClient(getContext());
         int dp_5 = DensityUtil.dpToPx(getContext(),5);
 
-        vTxCloudVideoView.setRenderMode(TXCloudVideoView.ACCESSIBILITY_LIVE_REGION_ASSERTIVE);
-        vTxCloudVideoView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (ScreenUtils.getScreenWidth(getContext())-dp_5*2)* 481 / 366));
 
         homeToyResult = getIntent().getParcelableExtra(IntentKey.KEY_ROOM);
         connectRoom();
 
+
+
+    }
+
+    private void initPlayer(String url){
+        mLivePlayer = new WaWaPlayerVideoView(getContext());
+        mLivePlayer.setDataSource(url);
 
     }
 
@@ -143,7 +154,9 @@ public class RoomActivity extends BaseActivity {
 
     //连接房间
     private void connectRoom() {
-
+        if (homeToyResult.getMachineList()==null||homeToyResult.getMachineList().size()==0){
+            return;
+        }
         roomModel.getToyDetailForAll(homeToyResult.getToyId(), homeToyResult.getMachineList().get(currentRoom).getMachineId(), new BeanCallback<BaseJson<ToyDetail>>() {
             @Override
             public void response(boolean success, BaseJson<ToyDetail> response, int id) {
@@ -162,20 +175,24 @@ public class RoomActivity extends BaseActivity {
         textToyName.setText(toyDetail.getToyName());
         textBalance.setText(toyDetail.getUserBalance());
         textPrice.setText(toyDetail.getNeedPay()+"/次");
-        createIpcam(camUrl.equals(toyDetail.getFlankFlowLink())?(camUrl=toyDetail.getMainFlowLink()):(camUrl=toyDetail.getFlankFlowLink()));
+
+        toyDetail.setMainFlowLink("rtmp://vb310f0bb.live.126.net/live/59f2cd32b16b4594be06c4c0aeaa157b");
+        toyDetail.setFlankFlowLink("rtmp://vb310f0bb.live.126.net/live/b38d3179430242ffaf7d507236162a88");
+
+        initPlayer(camUrl.equals(toyDetail.getFlankFlowLink())?(camUrl=toyDetail.getMainFlowLink()):(camUrl=toyDetail.getFlankFlowLink()));
+
         createRechargeDialog(toyDetail.getRule());
 
-        vWebView.loadData(toyDetail.getToyDesc(), "text/html", "UTF-8");
+        vWebView.loadData(toyDetail.getToyDesc(), "text/html; charset=UTF-8", "UTF-8");
+
 
         waWaJiControlClient.start("4AAZU15J37FG6L4K111A","123456");
     }
 
-    public void createIpcam(String url){
-        //创建player对象
-        TXLivePlayer mLivePlayer = new TXLivePlayer(getContext());
-        //关键player对象与界面view
-        mLivePlayer.setPlayerView(vTxCloudVideoView);
-        mLivePlayer.startPlay(url, TXLivePlayer.PLAY_TYPE_LIVE_RTMP);
+    public void changeIpCamUrl(String url){
+
+
+
 
     }
 
@@ -195,19 +212,16 @@ public class RoomActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        vTxCloudVideoView.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-//        vTxCloudVideoView.onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        vTxCloudVideoView.onDestroy();
     }
 
     @OnClick(R.id.img_back2)
@@ -225,7 +239,7 @@ public class RoomActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.img_changeChannel:
                 //更换视频源   主次摄像头切换
-                createIpcam(camUrl.equals(toyDetail.getFlankFlowLink())?(camUrl=toyDetail.getMainFlowLink()):(camUrl=toyDetail.getFlankFlowLink()));
+                changeIpCamUrl(camUrl.equals(toyDetail.getFlankFlowLink())?(camUrl=toyDetail.getMainFlowLink()):(camUrl=toyDetail.getFlankFlowLink()));
                   break;
             case R.id.img_help:
                 break;

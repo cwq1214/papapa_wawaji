@@ -41,12 +41,12 @@ public class RoomModelImpl implements RoomModel {
 
     @Override
     public void quitRoom(String machineId, Callback callback) {
-        OkHttpUtils.get().url(Api.domain+Api.quitRoom).addParams("machineId",machineId).build().execute(callback);
+        OkHttpUtils.get().url(Api.domain+Api.quitRoom).addParams("machineId",machineId).tag(context).build().execute(callback);
     }
 
     @Override
     public void afterGrabToy(String machineId, Callback callback) {
-        OkHttpUtils.get().url(Api.domain+Api.afterGrabToSetState).addParams("machineId",machineId).build().execute(callback);
+        OkHttpUtils.get().url(Api.domain+Api.afterGrabToSetState).addParams("machineId",machineId).tag(context).build().execute(callback);
 
     }
 }

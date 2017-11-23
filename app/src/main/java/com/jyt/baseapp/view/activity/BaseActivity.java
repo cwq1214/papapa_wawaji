@@ -223,6 +223,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         return this;
     }
 
+    public void refreshFragment(int index){
+
+    }
+
     abstract protected int getLayoutId();
 
     abstract protected View getContentView();

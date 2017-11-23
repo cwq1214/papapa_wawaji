@@ -25,12 +25,17 @@ public class PersonalInfoModelImpl implements PersonalInfoModel {
 
     @Override
     public void getUserInfo(Callback callback) {
-        OkHttpUtils.get().url(Api.domain+Api.personalInfo).build().execute(callback);
+        OkHttpUtils.get().url(Api.domain+Api.personalInfo).tag(context).build().execute(callback);
     }
 
     @Override
     public void modifyUserNameOrUserImage(String imgUrl, String username, Callback callback) {
-        OkHttpUtils.get().url(Api.domain+Api.modifyUserNameOrImage).build().execute(callback);
+        OkHttpUtils.get().url(Api.domain+Api.modifyUserNameOrImage).tag(context).build().execute(callback);
 
+    }
+
+    @Override
+    public void getUserCoinTransactionDetails(Callback callback) {
+        OkHttpUtils.get().url(Api.domain+Api.userCoinDetail).tag(context).build().execute(callback);
     }
 }

@@ -3,6 +3,8 @@ package com.jyt.baseapp.bean.json;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * Created by chenweiqi on 2017/11/15.
  */
@@ -14,6 +16,132 @@ public class Order implements Parcelable{
     private String createdTime;
     private String sequeue;
     private int orderType;
+
+
+    private String textReceiver;//是否发货：1代表是0代表不是
+    private String trackingTime;//发货时间
+    private String address;//地址
+    private String contactPerson;//联系人
+    private String contactMobile;//联系电话
+    private String comfrimStatus;//确认状态：1代表是0代表不是
+    private String status;//订单状态（中文）
+    private List<OrderProgress> logistics;//物流信息
+
+    protected Order(Parcel in) {
+        toyName = in.readString();
+        toyImg = in.readString();
+        orderNo = in.readString();
+        createdTime = in.readString();
+        sequeue = in.readString();
+        orderType = in.readInt();
+        textReceiver = in.readString();
+        trackingTime = in.readString();
+        address = in.readString();
+        contactPerson = in.readString();
+        contactMobile = in.readString();
+        comfrimStatus = in.readString();
+        status = in.readString();
+        logistics = in.createTypedArrayList(OrderProgress.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(toyName);
+        dest.writeString(toyImg);
+        dest.writeString(orderNo);
+        dest.writeString(createdTime);
+        dest.writeString(sequeue);
+        dest.writeInt(orderType);
+        dest.writeString(textReceiver);
+        dest.writeString(trackingTime);
+        dest.writeString(address);
+        dest.writeString(contactPerson);
+        dest.writeString(contactMobile);
+        dest.writeString(comfrimStatus);
+        dest.writeString(status);
+        dest.writeTypedList(logistics);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Order> CREATOR = new Creator<Order>() {
+        @Override
+        public Order createFromParcel(Parcel in) {
+            return new Order(in);
+        }
+
+        @Override
+        public Order[] newArray(int size) {
+            return new Order[size];
+        }
+    };
+
+    public String getTextReceiver() {
+        return textReceiver;
+    }
+
+    public void setTextReceiver(String textReceiver) {
+        this.textReceiver = textReceiver;
+    }
+
+    public String getTrackingTime() {
+        return trackingTime;
+    }
+
+    public void setTrackingTime(String trackingTime) {
+        this.trackingTime = trackingTime;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
+    }
+
+    public String getContactMobile() {
+        return contactMobile;
+    }
+
+    public void setContactMobile(String contactMobile) {
+        this.contactMobile = contactMobile;
+    }
+
+    public String getComfrimStatus() {
+        return comfrimStatus;
+    }
+
+    public void setComfrimStatus(String comfrimStatus) {
+        this.comfrimStatus = comfrimStatus;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public List<OrderProgress> getLogistics() {
+        return logistics;
+    }
+
+    public void setLogistics(List<OrderProgress> logistics) {
+        this.logistics = logistics;
+    }
 
     public String getToyName() {
         return toyName;
@@ -76,39 +204,5 @@ public class Order implements Parcelable{
         return text;
     }
 
-    protected Order(Parcel in) {
-        toyName = in.readString();
-        toyImg = in.readString();
-        orderNo = in.readString();
-        createdTime = in.readString();
-        sequeue = in.readString();
-        orderType = in.readInt();
-    }
 
-    public static final Creator<Order> CREATOR = new Creator<Order>() {
-        @Override
-        public Order createFromParcel(Parcel in) {
-            return new Order(in);
-        }
-
-        @Override
-        public Order[] newArray(int size) {
-            return new Order[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(toyName);
-        dest.writeString(toyImg);
-        dest.writeString(orderNo);
-        dest.writeString(createdTime);
-        dest.writeString(sequeue);
-        dest.writeInt(orderType);
-    }
 }

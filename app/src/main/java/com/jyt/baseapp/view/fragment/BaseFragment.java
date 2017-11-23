@@ -72,6 +72,10 @@ public abstract class BaseFragment extends Fragment {
             }
     }
 
+    public void refresh(){
+
+    }
+
     protected abstract int getLayoutId();
 
     protected abstract void firstInit();

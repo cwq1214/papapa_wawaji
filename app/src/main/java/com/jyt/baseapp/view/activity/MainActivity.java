@@ -23,6 +23,7 @@ import com.jyt.baseapp.model.MainActModel;
 import com.jyt.baseapp.model.impl.MainActModelImpl;
 import com.jyt.baseapp.util.ImageLoader;
 import com.jyt.baseapp.util.L;
+import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.view.dialog.RechargeCoinDialog;
 import com.jyt.baseapp.view.fragment.RoomListFragment;
 import com.jyt.baseapp.view.widget.NoScrollViewPager;
@@ -121,6 +122,7 @@ public class MainActivity extends BaseActivity {
                     }
                     vBanner.setData(imgs);
                 }
+                T.showShort(getContext(),response.getForUser());
             }
         });
     }

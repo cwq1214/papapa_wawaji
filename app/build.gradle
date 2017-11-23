@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     sourceSets {
         main {
-            jniLibs.srcDirs = ['libs']
+            jniLibs.srcDirs = ['libs/neteaseplayer','libs/wawacontrol']
         }
     }
 
@@ -17,7 +17,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-
+        ndk{
+            abiFilters "armeabi"
+        }
 
     }
 
@@ -33,7 +35,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(include: ['*/*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -50,6 +52,7 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:2.0.2'
     compile 'cn.bingoogolapple:bga-banner:2.1.8@aar'
     compile 'com.lcodecorex:tkrefreshlayout:1.0.7'
+    compile 'com.orhanobut:hawk:2.0.1'
 
 
 }

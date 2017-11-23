@@ -35,6 +35,9 @@ public abstract class BeanCallback<T> extends Callback<T> {
     public BeanCallback() {
         this(null,false,null);
     }
+    public BeanCallback(Context context){
+        this(context,true,null);
+    }
     public BeanCallback(Context context, boolean cancelable) {
         this(context,cancelable,null);
     }
@@ -69,6 +72,9 @@ public abstract class BeanCallback<T> extends Callback<T> {
     @Override
     public T parseNetworkResponse(Response response, int id) throws Exception {
         Type type = this.getClass().getGenericSuperclass();
+//        if (true) {
+//            throw new RuntimeException("人工异常");
+//        }
         String bodyString = response.body().string() ;
             if (type instanceof ParameterizedType) {
                 //如果用户写了泛型，就会进入这里，否者不会执行
@@ -84,8 +90,7 @@ public abstract class BeanCallback<T> extends Callback<T> {
                     }
                 }catch (Exception e){
                     e.printStackTrace();
-                    Class c = (Class) ((ParameterizedType) beanType).getRawType();
-                    Object object =c.newInstance();
+                    Object object =createReturnResultByTemplate();
                     if (object instanceof BaseJson){
                         ((BaseJson) object).setForUser(e.getMessage());
                     }
@@ -95,25 +100,38 @@ public abstract class BeanCallback<T> extends Callback<T> {
                 //默认返回字符串
                 return (T) bodyString;
             }
-
     }
 
 
     @Override
     public void onError(Call call, Exception e, int id) {
+        L.e("error",e.getMessage());
+        Object object = createReturnResultByTemplate();
+        if (object instanceof BaseJson){
+            ((BaseJson) object).setForUser(e.getMessage());
+        }
+        response(false, (T) object,id);
+    }
+
+    /**
+     * 根据范型创建一个新对象
+     * @return
+     */
+    private T createReturnResultByTemplate(){
         Type type = this.getClass().getGenericSuperclass();
         ParameterizedType parameterizedType = (ParameterizedType) type;
         Type beanType = parameterizedType.getActualTypeArguments()[0];
-        Class c = (Class) ((ParameterizedType) beanType).getRawType();
-        try {
-            Object object =c.newInstance();
-            if (object instanceof BaseJson){
-                ((BaseJson) object).setForUser(e.getMessage());
-            }
-            response(false, (T)object,id);
-        } catch (Exception e1) {
-            e1.printStackTrace();
+        L.e(beanType.getClass().getName());
+        while (!(beanType instanceof Class)){
+            beanType = ((ParameterizedType) beanType).getRawType();
         }
+        Class c = (Class) beanType;
+        try {
+            return (T) c.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override

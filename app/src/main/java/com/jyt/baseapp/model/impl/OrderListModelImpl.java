@@ -28,16 +28,22 @@ public class OrderListModelImpl implements OrderListModel {
         if (sequeue==null){
             sequeue = "";
         }
-        OkHttpUtils.get().url(Api.domain+Api.orderList).addParams("type",type+"").addParams("sequeue",sequeue).build().execute(callback);
+        OkHttpUtils.get().url(Api.domain+Api.orderList).addParams("type",type+"").addParams("sequeue",sequeue).tag(context).build().execute(callback);
     }
 
     @Override
     public void getOrderDetail(String orderNo, Callback callback) {
-        OkHttpUtils.get().url(Api.domain+Api.orderDetail).addParams("orderNo",orderNo).build().execute(callback);
+        OkHttpUtils.get().url(Api.domain+Api.orderDetail).addParams("orderNo",orderNo).tag(context).build().execute(callback);
     }
 
     @Override
     public void receiveOrder(String orderNo, Callback callback) {
-        OkHttpUtils.get().url(Api.domain+Api.receiveOrder).addParams("orderNo",orderNo).build().execute(callback);
+        OkHttpUtils.get().url(Api.domain+Api.receiveOrder).addParams("orderNo",orderNo).tag(context).build().execute(callback);
+    }
+
+    @Override
+    public void submitOrder(String orderNo, String addressId, Callback callback) {
+        OkHttpUtils.post().url(Api.domain+Api.submitOrder).addParams("orderNo",orderNo).addParams("addressId",addressId).tag(context).build().execute(callback);
+
     }
 }

@@ -1,5 +1,9 @@
 package com.jyt.baseapp.view.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
@@ -11,9 +15,11 @@ import com.jyt.baseapp.api.BeanCallback;
 import com.jyt.baseapp.bean.BaseJson;
 import com.jyt.baseapp.bean.json.Order;
 import com.jyt.baseapp.helper.IntentHelper;
+import com.jyt.baseapp.helper.IntentKey;
 import com.jyt.baseapp.itemDecoration.RecyclerViewDivider;
 import com.jyt.baseapp.model.OrderListModel;
 import com.jyt.baseapp.util.T;
+import com.jyt.baseapp.view.activity.BaseActivity;
 import com.jyt.baseapp.view.viewholder.BaseViewHolder;
 import com.jyt.baseapp.view.widget.RefreshRecyclerView;
 import com.jyt.baseapp.view.widget.WhiteRefreshView;
@@ -40,6 +46,7 @@ public class OrderListFragment extends BaseFragment {
     int type;
     String sequeue;
     OrderListModel orderListModel;
+    RefreshOrderBroadcastReceiver broadcastReceiver;
 
     BeanCallback beanCallback_refresh = new BeanCallback<BaseJson<List<Order>>>() {
         @Override
@@ -90,10 +97,13 @@ public class OrderListFragment extends BaseFragment {
             public void onClick(BaseViewHolder holder) {
                 Order order =  (Order) holder.getData();
                 if (order.getOrderType()==TYPE_READY){
-                    IntentHelper.openDollDetailActivity(getContext(),order);
+//                    IntentHelper.openDollDetailActivity(getContext(),order);
                 }
+                IntentHelper.openOrderDetailActivity(OrderListFragment.this,order,0);
+
             }
         });
+        //确认收货
         adapter.setOnConfirmReceiveGoodsClickListener(new BaseViewHolder.OnViewHolderClickListener() {
             @Override
             public void onClick(BaseViewHolder holder) {
@@ -104,6 +114,9 @@ public class OrderListFragment extends BaseFragment {
                         public void response(boolean success, BaseJson response, int id) {
                             if (response.isRet()){
                                 vRefreshRecyclerView.getRefreshLayout().startRefresh();
+                                //刷新已收货列表
+//                                ((BaseActivity) getActivity()).refreshFragment(2);
+                                getActivity().sendBroadcast(new Intent(IntentKey.KEY_TYPE+type));
                             }else{
                                 T.showShort(getContext(),response.getForUser());
                             }
@@ -117,7 +130,9 @@ public class OrderListFragment extends BaseFragment {
         type = getArguments().getInt(IntentHelper.KEY_TYPE,-1);
 
 
-
+        broadcastReceiver = new RefreshOrderBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter(IntentHelper.KEY_TYPE+type);
+        getActivity().registerReceiver(broadcastReceiver,intentFilter);
 
         vRefreshRecyclerView.setRefreshListener(new RefreshListenerAdapter() {
             @Override
@@ -134,11 +149,30 @@ public class OrderListFragment extends BaseFragment {
             }
         });
 
-        vRefreshRecyclerView.getRefreshLayout().startRefresh();
+        refresh();
+    }
 
+    @Override
+    public void refresh() {
+        vRefreshRecyclerView.getRefreshLayout().startRefresh();
     }
 
     public void setOrderListModel(OrderListModel orderListModel) {
         this.orderListModel = orderListModel;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (broadcastReceiver!=null)
+            getActivity().unregisterReceiver(broadcastReceiver);
+    }
+
+    class RefreshOrderBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            refresh();
+        }
     }
 }

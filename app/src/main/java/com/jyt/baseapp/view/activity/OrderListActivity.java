@@ -11,6 +11,7 @@ import com.jyt.baseapp.helper.IntentKey;
 import com.jyt.baseapp.model.BaseModel;
 import com.jyt.baseapp.model.OrderListModel;
 import com.jyt.baseapp.model.impl.OrderListModelImpl;
+import com.jyt.baseapp.view.fragment.BaseFragment;
 import com.jyt.baseapp.view.fragment.OrderListFragment;
 import com.jyt.baseapp.view.widget.NoScrollViewPager;
 
@@ -80,5 +81,10 @@ public class OrderListActivity extends BaseActivity {
         List list = new ArrayList();
         list.add(orderListModel = new OrderListModelImpl());
         return list;
+    }
+
+    @Override
+    public void refreshFragment(int index) {
+        ((BaseFragment) adapter.getFragments().get(index)).refresh();
     }
 }

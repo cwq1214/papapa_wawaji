@@ -9,4 +9,6 @@ public class IntentKey {
     public static final String KEY_ROOM = "KEY_ROOM";
     public static final String KEY_DOLL = "KEY_DOLL";
     public static final String KEY_TYPE = "KEY_TYPE";
+    public static final String KEY_ORDER = "KEY_ORDER";
+    public static final String KEY_NEED_SET_RESULT = "KEY_NEED_SET_RESULT";
 }

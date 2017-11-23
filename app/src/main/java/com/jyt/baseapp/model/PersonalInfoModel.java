@@ -12,4 +12,11 @@ public interface PersonalInfoModel extends BaseModel {
 
     void modifyUserNameOrUserImage(String imgUrl,String username, Callback callback);
 
+    /**
+     * 获取我的娃娃币内容（娃娃币流水
+     * @param callback
+     */
+    void getUserCoinTransactionDetails(Callback callback);
+
+
 }

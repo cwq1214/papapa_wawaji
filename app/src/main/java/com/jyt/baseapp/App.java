@@ -5,6 +5,7 @@ import android.widget.LinearLayout;
 
 import com.jyt.baseapp.util.ImageLoader;
 import com.jyt.baseapp.util.L;
+import com.jyt.baseapp.util.OkHttpPostInterceptor;
 import com.jyt.baseapp.util.UserInfo;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.log.LoggerInterceptor;
@@ -75,7 +76,7 @@ public class App  extends Application {
             }
         }).sslSocketFactory(createSSLSocketFactory());
 
-
+        builder.addInterceptor(new OkHttpPostInterceptor());
         //统一请求头添加header
         builder.addInterceptor(new Interceptor() {
             @Override

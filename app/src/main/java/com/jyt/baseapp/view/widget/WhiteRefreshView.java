@@ -111,6 +111,7 @@ public class WhiteRefreshView extends FrameLayout implements IBottomView, IHeade
     }
 
     public void setUnRefreshStyle(){
+        imgLoadingImg.setRotation(0);
         imgLoadingImg.setImageDrawable(getResources().getDrawable(preRefreshImgResId));
         textLoadingText.setText(preRefreshText);
     }

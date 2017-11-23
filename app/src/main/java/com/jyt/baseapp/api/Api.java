@@ -48,4 +48,22 @@ public class Api {
 
     //确认订单
     public static final String receiveOrder = "api/order/comfirm";
+
+    //提交发货
+    public static final String submitOrder = "api/order/submit";
+
+    //获取我的娃娃币内容（娃娃币流水）
+    public static final String userCoinDetail = "api/user/water";
+
+    //我的地址
+    public static final String userAddressList = "api/user/address";
+
+    //修改、添加个人地址
+    public static final String modifyAddress = "api/user/address";
+
+    // 设置默认地址
+    public static final String setDefaultAddress = "api/user/set_default_address";
+
+    //删除地址
+    public static final String deleteAddress = "api/user/del_address";
 }

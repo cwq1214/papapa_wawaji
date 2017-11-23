@@ -42,6 +42,7 @@
             android:src="@mipmap/location" />
 
         <TextView
+            android:id="@+id/text_address"
             style="@style/commonText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,6 +63,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/v_setDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -69,6 +71,7 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/img_defaultImg"
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:src="@mipmap/circle_check_nor" />
@@ -88,12 +91,14 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/text_modify"
                 style="@style/commonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="编辑" />
 
             <TextView
+                android:id="@+id/text_delete"
                 style="@style/commonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

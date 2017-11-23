@@ -4,10 +4,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.bean.json.Order;
+import com.jyt.baseapp.util.DensityUtil;
 import com.jyt.baseapp.util.ImageLoader;
 import com.jyt.baseapp.view.viewholder.BaseViewHolder;
 
@@ -31,11 +33,17 @@ public class OrderItemViewHolder extends BaseViewHolder {
     TextView textDate;
     @BindView(R.id.text_received)
     TextView textReceived;
+    OnViewHolderClickListener onConfirmReceiveGoodsClickListener;
 
-    BaseViewHolder.OnViewHolderClickListener onConfirmReceiveGoodsClickListener;
-
+    int borderRadius;
+    int borderWidth;
+    int color;
     public OrderItemViewHolder(ViewGroup parent) {
         super(LayoutInflater.from(parent.getContext()).inflate(R.layout.holder_order_list_item, parent, false));
+
+        borderRadius = DensityUtil.dpToPx(itemView.getContext(),4);
+        borderWidth = DensityUtil.dpToPx(itemView.getContext(),1);
+        color = itemView.getResources().getColor(R.color.colorPrimary);
     }
 
     @Override
@@ -47,23 +55,24 @@ public class OrderItemViewHolder extends BaseViewHolder {
         textGoodsName.setText(order.getToyName());
         textState.setText(order.getOrderTypeText());
 
-        ImageLoader.getInstance().loadWhiteRadiusBorder(imgGoodsImg,order.getToyImg());
+        ImageLoader.getInstance().loadWithRadiusBorder(imgGoodsImg, order.getToyImg(),borderRadius,borderWidth,color);
         textId.setText(order.getOrderNo());
         textDate.setText(order.getCreatedTime());
 
-        if (order.getOrderType() == 2){
+        if (order.getOrderType() == 2) {
             textReceived.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             textReceived.setVisibility(View.INVISIBLE);
         }
     }
 
     @OnClick(R.id.text_received)
-    public void onConfirmClick(){
-        if (onConfirmReceiveGoodsClickListener!=null)
+    public void onConfirmClick() {
+        if (onConfirmReceiveGoodsClickListener != null)
             onConfirmReceiveGoodsClickListener.onClick(this);
     }
-    public void setOnConfirmReceiveGoodsClickListener(BaseViewHolder.OnViewHolderClickListener onConfirmReceiveGoodsClickListener) {
+
+    public void setOnConfirmReceiveGoodsClickListener(OnViewHolderClickListener onConfirmReceiveGoodsClickListener) {
         this.onConfirmReceiveGoodsClickListener = onConfirmReceiveGoodsClickListener;
     }
 

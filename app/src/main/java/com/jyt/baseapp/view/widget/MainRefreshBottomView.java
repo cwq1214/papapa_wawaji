@@ -88,6 +88,7 @@ public class MainRefreshBottomView extends FrameLayout implements IBottomView {
     }
 
     public void setUnRefreshStyle(){
+        imgLoadingImg.setRotation(0);
         imgLoadingImg.setImageDrawable(getResources().getDrawable(preRefreshImgResId));
         textLoadingText.setText(preRefreshText);
     }

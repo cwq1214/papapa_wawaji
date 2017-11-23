@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 public class T {
     public static void showShort(Context context , String message){
-        if (TextUtils.isEmpty(message)){
+        if (TextUtils.isEmpty(message)||"请求成功".equals(message)){
             return;
         }
         Toast t = Toast.makeText(context,message,Toast.LENGTH_SHORT);

@@ -13,10 +13,10 @@
         android:text="61"
         android:textColor="@color/white"
         android:textSize="50dp" />
-    <android.support.v7.widget.RecyclerView
+    <com.jyt.baseapp.view.widget.RefreshRecyclerView
         android:background="@drawable/bg_white_4radius"
         android:layout_margin="10dp"
         android:id="@+id/v_coinTransactionDetails"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent"></com.jyt.baseapp.view.widget.RefreshRecyclerView>
 </LinearLayout>

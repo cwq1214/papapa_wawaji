@@ -14,11 +14,11 @@ import com.zhy.http.okhttp.callback.Callback;
  */
 
 public class LoginLoutModelImpl implements LoginLogoutModel {
-
+    Context context;
 
     @Override
     public void loginByMobile(String mobile, String pwd, Callback callback) {
-        OkHttpUtils.post().url(Api.domain+Api.login).addParams("mobile",mobile).addParams("pwd",pwd).build().execute(callback);
+        OkHttpUtils.post().url(Api.domain+Api.login).addParams("mobile",mobile).addParams("pwd",pwd).tag(context).build().execute(callback);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class LoginLoutModelImpl implements LoginLogoutModel {
 
     @Override
     public void register(String mobile, String verifyCode, String pwd, Callback callback) {
-        OkHttpUtils.post().url(Api.domain+Api.register).addParams("mobile",mobile).addParams("pwd",pwd).addParams("verifyCode",verifyCode).build().execute(callback);
+        OkHttpUtils.post().url(Api.domain+Api.register).addParams("mobile",mobile).addParams("pwd",pwd).addParams("verifyCode",verifyCode).tag(context).build().execute(callback);
 
     }
 
@@ -39,16 +39,16 @@ public class LoginLoutModelImpl implements LoginLogoutModel {
 
     @Override
     public void getVerifyCode(String mobile, Callback callback) {
-        OkHttpUtils.post().url(Api.domain+Api.getCode).addParams("mobile",mobile).build().execute(callback);
+        OkHttpUtils.post().url(Api.domain+Api.getCode).addParams("mobile",mobile).tag(context).build().execute(callback);
     }
 
     @Override
     public void onStart(Context context) {
-
+        this.context = context;
     }
 
     @Override
     public void onDestroy() {
-
+        OkHttpUtils.getInstance().cancelTag(context);
     }
 }

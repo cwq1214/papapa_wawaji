@@ -16,6 +16,9 @@ public class PersonalInfo  implements Parcelable{
     private String useDesc;//使用说明
     private String contact;//联系我们
     private String version;//版本信息
+    private String getCount;//成功抓取次数
+    private String balance;//用户余额
+
 
     protected PersonalInfo(Parcel in) {
         userId = in.readString();
@@ -26,6 +29,8 @@ public class PersonalInfo  implements Parcelable{
         useDesc = in.readString();
         contact = in.readString();
         version = in.readString();
+        getCount = in.readString();
+        balance = in.readString();
     }
 
     @Override
@@ -38,6 +43,8 @@ public class PersonalInfo  implements Parcelable{
         dest.writeString(useDesc);
         dest.writeString(contact);
         dest.writeString(version);
+        dest.writeString(getCount);
+        dest.writeString(balance);
     }
 
     @Override
@@ -119,5 +126,21 @@ public class PersonalInfo  implements Parcelable{
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getGetCount() {
+        return getCount;
+    }
+
+    public void setGetCount(String getCount) {
+        this.getCount = getCount;
+    }
+
+    public String getBalance() {
+        return balance;
+    }
+
+    public void setBalance(String balance) {
+        this.balance = balance;
     }
 }

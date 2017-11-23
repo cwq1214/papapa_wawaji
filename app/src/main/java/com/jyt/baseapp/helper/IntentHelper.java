@@ -12,6 +12,8 @@ import com.jyt.baseapp.view.activity.EditAddressActivity;
 import com.jyt.baseapp.view.activity.LoginActivity;
 import com.jyt.baseapp.view.activity.MainActivity;
 import com.jyt.baseapp.view.activity.MyCoinActivity;
+import com.jyt.baseapp.view.activity.MyWaWaActivity;
+import com.jyt.baseapp.view.activity.OrderDetailActivity;
 import com.jyt.baseapp.view.activity.OrderListActivity;
 import com.jyt.baseapp.view.activity.PersonCenterActivity;
 import com.jyt.baseapp.view.activity.ResetPsdActivity;
@@ -51,10 +53,15 @@ public class IntentHelper extends IntentKey{
         context.startActivity(getIntent(context, AddressListActivity.class));
     }
     public static void openAddressListActivityForResult(Object context,int requestCode){
+        Intent intent;
         if (context instanceof Activity){
-            ((Activity) context).startActivityForResult(getIntent((Context) context, AddressListActivity.class),requestCode);
+            intent = getIntent((Context) context, AddressListActivity.class);
+            intent.putExtra(IntentKey.KEY_NEED_SET_RESULT,true);
+            ((Activity) context).startActivityForResult(intent,requestCode);
         }else if (context instanceof Fragment){
-            ((Fragment) context).startActivityForResult(getIntent(((Fragment) context).getContext(), AddressListActivity.class),requestCode);
+            intent = getIntent((Context) context, AddressListActivity.class);
+            intent.putExtra(IntentKey.KEY_NEED_SET_RESULT,true);
+            ((Fragment) context).startActivityForResult(intent,requestCode);
         }
     }
 
@@ -85,10 +92,32 @@ public class IntentHelper extends IntentKey{
         context.startActivity(getIntent(context, VersionInfoActivity.class));
     }
 
+    public static void openMyWaWaActivity(Context context){
+        context.startActivity(getIntent(context, MyWaWaActivity.class));
+
+    }
+
+    public static void openOrderDetailActivity(Object context , Parcelable order,int requestCode){
+        Intent intent = getIntent();
+        intent.putExtra(IntentKey.KEY_ORDER,order);
+        openActivityForResult(context,OrderDetailActivity.class,intent,requestCode);
+    }
+
     public static Intent getIntent(){
         return new Intent();
     }
     public static Intent getIntent(Context context,Class aClass){
         return new Intent(context,aClass);
+    }
+    private static void openActivityForResult(Object context,Class openClass,Intent intent,int requestCode){
+        if (context instanceof Activity){
+            intent.setClass((Context) context,openClass);
+            ((Activity) context).startActivityForResult(intent,requestCode);
+        }else if (context instanceof Fragment){
+            intent.setClass(((Fragment) context).getContext(),openClass);
+            ((Fragment) context).startActivityForResult(intent,requestCode);
+        }
+
+
     }
 }

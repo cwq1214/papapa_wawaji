@@ -208,6 +208,11 @@ public class RefreshRecyclerView extends LinearLayout {
         return this;
     }
 
+    public void notifyDataSetChanged(){
+        adapter.notifyDataSetChanged();
+        showEmptyViewWhenListEmpty();
+    }
+
     public void showEmptyViewWhenListEmpty(){
         if (!isShowEmptyHint()){
             vEmptyView.setVisibility(GONE);
