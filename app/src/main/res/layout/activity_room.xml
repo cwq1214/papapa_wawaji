@@ -41,6 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <ScrollView
+            android:id="@+id/v_mainScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorPrimary"
@@ -63,12 +64,19 @@
                         android:layout_margin="5dp"
                         android:background="@drawable/bg_white_4radius">
 
-                        <SurfaceView
-                            android:id="@+id/v_surfaceView"
+                        <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="#f1f1f1"
-                            android:minHeight="481dp"></SurfaceView>
+                            android:minHeight="481dp"
+                            android:background="@color/gray"
+                            >
+                            <com.tencent.rtmp.ui.TXCloudVideoView
+                                android:id="@+id/v_player"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                ></com.tencent.rtmp.ui.TXCloudVideoView>
+                        </FrameLayout>
+
 
                         <!--人数 换房-->
                         <LinearLayout
@@ -314,7 +322,7 @@
 
 
         <!--底部按钮-->
-        <include layout="@layout/layout_bottom_control" />
+        <include layout="@layout/layout_bottom_control" android:visibility="gone"/>
 
     </RelativeLayout>
 

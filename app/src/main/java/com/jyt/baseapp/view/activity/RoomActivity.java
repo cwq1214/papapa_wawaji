@@ -1,13 +1,15 @@
 package com.jyt.baseapp.view.activity;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.MotionEvent;
-import android.view.SurfaceView;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.jyt.baseapp.R;
@@ -26,13 +28,17 @@ import com.jyt.baseapp.util.DensityUtil;
 import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.util.UserInfo;
+import com.jyt.baseapp.view.dialog.CaughtSuccessDialog;
 import com.jyt.baseapp.view.dialog.RechargeCoinDialog;
 import com.jyt.baseapp.view.widget.CircleProgressView;
-import com.jyt.baseapp.view.widget.WaWaPlayerVideoView;
 import com.jyt.baseapp.waWaJiControl.WaWaJiControlClient;
-import com.netease.neliveplayer.sdk.NELivePlayer;
+import com.tencent.rtmp.TXLiveConstants;
+import com.tencent.rtmp.TXLivePlayer;
+import com.tencent.rtmp.ui.TXCloudVideoView;
 
-
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +55,8 @@ import butterknife.OnTouch;
 public class RoomActivity extends BaseActivity {
     @BindView(R.id.img_help)
     ImageView imgHelp;
-    @BindView(R.id.v_surfaceView)
-    SurfaceView surfaceView;
+    @BindView(R.id.v_player)
+    TXCloudVideoView mVideoView;
     @BindView(R.id.img_back2)
     ImageView imgBack2;
     @BindView(R.id.text_roomIndex)
@@ -97,6 +103,11 @@ public class RoomActivity extends BaseActivity {
     RelativeLayout vBottomControl;
     @BindView(R.id.text_toyName)
     TextView textToyName;
+    @BindView(R.id.v_mainScrollView)
+    ScrollView vMainScrollView;
+    @BindView(R.id.v_doneLayout)
+    RelativeLayout vDoneLayout;
+
 
     //充值对话框
     RechargeCoinDialog rechargeCoinDialog;
@@ -106,12 +117,12 @@ public class RoomActivity extends BaseActivity {
     ToyDetail toyDetail;
     WaWaJiControlClient waWaJiControlClient;
 
+    String TAG = getClass().getSimpleName();
 
+    private boolean isScreenOff;
+    private boolean isBackground;
+    TXLivePlayer mLivePlayer;
     String camUrl;
-
-    //网易播放器
-    private WaWaPlayerVideoView mLivePlayer = null;
-
 
     @Override
     protected int getLayoutId() {
@@ -128,19 +139,55 @@ public class RoomActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         waWaJiControlClient = new WaWaJiControlClient(getContext());
-        int dp_5 = DensityUtil.dpToPx(getContext(),5);
+        waWaJiControlClient.setOnWaWaPlayedListener(new WaWaJiControlClient.OnWaWaPlayedListener() {
+            @Override
+            public void onPlayed(boolean caught) {
+                setCaughtResult(caught);
+                showResultDialog(caught);
+                setWaWaControl(false);
+            }
+        });
+        int dp_5 = DensityUtil.dpToPx(getContext(), 5);
+
+        FrameLayout parent = (FrameLayout) mVideoView.getParent();
+        parent.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                int width = right - left;
+                v.setLayoutParams(new RelativeLayout.LayoutParams(width, width * 481 / 366));
+                v.removeOnLayoutChangeListener(this);
+            }
+        });
 
 
         homeToyResult = getIntent().getParcelableExtra(IntentKey.KEY_ROOM);
         connectRoom();
 
 
-
     }
 
-    private void initPlayer(String url){
-        mLivePlayer = new WaWaPlayerVideoView(getContext());
-        mLivePlayer.setDataSource(url);
+    private void initPlayer(String url) {
+
+        //创建player对象
+        mLivePlayer = new TXLivePlayer(getActivity());
+
+        mLivePlayer.setRenderMode(TXLiveConstants.RENDER_MODE_FULL_FILL_SCREEN);
+        //关键player对象与界面view
+        mLivePlayer.setPlayerView(mVideoView);
+        mLivePlayer.setRenderRotation(TXLiveConstants.RENDER_ROTATION_LANDSCAPE);
+
+        mLivePlayer.startPlay(url, TXLivePlayer.PLAY_TYPE_LIVE_RTMP_ACC);
+
+        mVideoView.setRotationX(180);
+        mVideoView.setRotationY(180);
+    }
+
+    public void changeIpCamUrl(String url) {
+//        mVideoView.setVideoPath(url);
+        if (mLivePlayer != null) {
+            mLivePlayer.stopPlay(true);
+            mLivePlayer.startPlay(url, TXLivePlayer.PLAY_TYPE_LIVE_RTMP_ACC);
+        }
 
     }
 
@@ -154,7 +201,7 @@ public class RoomActivity extends BaseActivity {
 
     //连接房间
     private void connectRoom() {
-        if (homeToyResult.getMachineList()==null||homeToyResult.getMachineList().size()==0){
+        if (homeToyResult.getMachineList() == null || homeToyResult.getMachineList().size() == 0) {
             return;
         }
         roomModel.getToyDetailForAll(homeToyResult.getToyId(), homeToyResult.getMachineList().get(currentRoom).getMachineId(), new BeanCallback<BaseJson<ToyDetail>>() {
@@ -170,31 +217,24 @@ public class RoomActivity extends BaseActivity {
 
     //设置房间基本详情
     private void setRoomInfo(final ToyDetail toyDetail) {
-        camUrl ="";
+        camUrl = "";
 
         textToyName.setText(toyDetail.getToyName());
         textBalance.setText(toyDetail.getUserBalance());
-        textPrice.setText(toyDetail.getNeedPay()+"/次");
+        textPrice.setText(toyDetail.getNeedPay() + "/次");
 
-        toyDetail.setMainFlowLink("rtmp://vb310f0bb.live.126.net/live/59f2cd32b16b4594be06c4c0aeaa157b");
-        toyDetail.setFlankFlowLink("rtmp://vb310f0bb.live.126.net/live/b38d3179430242ffaf7d507236162a88");
+//        toyDetail.setMainFlowLink("rtmp://live.hkstv.hk.lxdns.com/live/hks");
+//        toyDetail.setFlankFlowLink("rtmp://live.hkstv.hk.lxdns.com/live/hks");
 
-        initPlayer(camUrl.equals(toyDetail.getFlankFlowLink())?(camUrl=toyDetail.getMainFlowLink()):(camUrl=toyDetail.getFlankFlowLink()));
+        initPlayer(camUrl.equals(toyDetail.getFlankFlowLink()) ? (camUrl = toyDetail.getMainFlowLink()) : (camUrl = toyDetail.getFlankFlowLink()));
 
         createRechargeDialog(toyDetail.getRule());
 
         vWebView.loadData(toyDetail.getToyDesc(), "text/html; charset=UTF-8", "UTF-8");
 
 
-        waWaJiControlClient.start("4AAZU15J37FG6L4K111A","123456");
     }
 
-    public void changeIpCamUrl(String url){
-
-
-
-
-    }
 
     public void createRechargeDialog(List<RechargePrice> rechargePrices) {
         rechargeCoinDialog = new RechargeCoinDialog(getContext());
@@ -212,16 +252,33 @@ public class RoomActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (mLivePlayer != null)
+            mLivePlayer.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        if (mLivePlayer != null)
+            mLivePlayer.pause();
+//        mVideoView.onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mLivePlayer != null)
+            mLivePlayer.stopPlay(true);
+        mVideoView.onDestroy();
+        waWaJiControlClient.stop();
+
+        if (toyDetail!=null)
+        roomModel.quitRoom(toyDetail.getMachineId(), new BeanCallback() {
+            @Override
+            public void response(boolean success, Object response, int id) {
+                L.e("quit");
+            }
+        });
     }
 
     @OnClick(R.id.img_back2)
@@ -230,7 +287,7 @@ public class RoomActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.img_changeChannel,R.id.img_help, R.id.v_changeRoom, R.id.v_recharge,  R.id.img_done})
+    @OnClick({R.id.v_playLayout, R.id.img_changeChannel, R.id.img_help, R.id.v_changeRoom, R.id.v_recharge, R.id.img_done})
     public void onViewClicked(View view) {
         if (!UserInfo.isLogin()) {
             IntentHelper.openLoginActivity(getContext());
@@ -239,8 +296,8 @@ public class RoomActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.img_changeChannel:
                 //更换视频源   主次摄像头切换
-                changeIpCamUrl(camUrl.equals(toyDetail.getFlankFlowLink())?(camUrl=toyDetail.getMainFlowLink()):(camUrl=toyDetail.getFlankFlowLink()));
-                  break;
+                changeIpCamUrl(camUrl.equals(toyDetail.getFlankFlowLink()) ? (camUrl = toyDetail.getMainFlowLink()) : (camUrl = toyDetail.getFlankFlowLink()));
+                break;
             case R.id.img_help:
                 break;
             case R.id.v_changeRoom:
@@ -253,40 +310,111 @@ public class RoomActivity extends BaseActivity {
             case R.id.img_top:
                 waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_TOP);
                 break;
-            case R.id.img_left:
-                break;
-            case R.id.img_right:
-                break;
-            case R.id.img_down:
-                break;
-            case R.id.img_done:
+            case R.id.v_playLayout:
+                playWaWaJi();
                 break;
         }
     }
 
-    @OnTouch({R.id.img_top, R.id.img_left, R.id.img_right, R.id.img_down,R.id.img_done})
-    public boolean onBottomControlTouch(View v, MotionEvent event){
+
+    private void playWaWaJi() {
+        roomModel.getMachineState(toyDetail.getMachineId(), new BeanCallback<BaseJson>() {
+            @Override
+            public void response(boolean success, BaseJson response, int id) {
+                if (response.isRet()) {
+                    setWaWaControl(true);
+                    waWaJiControlClient.start("4AAZU15J37FG6L4K111A", "pppzww168");
+                } else {
+
+                    T.showShort(getContext(),response.getForUser());
+                }
+            }
+        });
+
+    }
+
+    private void setWaWaControl(final boolean play) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                vBottomControl.setVisibility(play ? View.VISIBLE : View.GONE);
+
+                if (play){
+                    vMainScrollView.scrollTo(0,0);
+                }
+                vMainScrollView.setOnTouchListener(new View.OnTouchListener(){
+                    @Override
+                    public boolean onTouch(View arg0, MotionEvent arg1) {
+                        return play;
+                    }});
+                vPlayLayout.setVisibility(!play?View.VISIBLE:View.GONE);
+            }
+        });
+
+
+    }
+
+    //娃娃机控制
+    @OnTouch({R.id.img_top, R.id.img_left, R.id.img_right, R.id.img_down, R.id.img_done})
+    public boolean onBottomControlTouch(View v, MotionEvent event) {
         int action = event.getAction();
 
-        if (action == MotionEvent.ACTION_DOWN){
-            if (v==imgTop){
+        if (action == MotionEvent.ACTION_DOWN) {
+            if (v == imgTop) {
                 waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_TOP);
-            }else if (v==imgDown){
+            } else if (v == imgDown) {
                 waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_DOWN);
-            }else if (v==imgLeft){
+            } else if (v == imgLeft) {
                 waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_LEFT);
-            }else if (v==imgRight){
+            } else if (v == imgRight) {
                 waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_RIGHT);
-            }else if (v==imgDone){
+            } else if (v == imgDone) {
                 waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_CATCH);
             }
             L.e("touch down");
-        }else if (action == MotionEvent.ACTION_UP){
+        } else if (action == MotionEvent.ACTION_UP) {
             waWaJiControlClient.action_up();
             L.e("touch up");
 
         }
         return true;
+    }
+
+    /**
+     * 抓取结果，显示对话框
+     */
+    private void showResultDialog(final boolean caught){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                CaughtSuccessDialog successDialog = new CaughtSuccessDialog(getContext());
+                successDialog.setOnDialogBtnClick(new CaughtSuccessDialog.OnDialogBtnClick() {
+                    @Override
+                    public void onClick(Dialog dialog,int btnIndex, View btn) {
+                        dialog.dismiss();
+                    }
+                });
+                successDialog.show();
+                if (caught){
+
+                }else {
+
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 设置抓取结果
+     */
+    private void setCaughtResult(boolean caught){
+        roomModel.afterGrabToy(toyDetail.getMachineId(), caught, new BeanCallback<BaseJson>() {
+            @Override
+            public void response(boolean success, BaseJson response, int id) {
+
+            }
+        });
     }
 
 }

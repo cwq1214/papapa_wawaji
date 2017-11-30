@@ -35,8 +35,7 @@ public class RoomModelImpl implements RoomModel {
 
     @Override
     public void getMachineState(String machineId, Callback callback) {
-        OkHttpUtils.get().url(Api.domain+Api.getMachineStateBeforeStart).addParams("machineId",machineId).tag(context).build().execute(callback);
-
+        OkHttpUtils.post().url(Api.domain+Api.getMachineStateBeforeStart).addParams("machineId",machineId).tag(context).build().execute(callback);
     }
 
     @Override
@@ -45,8 +44,8 @@ public class RoomModelImpl implements RoomModel {
     }
 
     @Override
-    public void afterGrabToy(String machineId, Callback callback) {
-        OkHttpUtils.get().url(Api.domain+Api.afterGrabToSetState).addParams("machineId",machineId).tag(context).build().execute(callback);
+    public void afterGrabToy(String machineId,boolean caught, Callback callback) {
+        OkHttpUtils.post().url(Api.domain+Api.afterGrabToSetState).addParams("machineId",machineId).addParams("isget",caught?"1":"0").build().execute(callback);
 
     }
 }

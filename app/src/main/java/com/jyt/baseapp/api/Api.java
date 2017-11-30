@@ -13,6 +13,8 @@ public class Api {
 
     public static final String register = "api/login/register";
 
+    public static final String resetPassword = "api/login/forget_pwd";
+
     //获取验证码
     public static final String getCode = "api/login/getVerifyCode";
 

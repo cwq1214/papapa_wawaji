@@ -16,6 +16,18 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <!-- 允许程序获得设备信息 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.Camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/icon"
@@ -27,12 +39,12 @@
 
         <activity android:name=".view.activity.WelComeActivity" android:screenOrientation="portrait" android:label=""></activity>
 
-        <activity android:name=".view.activity.LoginActivity" android:screenOrientation="portrait" android:label="">
+        <activity android:name=".view.activity.LoginActivity" android:screenOrientation="portrait" android:label="" android:launchMode="singleTask" android:windowSoftInputMode="adjustResize">
 
         </activity>
 
         <activity android:name=".view.activity.ResetPsdActivity" android:screenOrientation="portrait" android:label="忘记密码"></activity>
-        <activity android:name=".view.activity.MainActivity" android:screenOrientation="portrait" android:label="首页">
+        <activity android:name=".view.activity.MainActivity" android:screenOrientation="portrait" android:label="首页"  android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"></action>
                 <category android:name="android.intent.category.LAUNCHER"></category>

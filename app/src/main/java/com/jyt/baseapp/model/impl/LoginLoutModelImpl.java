@@ -34,6 +34,7 @@ public class LoginLoutModelImpl implements LoginLogoutModel {
 
     @Override
     public void resetPassword(String mobile, String verifyCode, String pwd, Callback callback) {
+        OkHttpUtils.post().url(Api.domain+Api.resetPassword).addParams("mobile",mobile).addParams("pwd",pwd).addParams("verifyCode",verifyCode).tag(context).build().execute(callback);
 
     }
 

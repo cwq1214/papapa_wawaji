@@ -86,10 +86,14 @@ public abstract class BeanCallback<T> extends Callback<T> {
                         return (T) bodyString;
                     } else {
                         //如果是 Bean List Map ，则解析完后返回
-                        return new Gson().fromJson(bodyString, beanType);
+                        Object object = new Gson().fromJson(bodyString, beanType);
+                        if (object==null){
+                            object =createReturnResultByTemplate();
+                        }
+                        return (T) object;
                     }
-                }catch (Exception e){
-                    e.printStackTrace();
+                }catch (Throwable e){
+//                    e.printStackTrace();
                     Object object =createReturnResultByTemplate();
                     if (object instanceof BaseJson){
                         ((BaseJson) object).setForUser(e.getMessage());

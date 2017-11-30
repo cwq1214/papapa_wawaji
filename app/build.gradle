@@ -53,6 +53,7 @@ dependencies {
     compile 'cn.bingoogolapple:bga-banner:2.1.8@aar'
     compile 'com.lcodecorex:tkrefreshlayout:1.0.7'
     compile 'com.orhanobut:hawk:2.0.1'
+    compile(name: '/txplayer/LiteAVSDK_Player_3.7.3403', ext: 'aar')
 
 
 }

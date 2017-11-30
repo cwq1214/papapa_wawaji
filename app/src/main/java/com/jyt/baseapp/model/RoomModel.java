@@ -41,5 +41,7 @@ public interface RoomModel extends BaseModel {
      * @param machineId
      * @param callback
      */
-    void afterGrabToy(String machineId,Callback callback);
+    void afterGrabToy(String machineId,boolean caught,Callback callback);
+
+
 }

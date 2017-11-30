@@ -19,7 +19,7 @@ import static android.net.sip.SipErrorCode.TIME_OUT;
 
 public class WaWaJiControlClient {
     private Handler handler;
-    private Handler receiveHandler;
+    private Thread receive;
     private int avIndex;
     private int sid;
 
@@ -30,6 +30,10 @@ public class WaWaJiControlClient {
     public static final int MOVE_CATCH = 9;
     public static final int MOVE_STOP = AVIOCTRLDEFs.AVIOCTRL_PTZ_STOP;
 
+
+    boolean isReceive = true;
+
+    OnWaWaPlayedListener onWaWaPlayedListener;
 
     public WaWaJiControlClient(Context context){
         handler = new Handler(){
@@ -47,8 +51,7 @@ public class WaWaJiControlClient {
             }
         };
 
-        receiveHandler = new Handler(){
-        };
+//        receive = new Thread();
 
     }
 
@@ -64,18 +67,65 @@ public class WaWaJiControlClient {
         bundle.putString("pwd",pwd);
         message.setData(bundle);
         handler.sendMessage(message);
-        handler.post(new Runnable() {
+        receive = new Thread(new Runnable() {
             @Override
             public void run() {
-//                byte[] bdaata = SMsgAVIoctrlPtzCmd.parseContent(
-//                        (byte) acton,
-//                        (byte) AVIOCTRLDEFs.PTZ_SPEED,
-//                        (byte) AVIOCTRLDEFs.PTZ_POINT, (byte) 0, (byte) 0,
-//                        (byte) 0);
-//                int nRet = AVAPIs.avRecvIOCtrl(avIndex,, eventBuf, eventBuf.length, TIME_OUT);
+//                if (true)
+//                return;
+                int[] ioCtrlType = new int[1];
+                byte[] ioCtrlBuf = new byte[1024];
+
+
+                int timeourReceTimes = 60;//unit s
+                int i = 0; //timeout immediately
+//                             while (i++ < timeourReceTimes){
+                while (isReceive) {
+                    int nRet = AVAPIs.avRecvIOCtrl(avIndex, ioCtrlType, ioCtrlBuf, ioCtrlBuf.length, 0);
+                    L.e(String.format("avRecvIOCtrl ret[%d]\n", nRet));
+                    if (nRet >= 0) {
+
+
+                        if (ioCtrlType[0] == AVIOCTRLDEFs.IOTYPE_USER_IPCAM_EVENT_COMMAND) {
+
+                            L.e("IOTCamera", "avRecvIOCtrl(" +
+                                    0 + ", 0x" + Integer.toHexString(ioCtrlType[0]) + ", " + getHex(ioCtrlBuf, nRet) + ")");
+                            //recv get wawaji return Data
+                            int evtType2 = Packet.byteArrayToInt_Little(ioCtrlBuf, 16);
+                            L.e(evtType2+"");
+                            if (onWaWaPlayedListener!=null){
+                                onWaWaPlayedListener.onPlayed(evtType2==2);
+                            }
+                            break;
+
+                        }
+                        try {
+                            L.e(String.format("avRecvIOCtrl ret[%d]sleep start\n", nRet));
+
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            L.e(String.format("avRecvIOCtrl ret[%d]sleep out\n", nRet));
+                            e.printStackTrace();
+                        }
+                    } else {
+                        L.e(String.format(" ret < 0 %d\n", nRet));
+
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
         });
+        receive.start();
 //        receiveHandler.post();
+    }
+
+
+    public void setOnWaWaPlayedListener(OnWaWaPlayedListener onWaWaPlayedListener) {
+        this.onWaWaPlayedListener = onWaWaPlayedListener;
     }
 
     /**
@@ -89,6 +139,15 @@ public class WaWaJiControlClient {
         AVAPIs.avDeInitialize();
         IOTCAPIs.IOTC_DeInitialize();
         System.out.printf("StreamClient exit...\n");
+
+        isReceive = false;
+        try {
+            receive.interrupt();
+            receive.stop();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -169,7 +228,7 @@ public class WaWaJiControlClient {
     }
 
     public void startIpcamStream(int acton) {
-        AVAPIs av = new AVAPIs();
+//        AVAPIs av = new AVAPIs();
 
 
 
@@ -219,5 +278,34 @@ public class WaWaJiControlClient {
         }
     }
 
+    private  final String HEXES = "0123456789ABCDEF";
+
+     String getHex(byte[] raw, int size) {
+
+        if (raw == null) {
+            return null;
+        }
+
+        final StringBuilder hex = new StringBuilder(2 * raw.length);
+
+        int len = 0;
+
+        for (final byte b : raw) {
+            hex.append(HEXES.charAt((b & 0xF0) >> 4))
+                    .append(HEXES.charAt((b & 0x0F))).append(" ");
+
+            if (++len >= size)
+                break;
+        }
+
+        return hex.toString();
+    }
+
+    /**
+     * 结束回调
+     */
+    public interface OnWaWaPlayedListener{
+        void onPlayed(boolean caught);
+    }
 
 }

@@ -77,7 +77,13 @@ public class PersonCenterActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         reloadView();
+
     }
 
     private void reloadView() {
@@ -119,7 +125,7 @@ public class PersonCenterActivity extends BaseActivity {
 
     @OnClick({R.id.v_toMyWaWa,R.id.img_function, R.id.v_toBalance, R.id.v_toAddress, R.id.v_toOrder, R.id.img_BGMControl, R.id.img_voiceControl, R.id.v_toGuidance, R.id.v_toAboutUs, R.id.v_toContractUs, R.id.v_toFeedback, R.id.v_viewVersion, R.id.text_logout})
     public void onViewClicked(View view) {
-        if (!UserInfo.isLogin() && (view.getId() == R.id.v_toBalance || view.getId() == R.id.v_toAddress || view.getId() == R.id.v_toOrder || view.getId() == R.id.img_function)) {
+        if (!UserInfo.isLogin() && (view.getId() == R.id.v_toBalance || view.getId() == R.id.v_toAddress || view.getId() == R.id.v_toOrder || view.getId() == R.id.img_function || view.getId()==R.id.v_toMyWaWa )) {
             IntentHelper.openLoginActivity(getContext());
             return;
         }
