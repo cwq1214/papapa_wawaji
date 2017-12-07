@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.jyt.baseapp.api.Api;
 import com.jyt.baseapp.model.PersonalInfoModel;
+import com.jyt.baseapp.util.UserInfo;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -37,5 +38,11 @@ public class PersonalInfoModelImpl implements PersonalInfoModel {
     @Override
     public void getUserCoinTransactionDetails(Callback callback) {
         OkHttpUtils.get().url(Api.domain+Api.userCoinDetail).tag(context).build().execute(callback);
+    }
+
+    @Override
+    public void getChargeRole(Callback callback) {
+        OkHttpUtils.get().url(Api.domain+Api.getChargeRole).addParams("token", UserInfo.getToken()).tag(context).build().execute(callback);
+
     }
 }

@@ -6,14 +6,16 @@
     android:layout_alignParentBottom="true"
     android:padding="10dp"
     android:id="@+id/v_bottomControl"
+
     >
 
     <ImageView
+        android:clickable="true"
         android:id="@+id/img_top"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/sel_top_control_btn" />
+        android:background="@drawable/sel_top_control_btn" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -22,28 +24,31 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:clickable="true"
             android:id="@+id/img_left"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:background="@drawable/sel_left_control_btn" />
 
         <ImageView
+            android:clickable="true"
             android:id="@+id/img_right"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_marginLeft="105dp"
-            android:src="@drawable/sel_right_control_btn" />
+            android:background="@drawable/sel_right_control_btn" />
     </LinearLayout>
 
 
     <ImageView
+        android:clickable="true"
         android:id="@+id/img_down"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_below="@id/img_top"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="35dp"
-        android:src="@drawable/sel_bottom_control_btn" />
+        android:background="@drawable/sel_bottom_control_btn" />
 
     <RelativeLayout
         android:id="@+id/v_doneLayout"

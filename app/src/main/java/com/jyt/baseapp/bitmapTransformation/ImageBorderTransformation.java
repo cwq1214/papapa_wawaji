@@ -58,7 +58,7 @@ public class ImageBorderTransformation extends BitmapTransformation {
             return null;
         }
         //radius 要再乘以density 才能得到正确值
-        float radius =(this.radius*mContext.getResources().getDisplayMetrics().density);
+        float radius =(this.radius);
 
         Bitmap result = pool.get(source.getWidth(),source.getHeight(), Bitmap.Config.ARGB_8888);
         if (result == null) {
@@ -81,7 +81,7 @@ public class ImageBorderTransformation extends BitmapTransformation {
         RectF rectF1 = new RectF(0+(border), 0+(border), result.getWidth()-(border), result.getHeight()-(border));
         borderPaint.setStyle(Paint.Style.STROKE);
         //setStrokeWidth 要再乘以density 才能得到正确值
-        borderPaint.setStrokeWidth(borderWidth*mContext.getResources().getDisplayMetrics().density);
+        borderPaint.setStrokeWidth(borderWidth);
         canvas.drawRoundRect(rectF1,radius,radius,borderPaint);
 
         if (!source.isRecycled())

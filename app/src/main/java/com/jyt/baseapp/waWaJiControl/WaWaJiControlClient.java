@@ -92,10 +92,17 @@ public class WaWaJiControlClient {
                             //recv get wawaji return Data
                             int evtType2 = Packet.byteArrayToInt_Little(ioCtrlBuf, 16);
                             L.e(evtType2+"");
+
+
                             if (onWaWaPlayedListener!=null){
-                                onWaWaPlayedListener.onPlayed(evtType2==2);
+                                //开始
+                                if (evtType2==20){
+                                    onWaWaPlayedListener.start();
+                                }else {
+                                    onWaWaPlayedListener.onPlayed(evtType2==2);
+                                    break;
+                                }
                             }
-                            break;
 
                         }
                         try {
@@ -121,6 +128,9 @@ public class WaWaJiControlClient {
         });
         receive.start();
 //        receiveHandler.post();
+
+
+
     }
 
 
@@ -142,8 +152,10 @@ public class WaWaJiControlClient {
 
         isReceive = false;
         try {
-            receive.interrupt();
-            receive.stop();
+            if (receive!=null) {
+                receive.interrupt();
+                receive.stop();
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -190,6 +202,8 @@ public class WaWaJiControlClient {
             L.e(String.format("avClientStart failed[%d]\n", avIndex));
             return;
         }
+
+        startIpcamStream(20);
     }
 
 
@@ -306,6 +320,8 @@ public class WaWaJiControlClient {
      */
     public interface OnWaWaPlayedListener{
         void onPlayed(boolean caught);
+
+        void start();
     }
 
 }

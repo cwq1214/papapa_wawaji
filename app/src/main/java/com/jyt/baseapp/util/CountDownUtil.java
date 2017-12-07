@@ -26,9 +26,9 @@ public class CountDownUtil {
         this(context,defaultCount,defaultDelay);
     }
 
-    public CountDownUtil(Context context, int count, int delay) {
-        this.count = count;
-        this.delay = delay;
+    public CountDownUtil(Context context, int count_s, int delay_ms) {
+        this.count = count_s;
+        this.delay = delay_ms;
         this.context = context;
         handler = new Handler(context.getMainLooper());
     }
@@ -54,13 +54,14 @@ public class CountDownUtil {
             if (useCount>=0){
 
                 handler.postDelayed(timerRunnable = new TimerRunnable(),delay);
-                useCount--;
             }else {
                 handler.removeCallbacks(timerRunnable);
             }
 
             if (countDownCallback!=null)
-                countDownCallback.countDownCallback(useCount==-1,useCount);
+                countDownCallback.countDownCallback(useCount==0,useCount);
+
+            useCount--;
 
         }
     }

@@ -67,14 +67,39 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:minHeight="481dp"
-                            android:background="@color/gray"
-                            >
-                            <com.tencent.rtmp.ui.TXCloudVideoView
-                                android:id="@+id/v_player"
+                            android:background="@color/gray">
+
+                            <FrameLayout
+                                android:id="@+id/v_videoView"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                ></com.tencent.rtmp.ui.TXCloudVideoView>
+                                android:minHeight="480dp"
+                                >
+
+                                <TextureView
+                                    android:id="@+id/textureview1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:visibility="invisible" />
+
+                                <TextureView
+                                    android:id="@+id/textureview2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:visibility="invisible" />
+                            </FrameLayout>
+
+                            <TextView
+                                android:id="@+id/text_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left|bottom"
+                                android:layout_marginBottom="24dp"
+                                android:layout_marginLeft="5dp"
+                                android:text="30''"
+                                android:textColor="@color/white"
+                                android:textSize="36dp"
+                                android:visibility="gone" />
                         </FrameLayout>
 
 

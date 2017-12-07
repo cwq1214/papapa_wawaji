@@ -5,12 +5,12 @@
             <solid android:color="@color/colorPrimary"/>
         </shape>
     </item>
-    <item>
-        <rotate android:pivotX="50%" android:pivotY="50%" android:fromDegrees="-65" android:toDegrees="-65">
-            <shape>
-                <solid android:color="@color/colorPrimary"/>
-            </shape>
-        </rotate>
+    <!--<item>-->
+        <!--<rotate android:pivotX="50%" android:pivotY="50%" android:fromDegrees="-65" android:toDegrees="-65">-->
+            <!--<shape>-->
+                <!--<solid android:color="@color/colorPrimary"/>-->
+            <!--</shape>-->
+        <!--</rotate>-->
 
-    </item>
+    <!--</item>-->
 </layer-list>

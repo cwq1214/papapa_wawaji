@@ -61,6 +61,7 @@ public class RechargeCoinDialog extends AlertDialog {
                 rechargeItem.setCoin(priceList.get(i).getScore());
                 rechargeItem.setPrice(priceList.get(i).getMoney());
                 rechargeItem.setGive(priceList.get(i).getGive());
+                rechargeItem.setTag(priceList.get(i));
                 vPriceLayout.addView(rechargeItem);
             }
         }
@@ -78,7 +79,7 @@ public class RechargeCoinDialog extends AlertDialog {
             case R.id.v_price20:
             case R.id.v_price50:
             case R.id.v_price100:
-                onPriceClick.onPriceClick(Integer.valueOf(((RechargeItem) view).getPrice()));
+                onPriceClick.onPriceClick((RechargePrice) view.getTag());
                 break;
             case R.id.text_cancel:
                 dismiss();
@@ -91,6 +92,6 @@ public class RechargeCoinDialog extends AlertDialog {
     }
 
     public interface OnPriceClick {
-        void onPriceClick(int price);
+        void onPriceClick(RechargePrice price);
     }
 }

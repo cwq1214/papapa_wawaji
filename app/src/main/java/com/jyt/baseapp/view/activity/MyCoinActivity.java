@@ -10,11 +10,14 @@ import com.jyt.baseapp.adapter.CoinTransactionDetailsAdapter;
 import com.jyt.baseapp.api.BeanCallback;
 import com.jyt.baseapp.bean.BaseJson;
 import com.jyt.baseapp.bean.json.PersonalInfo;
+import com.jyt.baseapp.bean.json.RechargePrice;
 import com.jyt.baseapp.bean.json.TransactionDetail;
 import com.jyt.baseapp.itemDecoration.RecyclerViewDivider;
 import com.jyt.baseapp.model.BaseModel;
 import com.jyt.baseapp.model.PersonalInfoModel;
 import com.jyt.baseapp.model.impl.PersonalInfoModelImpl;
+import com.jyt.baseapp.util.UserInfo;
+import com.jyt.baseapp.view.dialog.RechargeCoinDialog;
 import com.jyt.baseapp.view.widget.RefreshRecyclerView;
 import com.jyt.baseapp.view.widget.WhiteRefreshView;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
@@ -38,6 +41,7 @@ public class MyCoinActivity extends BaseActivity {
     CoinTransactionDetailsAdapter adapter;
     PersonalInfoModel personalInfoModel;
 
+    RechargeCoinDialog rechargeCoinDialog;
 
     BeanCallback loadMoreCallback = new BeanCallback<BaseJson<List<TransactionDetail>>>() {
         @Override
@@ -103,6 +107,34 @@ public class MyCoinActivity extends BaseActivity {
             }
         });
         vCoinTransactionDetails.getRefreshLayout().startRefresh();
+
+        if (UserInfo.isLogin()){
+            personalInfoModel.getChargeRole(new BeanCallback<BaseJson<List<RechargePrice>>>() {
+                @Override
+                public void response(boolean success, BaseJson<List<RechargePrice>> response, int id) {
+                    if (response.isRet()){
+                        rechargeCoinDialog = new RechargeCoinDialog(getContext());
+                        rechargeCoinDialog.setPriceList(response.getData());
+                        rechargeCoinDialog.setOnPriceClick(new RechargeCoinDialog.OnPriceClick() {
+                            @Override
+                            public void onPriceClick(RechargePrice price) {
+
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+    }
+
+    @Override
+    public void onFunctionClick() {
+        super.onFunctionClick();
+
+        if (rechargeCoinDialog!=null){
+            rechargeCoinDialog.show();
+        }
     }
 
     @Override

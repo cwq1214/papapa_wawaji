@@ -6,6 +6,7 @@ package com.jyt.baseapp.api;
 
 public class Api {
     public static final String domain = "http://192.168.3.16/babymc/";
+//    public static final String domain = "http://119.23.66.37/babymc/";
 
     public static final String login = "api/login/do_login";
 
@@ -68,4 +69,8 @@ public class Api {
 
     //删除地址
     public static final String deleteAddress = "api/user/del_address";
+
+    //获取充值选项信息
+    public static final String getChargeRole = "api/user/get_role";
+
 }

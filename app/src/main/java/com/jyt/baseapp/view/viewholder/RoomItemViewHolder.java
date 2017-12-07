@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.bean.json.HomeToyResult;
+import com.jyt.baseapp.util.DensityUtil;
 import com.jyt.baseapp.util.ImageLoader;
 
 import butterknife.BindView;
@@ -57,6 +58,7 @@ public class RoomItemViewHolder extends BaseViewHolder<HomeToyResult> {
         }
         String url = "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1510122506&di=fb7a112f7b5d08b696f7762815478c08&src=http://img2.shangxueba.com/img/uploadfile/20141022/12/7244D67D1CE5C5EB8F526A72EB0F0D33.jpg";
 
+//        ImageLoader.getInstance().loadWithRadiusBorder(imgGoods, data.getToyImg(), DensityUtil.dpToPx(itemView.getContext(),4),DensityUtil.dpToPx(itemView.getContext(),1),itemView.getResources().getColor(R.color.colorPrimary));
         ImageLoader.getInstance().load(imgGoods, data.getToyImg());
     }
 }

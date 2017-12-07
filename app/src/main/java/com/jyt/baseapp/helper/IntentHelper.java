@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 
+import com.jyt.baseapp.util.UserInfo;
 import com.jyt.baseapp.view.activity.AddressListActivity;
 import com.jyt.baseapp.view.activity.DollDetailActivity;
 import com.jyt.baseapp.view.activity.EditAddressActivity;
@@ -83,6 +84,11 @@ public class IntentHelper extends IntentKey{
     }
 
     public static void openRoomActivity(Context context,Parcelable room){
+        if (!UserInfo.isLogin()){
+            openLoginActivity(context);
+            return;
+        }
+
         Intent intent = getIntent(context, RoomActivity.class);
         intent.putExtra(KEY_ROOM,room);
         context.startActivity(intent);

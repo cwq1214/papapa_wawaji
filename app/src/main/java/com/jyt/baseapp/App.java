@@ -7,6 +7,8 @@ import com.jyt.baseapp.util.ImageLoader;
 import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.OkHttpPostInterceptor;
 import com.jyt.baseapp.util.UserInfo;
+import com.jyt.baseapp.zego.ZegoApiManager;
+import com.zego.zegoliveroom.ZegoLiveRoom;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.log.LoggerInterceptor;
 
@@ -52,11 +54,17 @@ public class App  extends Application {
         initUtil();
         app = this;
         UserInfo.init(getApplicationContext());
-        UserInfo.setToken("2");
+        UserInfo.setToken("3");
+
+        ZegoLiveRoom.setTestEnv(true);
+        ZegoLiveRoom.setVerbose(BuildConfig.DEBUG);
+        ZegoApiManager.getInstance().initSDK();
     }
 
 
     private void initUtil() {
+
+
 //        Hawk.init(getApplicationContext()).setLogInterceptor(new LogInterceptor() {
 //            @Override
 //            public void onLog(String message) {

@@ -1,7 +1,5 @@
 package com.jyt.baseapp.view.activity;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -22,14 +20,11 @@ import com.jyt.baseapp.model.BaseModel;
 import com.jyt.baseapp.model.MainActModel;
 import com.jyt.baseapp.model.impl.MainActModelImpl;
 import com.jyt.baseapp.util.ImageLoader;
-import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.T;
-import com.jyt.baseapp.view.dialog.RechargeCoinDialog;
 import com.jyt.baseapp.view.fragment.RoomListFragment;
 import com.jyt.baseapp.view.widget.NoScrollViewPager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -53,6 +48,8 @@ public class MainActivity extends BaseActivity {
     NoScrollViewPager vViewPager;
     @BindView(R.id.img_showHideBanner)
     ImageView imgShowHideBanner;
+    @BindView(R.id.img_gifppp)
+    ImageView imgGifppp;
     private RoomListFragment dollFragment;
     private RoomListFragment cabbageFragment;
 
@@ -78,20 +75,22 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dollFragment=new RoomListFragment();
+        Glide.with(this).load(R.drawable.logogif).asGif().centerCrop().into(imgGifppp);
+
+        dollFragment = new RoomListFragment();
         Bundle dollFragmentBundle = new Bundle();
-        dollFragmentBundle.putInt(IntentKey.KEY_TYPE,0);
+        dollFragmentBundle.putInt(IntentKey.KEY_TYPE, 0);
         dollFragment.setArguments(dollFragmentBundle);
 
-        cabbageFragment=new RoomListFragment();
+        cabbageFragment = new RoomListFragment();
         Bundle cabbageFragmentBundle = new Bundle();
-        cabbageFragmentBundle.putInt(IntentKey.KEY_TYPE,1);
+        cabbageFragmentBundle.putInt(IntentKey.KEY_TYPE, 1);
         cabbageFragment.setArguments(cabbageFragmentBundle);
 
         vViewPager.setAdapter(adapter = new FragmentViewPagerAdapter(getSupportFragmentManager()));
-        adapter.addFragment(dollFragment,"娃娃首页");
-        adapter.addFragment(cabbageFragment,"白菜特抓");
-        adapter.addFragment(new Fragment(),"玩家分享");
+        adapter.addFragment(dollFragment, "娃娃首页");
+        adapter.addFragment(cabbageFragment, "白菜特抓");
+        adapter.addFragment(new Fragment(), "玩家分享");
         adapter.notifyDataSetChanged();
         vTabLayout.setupWithViewPager(vViewPager);
 
@@ -111,18 +110,18 @@ public class MainActivity extends BaseActivity {
         model.getBanner(new BeanCallback<BaseJson<Banner>>() {
             @Override
             public void response(boolean success, BaseJson<Banner> response, int id) {
-                if (response.isRet()){
+                if (response.isRet()) {
                     banners = response.getData();
 
                     List<View> imgs = new ArrayList<View>();
-                    for (int i=0;i<response.getData().getSlide().size();i++){
+                    for (int i = 0; i < response.getData().getSlide().size(); i++) {
                         ImageView imageView = new ImageView(getContext());
-                        ImageLoader.getInstance().loadRectangle(imageView,banners.getSlide().get(i).getImg());
+                        ImageLoader.getInstance().loadRectangle(imageView, banners.getSlide().get(i).getImg());
                         imgs.add(imageView);
                     }
                     vBanner.setData(imgs);
                 }
-                T.showShort(getContext(),response.getForUser());
+                T.showShort(getContext(), response.getForUser());
             }
         });
     }
@@ -136,16 +135,16 @@ public class MainActivity extends BaseActivity {
     }
 
     @OnClick(R.id.img_setting)
-    public void onSettingClick(){
+    public void onSettingClick() {
         IntentHelper.openPersonalActivity(getContext());
     }
 
     @OnClick(R.id.img_showHideBanner)
-    public void onShowHideBannerClick(){
-        if (vBanner.getVisibility()== View.VISIBLE){
+    public void onShowHideBannerClick() {
+        if (vBanner.getVisibility() == View.VISIBLE) {
             imgShowHideBanner.setImageDrawable(getResources().getDrawable(R.mipmap.arrow_up_pink));
             vBanner.setVisibility(View.GONE);
-        }else {
+        } else {
             imgShowHideBanner.setImageDrawable(getResources().getDrawable(R.mipmap.arrow_down_pink));
             vBanner.setVisibility(View.VISIBLE);
         }

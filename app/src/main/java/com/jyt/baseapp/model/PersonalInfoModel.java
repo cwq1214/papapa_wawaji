@@ -18,5 +18,10 @@ public interface PersonalInfoModel extends BaseModel {
      */
     void getUserCoinTransactionDetails(Callback callback);
 
+    /**
+     * 获取充值按钮列表
+     * @param callback
+     */
+    void getChargeRole(Callback callback);
 
 }
