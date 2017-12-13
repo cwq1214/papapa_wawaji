@@ -12,11 +12,27 @@ public class RechargePrice implements Parcelable {
     private String score;//获得的娃娃币数量
     private String money;//充值金额
     private String give;//赠送的娃娃币数量
+    private String ruleId;//
+
 
     protected RechargePrice(Parcel in) {
         score = in.readString();
         money = in.readString();
         give = in.readString();
+        ruleId = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(score);
+        dest.writeString(money);
+        dest.writeString(give);
+        dest.writeString(ruleId);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<RechargePrice> CREATOR = new Creator<RechargePrice>() {
@@ -30,18 +46,6 @@ public class RechargePrice implements Parcelable {
             return new RechargePrice[size];
         }
     };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(score);
-        dest.writeString(money);
-        dest.writeString(give);
-    }
 
     public String getScore() {
         return score;
@@ -65,5 +69,13 @@ public class RechargePrice implements Parcelable {
 
     public void setGive(String give) {
         this.give = give;
+    }
+
+    public String getRuleId() {
+        return ruleId;
+    }
+
+    public void setRuleId(String ruleId) {
+        this.ruleId = ruleId;
     }
 }

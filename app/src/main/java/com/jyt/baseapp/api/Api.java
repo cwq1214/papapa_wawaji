@@ -73,4 +73,13 @@ public class Api {
     //获取充值选项信息
     public static final String getChargeRole = "api/user/get_role";
 
+    //微信充值
+    public static final String chargeCoinByWeChart = "api/pay/wechat_pay";
+
+    //支付宝充值
+    public static final String chargeCoinByAli = "api/pay/alipay";
+
+    //修改头像 昵称
+    public static final String modifyUserInfo = "/api/user/update";
+
 }

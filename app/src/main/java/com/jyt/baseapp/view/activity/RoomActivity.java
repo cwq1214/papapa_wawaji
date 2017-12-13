@@ -52,6 +52,7 @@ import com.zego.zegoliveroom.callback.IZegoLivePublisherCallback;
 import com.zego.zegoliveroom.callback.IZegoLoginCompletionCallback;
 import com.zego.zegoliveroom.callback.IZegoRoomCallback;
 import com.zego.zegoliveroom.constants.ZegoConstants;
+import com.zego.zegoliveroom.constants.ZegoVideoViewMode;
 import com.zego.zegoliveroom.entity.AuxData;
 import com.zego.zegoliveroom.entity.ZegoStreamInfo;
 import com.zego.zegoliveroom.entity.ZegoStreamQuality;
@@ -207,7 +208,7 @@ public class RoomActivity extends BaseActivity {
         }
         ZegoApiManager.getInstance().initSDK();
 
-        timer = new TimerUtil(getContext(), 5000);
+        timer = new TimerUtil(getContext(), 30*1000);
         timer.setOnTimeCallback(new TimerUtil.OnTimeCallback() {
             @Override
             public void onTime() {
@@ -224,7 +225,7 @@ public class RoomActivity extends BaseActivity {
         timer.start();
 
 
-        countDownUtil = new CountDownUtil(getContext(), 5, 1000);
+        countDownUtil = new CountDownUtil(getContext(), 30, 1000);
         countDownUtil.setCountDownCallback(new CountDownUtil.CountDownCallback() {
             @Override
             public void countDownCallback(boolean finish, int currentCount) {
@@ -240,7 +241,7 @@ public class RoomActivity extends BaseActivity {
                             waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_CATCH);
                             countDownUtil.stop();
                             vCircleProgress.stop();
-                            waWaJiControlClient.action_up();
+//                            waWaJiControlClient.action_up();
                         }
                     }.start();
 
@@ -345,9 +346,17 @@ public class RoomActivity extends BaseActivity {
                     // 拉两路流
                     mListStream.get(0).playStream(100);
                     mListStream.get(1).playStream(0);
+
+                    mZegoLiveRoom.setViewRotation(90,mListStream.get(0).getStreamID());
+                    mZegoLiveRoom.setViewRotation(90,mListStream.get(1).getStreamID());
+
+                    mZegoLiveRoom.setViewMode(ZegoVideoViewMode.ScaleAspectFill,mListStream.get(0).getStreamID());
+                    mZegoLiveRoom.setViewMode(ZegoVideoViewMode.ScaleAspectFill,mListStream.get(1).getStreamID());
                 }
+                L.e("[loginRoom]"+ "error code " + errCode);
             }
         });
+
 
 //        switchPlaySource(true);
         mZegoLiveRoom.setZegoLivePlayerCallback(new IZegoLivePlayerCallback() {
@@ -676,7 +685,7 @@ public class RoomActivity extends BaseActivity {
 
         createRechargeDialog(toyDetail.getRule());
 
-//        vWebView.loadData(toyDetail.getToyDesc(), "text/html; charset=UTF-8", "UTF-8");
+        vWebView.loadData(toyDetail.getToyDesc(), "text/html; charset=UTF-8", "UTF-8");
 
 
     }
@@ -849,6 +858,9 @@ public class RoomActivity extends BaseActivity {
             }
             return false;
         } else if (action == MotionEvent.ACTION_UP) {
+            if (v == imgDone){
+                return false;
+            }
             waWaJiControlClient.action_up();
             L.e("touch up");
             return false;

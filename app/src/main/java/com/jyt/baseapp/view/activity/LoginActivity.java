@@ -3,26 +3,24 @@ package com.jyt.baseapp.view.activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jyt.baseapp.App;
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.annotation.ActivityAnnotation;
 import com.jyt.baseapp.api.BeanCallback;
 import com.jyt.baseapp.bean.BaseJson;
 import com.jyt.baseapp.bean.json.LoginResult;
 import com.jyt.baseapp.helper.IntentHelper;
+import com.jyt.baseapp.helper.WeChartHelper;
 import com.jyt.baseapp.model.BaseModel;
 import com.jyt.baseapp.model.LoginLogoutModel;
 import com.jyt.baseapp.model.impl.LoginLoutModelImpl;
 import com.jyt.baseapp.util.CountDownUtil;
-import com.jyt.baseapp.util.DensityUtil;
-import com.jyt.baseapp.util.ScreenUtils;
 import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.util.UserInfo;
 
@@ -75,7 +73,7 @@ public class LoginActivity extends BaseActivity {
 
     LoginLogoutModel loginModel;
 
-
+    WeChartHelper weChartHelper;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_login;
@@ -102,6 +100,28 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
+        weChartHelper = new WeChartHelper();
+        weChartHelper.init(getContext(), App.weiXin_AppKey);
+        weChartHelper.registerToWx();
+
+        weChartHelper.setReceiveUserInfoListener(new WeChartHelper.ReceiveUserInfoListener() {
+            @Override
+            public void onGotUserInfo(WeChartHelper.WxUser user) {
+                loginModel.loginByWeiXin(user.getOpenid(), user.getNickname(), user.getHeadimgurl(), new BeanCallback<BaseJson<LoginResult>>() {
+                    @Override
+                    public void response(boolean success, BaseJson<LoginResult> response, int id) {
+                        if (response.isRet()) {
+                            //登录成功 保存用户信息
+                            UserInfo.setUserInfo(response.getData());
+                            IntentHelper.openMainActivity(getContext());
+                            finish();
+                            App.setJPushAlias();
+                        }
+                        T.showShort(getContext(), response.getForUser());
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -134,7 +154,7 @@ public class LoginActivity extends BaseActivity {
                     if (response.isRet()) {
                         //登录成功 保存用户信息
                         UserInfo.setUserInfo(response.getData());
-                        IntentHelper.openLoginActivity(getContext());
+                        IntentHelper.openMainActivity(getContext());
                         finish();
                     }
                     T.showShort(getContext(), response.getForUser());
@@ -193,7 +213,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.btn_wechartLogin)
     public void onWeChartLoginClick() {
-
+        weChartHelper.login();
     }
 
     @OnClick(R.id.v_agree)
@@ -220,5 +240,6 @@ public class LoginActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         countDownUtil.stop();
+        weChartHelper.unInit();
     }
 }

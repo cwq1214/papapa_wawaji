@@ -18,11 +18,12 @@ public class LoginLoutModelImpl implements LoginLogoutModel {
 
     @Override
     public void loginByMobile(String mobile, String pwd, Callback callback) {
-        OkHttpUtils.post().url(Api.domain+Api.login).addParams("mobile",mobile).addParams("pwd",pwd).tag(context).build().execute(callback);
+        OkHttpUtils.post().url(Api.domain+Api.login).addParams("loginType","1").addParams("mobile",mobile).addParams("pwd",pwd).tag(context).build().execute(callback);
     }
 
     @Override
     public void loginByWeiXin(String wechatId, String nickname, String userImg, Callback callback) {
+        OkHttpUtils.post().url(Api.domain+Api.login).addParams("loginType","2").addParams("wechatId",wechatId).addParams("nickname",nickname).addParams("userImg",userImg).tag(context).build().execute(callback);
 
     }
 

@@ -14,8 +14,8 @@ android {
             jniLibs.srcDirs = ['libs/zego', 'libs/wawacontrol']
         }
     }
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.2"
     defaultConfig {
         applicationId "com.jyt.pppwawaji"
         minSdkVersion 17
@@ -27,6 +27,11 @@ android {
             abiFilters 'armeabi-v7a', 'arm64-v8a'//, 'x86'// 'armeabi' ,
 
         }
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : applicationId,
+                JPUSH_APPKEY : "c1e2b188821bee9d90eebfb1", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+        ]
         signingConfig signingConfigs.config
     }
     buildTypes {
@@ -62,5 +67,10 @@ dependencies {
     compile 'cn.bingoogolapple:bga-banner:2.1.8@aar'
     compile 'com.lcodecorex:tkrefreshlayout:1.0.7'
     compile 'com.orhanobut:hawk:2.0.1'
-    compile(name: '/txplayer/LiteAVSDK_Player', ext: 'aar')
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+    compile 'com.upyun:upyun-android-sdk:2.0.5'
+    compile 'com.linchaolong.android:imagepicker:1.5'
+
+    compile 'cn.jiguang.sdk:jpush:3.0.9'  // 此处以JPush 3.0.9 版本为例。
+    compile 'cn.jiguang.sdk:jcore:1.1.7'  // 此处以JCore 1.1.7 版本为例。
 }

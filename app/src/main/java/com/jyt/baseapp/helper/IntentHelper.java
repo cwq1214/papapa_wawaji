@@ -4,14 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 
+import com.jyt.baseapp.util.FinishActivityManager;
 import com.jyt.baseapp.util.UserInfo;
 import com.jyt.baseapp.view.activity.AddressListActivity;
 import com.jyt.baseapp.view.activity.DollDetailActivity;
 import com.jyt.baseapp.view.activity.EditAddressActivity;
 import com.jyt.baseapp.view.activity.LoginActivity;
 import com.jyt.baseapp.view.activity.MainActivity;
+import com.jyt.baseapp.view.activity.ModifyUserInfoActivity;
 import com.jyt.baseapp.view.activity.MyCoinActivity;
 import com.jyt.baseapp.view.activity.MyWaWaActivity;
 import com.jyt.baseapp.view.activity.OrderDetailActivity;
@@ -27,7 +30,25 @@ import com.jyt.baseapp.view.activity.VersionInfoActivity;
 
 public class IntentHelper extends IntentKey{
 
+
+    public static void openSelImageActivityForResult(Object context,int requestCode){
+//        Intent intent = new Intent(Intent.ACTION_PICK);
+//        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+//        openActivityForResult(context,intent,requestCode);
+        Intent intent = getIntent();
+
+
+    }
+
+    public static void openModifyUserInfoActivity(String nickName,String userImage,Context context){
+        Intent intent = getIntent(context, ModifyUserInfoActivity.class);
+        intent.putExtra(IntentKey.KEY_IMAGE_URL,userImage);
+        intent.putExtra(IntentKey.KEY_NAME,nickName);
+        context.startActivity(intent);
+
+    }
     public static void openMainActivity(Context context){
+        FinishActivityManager.getManager().finishAllActivity();
         context.startActivity(getIntent(context, MainActivity.class));
 
     }
@@ -121,6 +142,15 @@ public class IntentHelper extends IntentKey{
             ((Activity) context).startActivityForResult(intent,requestCode);
         }else if (context instanceof Fragment){
             intent.setClass(((Fragment) context).getContext(),openClass);
+            ((Fragment) context).startActivityForResult(intent,requestCode);
+        }
+
+
+    }
+    private static void openActivityForResult(Object context,Intent intent,int requestCode){
+        if (context instanceof Activity){
+            ((Activity) context).startActivityForResult(intent,requestCode);
+        }else if (context instanceof Fragment){
             ((Fragment) context).startActivityForResult(intent,requestCode);
         }
 

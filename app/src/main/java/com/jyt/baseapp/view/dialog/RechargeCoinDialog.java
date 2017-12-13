@@ -52,6 +52,14 @@ public class RechargeCoinDialog extends AlertDialog {
         ButterKnife.bind(this);
         getWindow().setLayout((int) (ScreenUtils.getScreenWidth(getContext()) * 0.8), ViewGroup.LayoutParams.WRAP_CONTENT);
 
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                RechargePrice rechargePrice = (RechargePrice) v.getTag();
+                onPriceClick.onPriceClick((RechargePrice) v.getTag());
+
+            }
+        };
 
         if (priceList!=null){
             vPriceLayout.removeAllViews();
@@ -62,6 +70,7 @@ public class RechargeCoinDialog extends AlertDialog {
                 rechargeItem.setPrice(priceList.get(i).getMoney());
                 rechargeItem.setGive(priceList.get(i).getGive());
                 rechargeItem.setTag(priceList.get(i));
+                rechargeItem.setOnClickListener(onClickListener);
                 vPriceLayout.addView(rechargeItem);
             }
         }

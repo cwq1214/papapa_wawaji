@@ -1,5 +1,6 @@
 package com.jyt.baseapp.view.viewholder;
 
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +37,27 @@ public class RoomItemViewHolder extends BaseViewHolder<HomeToyResult> {
         vImgLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(right-left,right-left);
-                v.setLayoutParams(params);
-                v.removeOnLayoutChangeListener(this);
+//                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(right-left,right-left);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(((LinearLayout) v.getParent()).getWidth(),((LinearLayout) v.getParent()).getWidth());
+                vImgLayout.setLayoutParams(params);
+
+                RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(((LinearLayout) v.getParent()).getWidth(),((LinearLayout) v.getParent()).getWidth());
+                imgGoods.setLayoutParams(params1);
+
+                vImgLayout.removeOnLayoutChangeListener(this);
             }
         });
+
+//        itemView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+//            @Override
+//            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+//
+//                StaggeredGridLayoutManager.LayoutParams params = new StaggeredGridLayoutManager.LayoutParams(right-left,right-left+DensityUtil.dpToPx(v.getContext(),33));
+//                itemView.setLayoutParams(params);
+//
+//                itemView.removeOnLayoutChangeListener(this);
+//            }
+//        });
 
     }
 
@@ -48,7 +65,7 @@ public class RoomItemViewHolder extends BaseViewHolder<HomeToyResult> {
     public void setData(HomeToyResult data) {
         super.setData(data);
         textName.setText(data.getToyName());
-        textPrice.setText(data.getNeedPay());
+        textPrice.setText(data.getNeedPay()+"币/次");
         if (Integer.valueOf(data.getLeisure())==0){
             textStatus.setText("游戏中 "+data.getLeisure()+"空闲/"+data.getUseing()+"占用");
             textStatus.setTextColor(itemView.getResources().getColor(R.color.t3Color));

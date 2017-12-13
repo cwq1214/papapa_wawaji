@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jyt.baseapp.App;
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.api.BeanCallback;
 import com.jyt.baseapp.bean.BaseJson;
@@ -61,7 +62,7 @@ public class PersonCenterActivity extends BaseActivity {
     LabelAndTextItem vToMyWaWa;
     PersonalInfoModel personalInfoModel;
 
-
+    PersonalInfo personalInfo;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_personal_center;
@@ -111,9 +112,10 @@ public class PersonCenterActivity extends BaseActivity {
 
     //根据个人信息填充界面
     private void setUserInfo(PersonalInfo info) {
+        personalInfo = info;
         textName.setText(info.getNickname());
         textRecord.setText(String.format("共抓中  %s 次", info.getGetCount()));
-        ImageLoader.getInstance().loadHeader(imgHeader, info.getUserImg());
+        ImageLoader.getInstance().loadCircle(imgHeader, info.getUserImg());
     }
 
     @Override
@@ -123,15 +125,19 @@ public class PersonCenterActivity extends BaseActivity {
         return list;
     }
 
-    @OnClick({R.id.v_toMyWaWa,R.id.img_function, R.id.v_toBalance, R.id.v_toAddress, R.id.v_toOrder, R.id.img_BGMControl, R.id.img_voiceControl, R.id.v_toGuidance, R.id.v_toAboutUs, R.id.v_toContractUs, R.id.v_toFeedback, R.id.v_viewVersion, R.id.text_logout})
+    @OnClick({R.id.img_header,R.id.v_toMyWaWa,R.id.img_function, R.id.v_toBalance, R.id.v_toAddress, R.id.v_toOrder, R.id.img_BGMControl, R.id.img_voiceControl, R.id.v_toGuidance, R.id.v_toAboutUs, R.id.v_toContractUs, R.id.v_toFeedback, R.id.v_viewVersion, R.id.text_logout})
     public void onViewClicked(View view) {
-        if (!UserInfo.isLogin() && (view.getId() == R.id.v_toBalance || view.getId() == R.id.v_toAddress || view.getId() == R.id.v_toOrder || view.getId() == R.id.img_function || view.getId()==R.id.v_toMyWaWa )) {
+        int vid = view.getId();
+        if (!UserInfo.isLogin() && (vid == R.id.img_header || vid == R.id.v_toBalance || vid == R.id.v_toAddress || vid == R.id.v_toOrder || vid == R.id.img_function || vid==R.id.v_toMyWaWa )) {
             IntentHelper.openLoginActivity(getContext());
             return;
         }
 
 
-        switch (view.getId()) {
+        switch (vid) {
+            case R.id.img_header:
+                IntentHelper.openModifyUserInfoActivity(personalInfo.getNickname(),personalInfo.getUserImg(),getContext());
+                break;
             case R.id.v_toMyWaWa:
                 IntentHelper.openMyWaWaActivity(getContext());
                 break;
@@ -163,6 +169,7 @@ public class PersonCenterActivity extends BaseActivity {
                 if (UserInfo.isLogin()) {
                     UserInfo.clearUserInfo();
                     reloadView();
+                    App.unInitJPush();
                 } else {
                     IntentHelper.openLoginActivity(getContext());
                 }

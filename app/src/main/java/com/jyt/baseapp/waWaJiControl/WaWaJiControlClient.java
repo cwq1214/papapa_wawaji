@@ -31,7 +31,7 @@ public class WaWaJiControlClient {
     public static final int MOVE_STOP = AVIOCTRLDEFs.AVIOCTRL_PTZ_STOP;
 
 
-    boolean isReceive = true;
+    boolean isReceive;
 
     OnWaWaPlayedListener onWaWaPlayedListener;
 
@@ -67,6 +67,7 @@ public class WaWaJiControlClient {
         bundle.putString("pwd",pwd);
         message.setData(bundle);
         handler.sendMessage(message);
+        isReceive = true;
         receive = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -127,9 +128,6 @@ public class WaWaJiControlClient {
             }
         });
         receive.start();
-//        receiveHandler.post();
-
-
 
     }
 
@@ -170,11 +168,11 @@ public class WaWaJiControlClient {
     private void startConnection(String uid, String pwd ){
         L.e(String.format("StreamClient start..."));
         int port = (int) (10000 + (System.currentTimeMillis() % 10000));
-
         int ret = IOTCAPIs.IOTC_Initialize2(port);
         L.e(String.format("IOTC_Initialize() ret = %d\n", ret));
         if (ret != IOTCAPIs.IOTC_ER_NoERROR) {
             L.e(String.format("IOTCAPIs_Device exit...!!\n"));
+            isReceive = false;
             return;
         }
 
@@ -183,6 +181,7 @@ public class WaWaJiControlClient {
         sid = IOTCAPIs.IOTC_Get_SessionID();
         if (sid < 0) {
             L.e(String.format("IOTC_Get_SessionID error code [%d]\n", sid));
+            isReceive= false;
             return;
         }
 
@@ -199,6 +198,7 @@ public class WaWaJiControlClient {
         L.e("Step 2: call avClientStart(%d).......\n", avIndex);
 
         if (avIndex < 0) {
+            isReceive = false;
             L.e(String.format("avClientStart failed[%d]\n", avIndex));
             return;
         }

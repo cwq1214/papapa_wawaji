@@ -1,10 +1,12 @@
 package com.jyt.baseapp;
 
 import android.app.Application;
-import android.widget.LinearLayout;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.jyt.baseapp.util.ImageLoader;
-import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.OkHttpPostInterceptor;
 import com.jyt.baseapp.util.UserInfo;
 import com.jyt.baseapp.zego.ZegoApiManager;
@@ -15,6 +17,7 @@ import com.zhy.http.okhttp.log.LoggerInterceptor;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.Set;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -23,7 +26,8 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import okhttp3.Headers;
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -34,6 +38,10 @@ import okhttp3.Response;
  */
 
 public class App  extends Application {
+
+    public static String weiXin_AppKey = "wx3b44ee4ad08755b6";
+    public static String weiXin_AppSecret = "83dddf25ffe14ca901239b49ea241142";
+
     public boolean isDebug() {
         return isDebug;
     }
@@ -45,6 +53,17 @@ public class App  extends Application {
     private boolean isDebug = false;
 
     static App app;
+
+    private static final int MSG_SET_ALIAS = 1;
+    static Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == MSG_SET_ALIAS){
+                setJPushAlias();
+            }
+        }
+    };
 
     @Override
     public void onCreate() {
@@ -59,12 +78,18 @@ public class App  extends Application {
         ZegoLiveRoom.setTestEnv(true);
         ZegoLiveRoom.setVerbose(BuildConfig.DEBUG);
         ZegoApiManager.getInstance().initSDK();
+        initJPush();
+        if (UserInfo.isLogin()){
+            setJPushAlias();
+        }
     }
+
 
 
     private void initUtil() {
 
-
+//        WeChartHelper.getInstance().init(getApplicationContext(),weiXin_AppKey);
+//        WeChartHelper.getInstance().registerToWx();
 //        Hawk.init(getApplicationContext()).setLogInterceptor(new LogInterceptor() {
 //            @Override
 //            public void onLog(String message) {
@@ -135,4 +160,43 @@ public class App  extends Application {
         return app;
     }
 
+
+    private void initJPush(){
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
+        setJPushAlias();
+
+    }
+
+    public static void unInitJPush(){
+        JPushInterface.deleteAlias(App.getApplication(),0);
+    }
+
+    public static void setJPushAlias(){
+        if (!TextUtils.isEmpty(UserInfo.getToken())) {
+            JPushInterface.setAlias(app, UserInfo.getToken(), new TagAliasCallback() {
+                @Override
+                public void gotResult(int code, String s, Set<String> set) {
+                    String TAG = "JPush";
+                    String logs ;
+                    switch (code) {
+                        case 0:
+                            logs = "Set tag and alias success";
+                            Log.i(TAG, logs);
+                            // 建议这里往 SharePreference 里写一个成功设置的状态。成功设置一次后，以后不必再次设置了。
+                            break;
+                        case 6002:
+                            logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
+                            Log.i(TAG, logs);
+                            handler.sendMessageDelayed(handler.obtainMessage(MSG_SET_ALIAS), 1000 * 60);
+
+                            break;
+                        default:
+                            logs = "Failed with errorCode = " + code;
+                            Log.e(TAG, logs);
+                    }
+                }
+            });
+        }
+    }
 }

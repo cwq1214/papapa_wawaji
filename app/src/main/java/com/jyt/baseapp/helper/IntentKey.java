@@ -11,4 +11,6 @@ public class IntentKey {
     public static final String KEY_TYPE = "KEY_TYPE";
     public static final String KEY_ORDER = "KEY_ORDER";
     public static final String KEY_NEED_SET_RESULT = "KEY_NEED_SET_RESULT";
+    public static final String KEY_IMAGE_URL = "KEY_IMAGE_URL";
+    public static final String KEY_NAME = "KEY_NAME";
 }

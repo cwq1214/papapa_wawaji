@@ -24,4 +24,12 @@ public interface PersonalInfoModel extends BaseModel {
      */
     void getChargeRole(Callback callback);
 
+    /**
+     * 修改个人信息
+     * @param userImg
+     * @param nickname
+     * @param callback
+     */
+    void modifyUserInfo(String userImg,String nickname,Callback callback);
+
 }
