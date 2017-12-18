@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Glide.with(this).load(R.drawable.logogif).asGif().centerCrop().into(imgGifppp);
+        Glide.with(this).load(R.mipmap.start).asGif().into(imgGifppp);
 
         dollFragment = new RoomListFragment();
         Bundle dollFragmentBundle = new Bundle();

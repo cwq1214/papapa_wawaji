@@ -86,12 +86,13 @@ public class DollDetailActivity extends BaseActivity {
                          response.getData()) {
                         if (a.isDefault()){
                             address = a;
-                            initView(address);
                             break;
                         }
 
                     }
                 }
+                initView(address);
+
             }
         });
     }
@@ -153,7 +154,7 @@ public class DollDetailActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode ==1 && resultCode == RESULT_OK){
-            Address address = data.getParcelableExtra(IntentKey.KEY_ADDRESS);
+            address = data.getParcelableExtra(IntentKey.KEY_ADDRESS);
             initView(address);
         }
     }

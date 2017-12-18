@@ -16,7 +16,7 @@ public class TransactionDetail implements Parcelable{
     private String createdTime;//时间
     private String sequeue;//排序字段
     private String content;//内容
-
+    private String feeType;
 
     protected TransactionDetail(Parcel in) {
         waterId = in.readString();
@@ -54,6 +54,17 @@ public class TransactionDetail implements Parcelable{
         dest.writeString(content);
     }
 
+    public String getFeeType() {
+        return feeType;
+    }
+
+    public void setFeeType(String feeType) {
+        this.feeType = feeType;
+    }
+
+    public String getFeeTypeConverter(){
+        return "1".equals(feeType)?"+":"-";
+    }
 
     public String getWaterId() {
         return waterId;

@@ -38,7 +38,7 @@ public class OrderListModelImpl implements OrderListModel {
 
     @Override
     public void receiveOrder(String orderNo, Callback callback) {
-        OkHttpUtils.get().url(Api.domain+Api.receiveOrder).addParams("orderNo",orderNo).tag(context).build().execute(callback);
+        OkHttpUtils.post().url(Api.domain+Api.receiveOrder).addParams("orderNo",orderNo).tag(context).build().execute(callback);
     }
 
     @Override

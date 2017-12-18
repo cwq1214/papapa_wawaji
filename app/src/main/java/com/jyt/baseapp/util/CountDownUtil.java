@@ -9,7 +9,7 @@ import android.os.Handler;
 
 public class CountDownUtil {
 
-    static final int defaultCount = 5;
+    static final int defaultCount = 30;
     static final int defaultDelay = 1000;
 
     Handler handler;
@@ -59,7 +59,7 @@ public class CountDownUtil {
             }
 
             if (countDownCallback!=null)
-                countDownCallback.countDownCallback(useCount==0,useCount);
+                countDownCallback.countDownCallback(useCount==-1,useCount);
 
             useCount--;
 

@@ -28,8 +28,7 @@
                     android:id="@+id/text_toyName"
                     style="@style/commonText"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="#1A1A1A" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/text_state"
@@ -37,7 +36,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="配送中"
                     android:textSize="12dp" />
             </RelativeLayout>
 
@@ -52,8 +50,7 @@
                     android:layout_height="91dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@color/gray" />
+                    android:layout_marginTop="15dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -77,8 +74,7 @@
                             android:id="@+id/text_orderNo"
                             style="@style/smallText"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="45102902025090837" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -96,8 +92,7 @@
                             android:id="@+id/text_date"
                             style="@style/smallText"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="45102902025090837" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -115,8 +110,7 @@
                             android:id="@+id/text_receiver"
                             style="@style/smallText"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="45102902025090837" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -134,8 +128,7 @@
                             android:id="@+id/text_address"
                             style="@style/smallText"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="451029020250908374510290202509083745102902025090837" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
                 </LinearLayout>
 

@@ -6,10 +6,11 @@
     android:layout_alignParentBottom="true"
     android:padding="10dp"
     android:id="@+id/v_bottomControl"
-
+    android:layout_marginBottom="10dp"
     >
 
     <ImageView
+        android:alpha="0.75"
         android:clickable="true"
         android:id="@+id/img_top"
         android:layout_width="56dp"
@@ -24,6 +25,7 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:alpha="0.75"
             android:clickable="true"
             android:id="@+id/img_left"
             android:layout_width="56dp"
@@ -31,6 +33,7 @@
             android:background="@drawable/sel_left_control_btn" />
 
         <ImageView
+            android:alpha="0.75"
             android:clickable="true"
             android:id="@+id/img_right"
             android:layout_width="56dp"
@@ -41,6 +44,7 @@
 
 
     <ImageView
+        android:alpha="0.75"
         android:clickable="true"
         android:id="@+id/img_down"
         android:layout_width="56dp"
@@ -51,6 +55,7 @@
         android:background="@drawable/sel_bottom_control_btn" />
 
     <RelativeLayout
+        android:alpha="0.75"
         android:id="@+id/v_doneLayout"
         android:layout_width="65dp"
         android:layout_height="65dp"

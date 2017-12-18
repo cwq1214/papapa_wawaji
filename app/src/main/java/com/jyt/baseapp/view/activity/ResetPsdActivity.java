@@ -10,9 +10,14 @@ import android.widget.TextView;
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.api.BeanCallback;
 import com.jyt.baseapp.bean.BaseJson;
+import com.jyt.baseapp.model.BaseModel;
 import com.jyt.baseapp.model.LoginLogoutModel;
+import com.jyt.baseapp.model.impl.LoginLoutModelImpl;
 import com.jyt.baseapp.util.CountDownUtil;
 import com.jyt.baseapp.util.T;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -69,6 +74,13 @@ public class ResetPsdActivity extends BaseActivity {
 
     }
 
+    @Override
+    public List<BaseModel> createModels() {
+        List list = new ArrayList();
+        list.add(loginLogoutModel = new LoginLoutModelImpl());
+        return list;
+    }
+
     @OnClick(R.id.btn_confirm)
     public void onConfirmClick(){
         String phone = inputPhone.getText().toString();
@@ -99,8 +111,28 @@ public class ResetPsdActivity extends BaseActivity {
 
     @OnClick(R.id.btn_getCode)
     public void onGetCodeClick(){
-        countDownUtil.start();
-        btnGetCode.setEnabled(false);
+
+        String phone = inputPhone.getText().toString();
+        String psd = inputPsd.getText().toString();
+        if (TextUtils.isEmpty(phone)){
+            T.showShort(getContext(),"请输入手机号");
+            return;
+        }
+//        if (TextUtils.isEmpty(psd)){
+//            T.showShort(getContext(),"请输入密码");
+//            return;
+//        }
+        loginLogoutModel.getVerifyCode(phone, new BeanCallback<BaseJson>() {
+            @Override
+            public void response(boolean success, BaseJson response, int id) {
+                if (response.isRet()){
+                    countDownUtil.start();
+                    btnGetCode.setEnabled(false);
+                }else {
+                    T.showShort(getContext(),response.getForUser());
+                }
+            }
+        });
     }
 
     @Override

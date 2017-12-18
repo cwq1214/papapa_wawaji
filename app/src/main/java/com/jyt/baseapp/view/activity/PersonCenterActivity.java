@@ -3,6 +3,7 @@ package com.jyt.baseapp.view.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.jyt.baseapp.model.BaseModel;
 import com.jyt.baseapp.model.PersonalInfoModel;
 import com.jyt.baseapp.model.impl.PersonalInfoModelImpl;
 import com.jyt.baseapp.util.ImageLoader;
+import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.util.UserInfo;
 import com.jyt.baseapp.view.widget.LabelAndTextItem;
 
@@ -43,9 +45,9 @@ public class PersonCenterActivity extends BaseActivity {
     @BindView(R.id.v_toOrder)
     LabelAndTextItem vToOrder;
     @BindView(R.id.img_BGMControl)
-    ImageView imgBGMControl;
+    CheckBox imgBGMControl;
     @BindView(R.id.img_voiceControl)
-    ImageView imgVoiceControl;
+    CheckBox imgVoiceControl;
     @BindView(R.id.v_toGuidance)
     LabelAndTextItem vToGuidance;
     @BindView(R.id.v_toAboutUs)
@@ -88,8 +90,10 @@ public class PersonCenterActivity extends BaseActivity {
     }
 
     private void reloadView() {
-        setFunctionImage(R.mipmap.message);
-        showFunctionImage();
+
+//        setFunctionImage(R.mipmap.message);
+//        showFunctionImage();
+
         textLogout.setText(UserInfo.isLogin() ? "退出登录" : "登录");
         if (UserInfo.isLogin()) {
             getUserInfo();
@@ -115,7 +119,7 @@ public class PersonCenterActivity extends BaseActivity {
         personalInfo = info;
         textName.setText(info.getNickname());
         textRecord.setText(String.format("共抓中  %s 次", info.getGetCount()));
-        ImageLoader.getInstance().loadCircle(imgHeader, info.getUserImg());
+        ImageLoader.getInstance().loadHeader(imgHeader, info.getUserImg());
     }
 
     @Override
@@ -136,7 +140,8 @@ public class PersonCenterActivity extends BaseActivity {
 
         switch (vid) {
             case R.id.img_header:
-                IntentHelper.openModifyUserInfoActivity(personalInfo.getNickname(),personalInfo.getUserImg(),getContext());
+                if (personalInfo!=null)
+                    IntentHelper.openModifyUserInfoActivity(personalInfo.getNickname(),personalInfo.getUserImg(),getContext());
                 break;
             case R.id.v_toMyWaWa:
                 IntentHelper.openMyWaWaActivity(getContext());
@@ -150,17 +155,11 @@ public class PersonCenterActivity extends BaseActivity {
             case R.id.v_toOrder:
                 IntentHelper.openOrderListActivity(getContext());
                 break;
-            case R.id.img_BGMControl:
-                break;
-            case R.id.img_voiceControl:
-                break;
             case R.id.v_toGuidance:
-                break;
             case R.id.v_toAboutUs:
-                break;
             case R.id.v_toContractUs:
-                break;
             case R.id.v_toFeedback:
+                T.showShort(getContext(),"敬请期待");
                 break;
             case R.id.v_viewVersion:
                 IntentHelper.openVersionInfoActivity(getContext());

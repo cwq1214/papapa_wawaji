@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jyt.baseapp.R;
+import com.jyt.baseapp.api.Api;
 import com.jyt.baseapp.util.ImageLoader;
 import com.lcodecore.tkrefreshlayout.IBottomView;
 
@@ -49,6 +50,8 @@ public class MainRefreshBottomView extends FrameLayout implements IBottomView {
         objectAnimator =  ObjectAnimator.ofFloat(imgLoadingImg,"Rotation",0,180);
         objectAnimator.setDuration(1000);
         objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+
+        textDomain.setText(Api.domainText);
     }
 
     @Override

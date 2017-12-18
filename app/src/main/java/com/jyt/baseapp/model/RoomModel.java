@@ -27,7 +27,7 @@ public interface RoomModel extends BaseModel {
      * @param machineId
      * @param callback
      */
-    void getMachineState(String machineId,Callback callback);
+    void play(String machineId, Callback callback);
 
     /**
      * 退出房间
@@ -42,6 +42,13 @@ public interface RoomModel extends BaseModel {
      * @param callback
      */
     void afterGrabToy(String machineId,boolean caught,Callback callback);
+
+    /**
+     * 设置娃娃机状态为空闲
+     * @param machineId
+     * @param callback
+     */
+    void setMachineFree(String machineId,Callback callback);
 
 
 }

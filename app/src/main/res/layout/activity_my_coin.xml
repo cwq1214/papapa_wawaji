@@ -10,7 +10,7 @@
         android:layout_height="101dp"
         android:background="@color/colorPrimary"
         android:gravity="center"
-        android:text="61"
+        android:text="0"
         android:textColor="@color/white"
         android:textSize="50dp" />
     <com.jyt.baseapp.view.widget.RefreshRecyclerView

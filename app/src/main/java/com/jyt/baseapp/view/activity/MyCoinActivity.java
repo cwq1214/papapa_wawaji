@@ -59,7 +59,7 @@ public class MyCoinActivity extends BaseActivity {
     RechargeCoinDialog rechargeCoinDialog;
 
     WeChartHelper weChartHelper;
-
+    PayDialog payDialog;
 
     BeanCallback loadMoreCallback = new BeanCallback<BaseJson<List<TransactionDetail>>>() {
         @Override
@@ -138,7 +138,7 @@ public class MyCoinActivity extends BaseActivity {
                             public void onPriceClick(final RechargePrice price) {
                                 rechargeCoinDialog.dismiss();
 
-                                PayDialog payDialog = new PayDialog(getContext());
+                                payDialog = new PayDialog(getContext());
                                 payDialog.setOnDoneClickListener(new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -177,6 +177,8 @@ public class MyCoinActivity extends BaseActivity {
                                                                     // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                                                                     T.showShort(getContext(), "支付失败");
                                                                 }
+                                                                if (payDialog != null)
+                                                                    payDialog.dismiss();
 
                                                             }
                                                         };
@@ -212,6 +214,10 @@ public class MyCoinActivity extends BaseActivity {
 
                     vCoinTransactionDetails.getRefreshLayout().startRefresh();
                     getSelfCoin();
+
+                    if (payDialog!=null){
+                        payDialog.dismiss();
+                    }
 
                 }else {
                     T.showShort(getContext(),"支付失败");

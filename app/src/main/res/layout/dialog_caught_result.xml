@@ -75,7 +75,7 @@
             android:paddingLeft="14dp"
             android:paddingRight="14dp"
             android:paddingTop="9dp"
-            android:text="分享喜悦"
+            android:text="  关    闭  "
             android:textColor="@color/white" />
     </LinearLayout>
 </LinearLayout>

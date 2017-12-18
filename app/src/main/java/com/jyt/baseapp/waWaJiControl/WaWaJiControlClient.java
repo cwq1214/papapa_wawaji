@@ -3,6 +3,7 @@ package com.jyt.baseapp.waWaJiControl;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 
 import com.jyt.baseapp.util.L;
@@ -20,7 +21,8 @@ import static android.net.sip.SipErrorCode.TIME_OUT;
 public class WaWaJiControlClient {
     private Handler handler;
     private Thread receive;
-    private int avIndex;
+    private Thread send;
+    private int avIndex = -1;
     private int sid;
 
     public static final int MOVE_TOP = AVIOCTRLDEFs.AVIOCTRL_PTZ_UP;
@@ -36,38 +38,35 @@ public class WaWaJiControlClient {
     OnWaWaPlayedListener onWaWaPlayedListener;
 
     public WaWaJiControlClient(Context context){
-        handler = new Handler(){
+
+        //region 发送
+        send = new Thread(){
             @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (msg.what==0){
-                    String uid = msg.getData().getString("uid");
-                    String pwd = msg.getData().getString("pwd");
-                    startConnection(uid,pwd);
-                }else if (msg.what == 1){
-                    int move_action = msg.getData().getInt("ACTION");
-                    startIpcamStream(move_action);
-                }
+            public void run() {
+                super.run();
+                Looper.prepare();
+
+                handler = new Handler(){
+                    @Override
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        if (msg.what==0){
+                            String uid = msg.getData().getString("uid");
+                            String pwd = msg.getData().getString("pwd");
+                            startConnection(uid,pwd);
+                        }else if (msg.what == 1){
+                            int move_action = msg.getData().getInt("ACTION");
+                            startIpcamStream(move_action);
+                        }
+                    }
+                };
+                Looper.myLooper().loop();
             }
+
+
         };
-
-//        receive = new Thread();
-
-    }
-
-    /**
-     * 开始
-     * @param uid
-     * @param pwd
-     */
-    public void start(String uid, String pwd ){
-        Message message = new Message();
-        Bundle bundle = new Bundle();
-        bundle.putString("uid",uid);
-        bundle.putString("pwd",pwd);
-        message.setData(bundle);
-        handler.sendMessage(message);
-        isReceive = true;
+        //endregion
+        //region 接收
         receive = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -127,7 +126,30 @@ public class WaWaJiControlClient {
                 }
             }
         });
-        receive.start();
+
+        //endregion
+        send.start();
+
+        AVAPIs avapIs = new AVAPIs();
+//        receive = new Thread();
+
+    }
+
+    /**
+     * 开始
+     * @param uid
+     * @param pwd
+     */
+    public void start(String uid, String pwd ){
+        Message message = new Message();
+        Bundle bundle = new Bundle();
+        bundle.putString("uid",uid);
+        bundle.putString("pwd",pwd);
+        message.setData(bundle);
+        handler.sendMessage(message);
+
+        isReceive = true;
+
 
     }
 
@@ -140,20 +162,31 @@ public class WaWaJiControlClient {
      *
      */
     public void stop(){
-        AVAPIs.avClientStop(avIndex);
-        System.out.printf("avClientStop OK\n");
-        IOTCAPIs.IOTC_Session_Close(sid);
-        System.out.printf("IOTC_Session_Close OK\n");
-        AVAPIs.avDeInitialize();
-        IOTCAPIs.IOTC_DeInitialize();
-        System.out.printf("StreamClient exit...\n");
-
-        isReceive = false;
         try {
-            if (receive!=null) {
-                receive.interrupt();
-                receive.stop();
+            if (avIndex == -1){
+                return;
             }
+            AVAPIs.avClientStop(avIndex);
+            System.out.printf("avClientStop OK\n");
+            IOTCAPIs.IOTC_Session_Close(sid);
+            System.out.printf("IOTC_Session_Close OK\n");
+            AVAPIs.avDeInitialize();
+            IOTCAPIs.IOTC_DeInitialize();
+            System.out.printf("StreamClient exit...\n");
+            avIndex = -1;
+            isReceive = false;
+
+                if (receive!=null) {
+                    receive.interrupt();
+                    receive.stop();
+                    receive = null;
+                }
+
+                if (send!=null){
+                    send.interrupt();
+                    send.stop();
+                    send = null;
+                }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -204,6 +237,17 @@ public class WaWaJiControlClient {
         }
 
         startIpcamStream(20);
+
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                isReceive = true;
+                receive.start();
+            }
+        }.start();
+
+
     }
 
 

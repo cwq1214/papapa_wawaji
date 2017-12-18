@@ -9,13 +9,6 @@
         android:layout_height="50dp">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="-20dp"
-            android:background="@mipmap/navbg"
-            android:scaleType="matrix"></ImageView>
-
-        <ImageView
             android:id="@+id/img_setting"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -32,17 +25,12 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
             android:src="@mipmap/personal" />
-        <View
-            android:background="@color/colorPrimary"
-            android:layout_centerInParent="true"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
 
         <ImageView
             android:id="@+id/img_gifppp"
-            android:layout_centerInParent="true"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true" />
     </RelativeLayout>
     
     <RelativeLayout

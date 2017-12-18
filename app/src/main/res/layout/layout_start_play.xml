@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:id="@+id/v_start_play_layout"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="20dp"
+    android:layout_gravity="bottom"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的娃娃币"
+            android:textColor="@color/white"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/text_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
+            android:autoText="true"
+            android:text="50"
+            android:textColor="@color/white"
+            android:textSize="18dp" />
+
+        <LinearLayout
+            android:id="@+id/v_recharge"
+            android:layout_width="67dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_10radius_white_solide"
+            android:gravity="center"
+            android:paddingBottom="2dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="2dp">
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="12dp"
+                android:src="@mipmap/money" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="充值"
+                android:textColor="#FFCC00"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/v_playLayout"
+        android:layout_width="151dp"
+        android:layout_height="56dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_28radius_white">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="141dp"
+            android:layout_height="46dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/play" />
+
+        <TextView
+            android:id="@+id/text_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="false"
+            android:layout_marginLeft="65dp"
+            android:layout_marginTop="30dp"
+            android:text="28/次"
+            android:textColor="@color/white"
+            android:textSize="10dp" />
+    </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/img_sendDanMu"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/bg_56circle"
+        android:cropToPadding="true"
+        android:padding="11dp"
+        android:src="@mipmap/comment"
+        android:visibility="gone" />
+
+
+</RelativeLayout>

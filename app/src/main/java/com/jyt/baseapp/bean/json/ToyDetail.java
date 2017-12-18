@@ -22,6 +22,8 @@ public class ToyDetail implements Parcelable {
     private String flankFlowLink;///侧面读流地址
     private List<RechargePrice> rule;//充值规则
     private List<GrabHistory> hist;//历史成功抓取记录
+    private String remoteId;
+
 
     protected ToyDetail(Parcel in) {
         toyId = in.readString();
@@ -36,6 +38,29 @@ public class ToyDetail implements Parcelable {
         flankFlowLink = in.readString();
         rule = in.createTypedArrayList(RechargePrice.CREATOR);
         hist = in.createTypedArrayList(GrabHistory.CREATOR);
+        remoteId = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(toyId);
+        dest.writeString(machineId);
+        dest.writeString(toyImg);
+        dest.writeString(toyName);
+        dest.writeString(needPay);
+        dest.writeString(machineStatus);
+        dest.writeString(toyDesc);
+        dest.writeString(userBalance);
+        dest.writeString(mainFlowLink);
+        dest.writeString(flankFlowLink);
+        dest.writeTypedList(rule);
+        dest.writeTypedList(hist);
+        dest.writeString(remoteId);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<ToyDetail> CREATOR = new Creator<ToyDetail>() {
@@ -49,6 +74,14 @@ public class ToyDetail implements Parcelable {
             return new ToyDetail[size];
         }
     };
+
+    public String getRemoteId() {
+        return remoteId;
+    }
+
+    public void setRemoteId(String remoteId) {
+        this.remoteId = remoteId;
+    }
 
     public String getToyId() {
         return toyId;
@@ -146,24 +179,5 @@ public class ToyDetail implements Parcelable {
         this.hist = hist;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(toyId);
-        dest.writeString(machineId);
-        dest.writeString(toyImg);
-        dest.writeString(toyName);
-        dest.writeString(needPay);
-        dest.writeString(machineStatus);
-        dest.writeString(toyDesc);
-        dest.writeString(userBalance);
-        dest.writeString(mainFlowLink);
-        dest.writeString(flankFlowLink);
-        dest.writeTypedList(rule);
-        dest.writeTypedList(hist);
-    }
 }

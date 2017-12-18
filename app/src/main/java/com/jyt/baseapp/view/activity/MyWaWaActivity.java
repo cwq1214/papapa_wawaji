@@ -78,8 +78,8 @@ public class MyWaWaActivity extends BaseActivity {
         WhiteRefreshView bottomView = new WhiteRefreshView(getContext());
         bottomView.setPreRefreshImgResId(R.mipmap.black_up_arrow);
 
-        vRefreshRecyclerView.getRefreshLayout().setHeaderView(headerView );
-        vRefreshRecyclerView.getRefreshLayout().setBottomView(bottomView );
+        vRefreshRecyclerView.getRefreshLayout().setHeaderView(headerView);
+        vRefreshRecyclerView.getRefreshLayout().setBottomView(bottomView);
 
 
         vRefreshRecyclerView.setAdapter(adapter = new GrabWaWaAdapter());

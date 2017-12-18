@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -20,12 +21,14 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.annotation.ActivityAnnotation;
 import com.jyt.baseapp.api.BeanCallback;
 import com.jyt.baseapp.bean.BaseJson;
 import com.jyt.baseapp.bean.json.HomeToyResult;
+import com.jyt.baseapp.bean.json.Machine;
 import com.jyt.baseapp.bean.json.MachineStateAndPeopleResult;
 import com.jyt.baseapp.bean.json.RechargePrice;
 import com.jyt.baseapp.bean.json.ToyDetail;
@@ -41,6 +44,7 @@ import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.util.TimerUtil;
 import com.jyt.baseapp.util.UserInfo;
 import com.jyt.baseapp.view.dialog.CaughtResultDialog;
+import com.jyt.baseapp.view.dialog.LoadingDialog;
 import com.jyt.baseapp.view.dialog.RechargeCoinDialog;
 import com.jyt.baseapp.view.widget.CircleProgressView;
 import com.jyt.baseapp.waWaJiControl.WaWaJiControlClient;
@@ -48,12 +52,9 @@ import com.jyt.baseapp.zego.ZegoApiManager;
 import com.jyt.baseapp.zego.ZegoStream;
 import com.zego.zegoliveroom.ZegoLiveRoom;
 import com.zego.zegoliveroom.callback.IZegoLivePlayerCallback;
-import com.zego.zegoliveroom.callback.IZegoLivePublisherCallback;
 import com.zego.zegoliveroom.callback.IZegoLoginCompletionCallback;
-import com.zego.zegoliveroom.callback.IZegoRoomCallback;
 import com.zego.zegoliveroom.constants.ZegoConstants;
 import com.zego.zegoliveroom.constants.ZegoVideoViewMode;
-import com.zego.zegoliveroom.entity.AuxData;
 import com.zego.zegoliveroom.entity.ZegoStreamInfo;
 import com.zego.zegoliveroom.entity.ZegoStreamQuality;
 import com.zego.zegoliveroom.entity.ZegoUser;
@@ -133,7 +134,10 @@ public class RoomActivity extends BaseActivity {
     TextureView textureview2;
     @BindView(R.id.v_videoView)
     FrameLayout vVideoView;
-
+    @BindView(R.id.img_gif)
+    ImageView imgGif;
+    @BindView(R.id.v_start_play_layout)
+    RelativeLayout vStartPlayLayout;
 
     //充值对话框
     RechargeCoinDialog rechargeCoinDialog;
@@ -158,7 +162,12 @@ public class RoomActivity extends BaseActivity {
     private ZegoLiveRoom mZegoLiveRoom = ZegoApiManager.getInstance().getZegoLiveRoom();
 
 
+    //结果对话框 判断是否继续
+    boolean dialogPlayContinue;
+
     boolean playing;
+
+    LoadingDialog loadingDialog;
 
 
     private List<ZegoStream> mListStream = new ArrayList<>();
@@ -200,6 +209,7 @@ public class RoomActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkPublishPermission();
+        Glide.with(this).load(R.mipmap.start).asGif().into(imgGif);
         homeToyResult = getIntent().getParcelableExtra(IntentKey.KEY_ROOM);
         if (homeToyResult.getMachineList() == null || homeToyResult.getMachineList().size() == 0) {
             T.showShort(getContext(), "此房间内无可用机器");
@@ -207,8 +217,9 @@ public class RoomActivity extends BaseActivity {
             return;
         }
         ZegoApiManager.getInstance().initSDK();
-
-        timer = new TimerUtil(getContext(), 30*1000);
+        loadingDialog = new LoadingDialog(getContext());
+        loadingDialog.setCancelable(false);
+        timer = new TimerUtil(getContext(), 30 * 1000);
         timer.setOnTimeCallback(new TimerUtil.OnTimeCallback() {
             @Override
             public void onTime() {
@@ -222,7 +233,6 @@ public class RoomActivity extends BaseActivity {
                 });
             }
         });
-        timer.start();
 
 
         countDownUtil = new CountDownUtil(getContext(), 30, 1000);
@@ -235,16 +245,16 @@ public class RoomActivity extends BaseActivity {
 //                    countDownUtil.stop();
 //                    vCircleProgress.stop();
 //                    setWaWaControl(playing = false);
-                    new Thread(){
+                    new Thread() {
                         @Override
                         public void run() {
+                            T.showShort(getContext(),"等待抓取结果");
                             waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_CATCH);
                             countDownUtil.stop();
                             vCircleProgress.stop();
 //                            waWaJiControlClient.action_up();
                         }
                     }.start();
-
 
 
                 }
@@ -267,6 +277,7 @@ public class RoomActivity extends BaseActivity {
 
             @Override
             public void start() {
+                loadingDialog.dismiss();
                 countDownUtil.start();
                 setWaWaControl(playing = true);
             }
@@ -278,15 +289,31 @@ public class RoomActivity extends BaseActivity {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 int width = right - left;
-                v.setLayoutParams(new RelativeLayout.LayoutParams(width, width * 481 / 366));
-                textureview1.setLayoutParams(new FrameLayout.LayoutParams(width, width * 481 / 366));
-                textureview2.setLayoutParams(new FrameLayout.LayoutParams(width, width * 481 / 366));
+                v.setLayoutParams(new RelativeLayout.LayoutParams(width, width * 500 / 360));
+                textureview1.setLayoutParams(new FrameLayout.LayoutParams(width, width * 500 / 360));
+                textureview2.setLayoutParams(new FrameLayout.LayoutParams(width, width * 500 / 360));
 
                 v.removeOnLayoutChangeListener(this);
+
+
             }
         });
+        vWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+//        vWebView.setEnabled(false);
+        vWebView.getSettings().setUseWideViewPort(true);
+        vWebView.getSettings().setJavaScriptEnabled(true);
+        vWebView.setScrollContainer(false);
+        vWebView.setVerticalScrollBarEnabled(false);
+        vWebView.setHorizontalScrollBarEnabled(false);
+//        vWebView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                return true;
+//            }
+//        });
 
-
+//        homeToyResult.getMachineList().addAll( homeToyResult.getMachineList());
+//        homeToyResult.getMachineList().addAll( homeToyResult.getMachineList());
         connectRoom();
 
 
@@ -314,7 +341,7 @@ public class RoomActivity extends BaseActivity {
 
     //初始化播放器
     private void initPlayer(String url) {
-        mZegoLiveRoom.loginRoom("666", ZegoConstants.RoomRole.Audience, new IZegoLoginCompletionCallback() {
+        mZegoLiveRoom.loginRoom(homeToyResult.getMachineList().get(currentRoom).getMachineId(), ZegoConstants.RoomRole.Audience, new IZegoLoginCompletionCallback() {
             @Override
             public void onLoginCompletion(int errCode, ZegoStreamInfo[] zegoStreamInfos) {
                 if (errCode == 0) {
@@ -347,13 +374,13 @@ public class RoomActivity extends BaseActivity {
                     mListStream.get(0).playStream(100);
                     mListStream.get(1).playStream(0);
 
-                    mZegoLiveRoom.setViewRotation(90,mListStream.get(0).getStreamID());
-                    mZegoLiveRoom.setViewRotation(90,mListStream.get(1).getStreamID());
+//                    mZegoLiveRoom.setViewRotation(90, mListStream.get(0).getStreamID());
+//                    mZegoLiveRoom.setViewRotation(90, mListStream.get(1).getStreamID());
 
-                    mZegoLiveRoom.setViewMode(ZegoVideoViewMode.ScaleAspectFill,mListStream.get(0).getStreamID());
-                    mZegoLiveRoom.setViewMode(ZegoVideoViewMode.ScaleAspectFill,mListStream.get(1).getStreamID());
+                    mZegoLiveRoom.setViewMode(ZegoVideoViewMode.ScaleAspectFill, mListStream.get(0).getStreamID());
+                    mZegoLiveRoom.setViewMode(ZegoVideoViewMode.ScaleAspectFill, mListStream.get(1).getStreamID());
                 }
-                L.e("[loginRoom]"+ "error code " + errCode);
+                L.e("[loginRoom]" + "error code " + errCode);
             }
         });
 
@@ -598,9 +625,9 @@ public class RoomActivity extends BaseActivity {
     }
 
     private ZegoStream constructStream(int index, String streamID) {
-        if (streamID.startsWith("rtmp://")){
-            streamID = streamID.substring(streamID.lastIndexOf("-")+1);
-        }
+//        if (streamID.startsWith("rtmp://")) {
+        streamID = streamID.substring(streamID.lastIndexOf("-") + 1);
+//        }
 
         String sateStrings[];
         TextureView textureView;
@@ -612,35 +639,6 @@ public class RoomActivity extends BaseActivity {
             textureView = textureview2;
         }
         return new ZegoStream(streamID, textureView, sateStrings);
-    }
-
-
-    private void switchPlaySource(boolean useUltraSource) {
-
-        // 停止推流
-        for (ZegoStream zegoStream : mListStream) {
-            zegoStream.stopPlayStream();
-        }
-
-        String config;
-        if (useUltraSource) {
-            // 切到zego服务器拉流
-            config = ZegoConstants.Config.PREFER_PLAY_ULTRA_SOURCE + "=1";
-        } else {
-            //切回cdn拉流
-            config = ZegoConstants.Config.PREFER_PLAY_ULTRA_SOURCE + "=0";
-        }
-
-        ZegoLiveRoom.setConfig(config);
-
-        int currentShowIndex = mSwitchCameraTimes % 2;
-        if (currentShowIndex == 0) {
-            mListStream.get(0).playStream(100);
-            mListStream.get(1).playStream(0);
-        } else {
-            mListStream.get(0).playStream(0);
-            mListStream.get(1).playStream(100);
-        }
     }
 
 
@@ -657,13 +655,20 @@ public class RoomActivity extends BaseActivity {
         if (homeToyResult.getMachineList() == null || homeToyResult.getMachineList().size() == 0) {
             return;
         }
+        loadingDialog.show();
         roomModel.getToyDetailForAll(homeToyResult.getToyId(), homeToyResult.getMachineList().get(currentRoom).getMachineId(), new BeanCallback<BaseJson<ToyDetail>>() {
             @Override
             public void response(boolean success, BaseJson<ToyDetail> response, int id) {
                 if (response.isRet()) {
                     toyDetail = response.getData();
                     setRoomInfo(response.getData());
+                    if (timer != null) {
+                        timer.stop();
+                        timer.start();
+
+                    }
                 }
+                loadingDialog.dismiss();
             }
         });
     }
@@ -734,13 +739,10 @@ public class RoomActivity extends BaseActivity {
         if (waWaJiControlClient != null)
             waWaJiControlClient.stop();
 
-        if (toyDetail != null)
-            roomModel.quitRoom(toyDetail.getMachineId(), new BeanCallback<String>() {
-                @Override
-                public void response(boolean success, String response, int id) {
-                    L.e("quit");
-                }
-            });
+        if (toyDetail != null) {
+            quitRoom();
+        }
+
 
         if (timer != null) {
             timer.stop();
@@ -772,6 +774,7 @@ public class RoomActivity extends BaseActivity {
             case R.id.img_help:
                 break;
             case R.id.v_changeRoom:
+                onChangeRoomClick();
                 break;
             case R.id.v_recharge:
 
@@ -789,20 +792,25 @@ public class RoomActivity extends BaseActivity {
 
 
     private void playWaWaJi() {
-        if (toyDetail!=null)
-        roomModel.getMachineState(toyDetail.getMachineId(), new BeanCallback<BaseJson>() {
-            @Override
-            public void response(boolean success, BaseJson response, int id) {
-                if (response.isRet()) {
+        loadingDialog.show();
 
-                    waWaJiControlClient.stop();
-                    waWaJiControlClient.start("4AAZU15J37FG6L4K111A", "pppzww168");
-                } else {
+        if (toyDetail != null)
+            roomModel.play(toyDetail.getMachineId(), new BeanCallback<BaseJson>() {
+                @Override
+                public void response(boolean success, BaseJson response, int id) {
+                    if (response.isRet()) {
+                        waWaJiControlClient.stop();
+                        waWaJiControlClient.start(toyDetail.getRemoteId(), "pppzww168");
+                    } else {
+                        setWaWaControl(false);
+                        if (loadingDialog.isShowing())
+                            loadingDialog.dismiss();
 
-                    T.showShort(getContext(), response.getForUser());
+                        T.showShort(getContext(), response.getForUser());
+                    }
+
                 }
-            }
-        });
+            });
 
     }
 
@@ -828,7 +836,7 @@ public class RoomActivity extends BaseActivity {
                         return play;
                     }
                 });
-                vPlayLayout.setVisibility(!play ? View.VISIBLE : View.GONE);
+                vStartPlayLayout.setVisibility(!play ? View.VISIBLE : View.GONE);
 
 
             }
@@ -843,22 +851,39 @@ public class RoomActivity extends BaseActivity {
         int action = event.getAction();
 
         if (action == MotionEvent.ACTION_DOWN) {
-            if (v == imgTop) {
-                waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_TOP);
-            } else if (v == imgDown) {
-                waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_DOWN);
-            } else if (v == imgLeft) {
-                waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_LEFT);
-            } else if (v == imgRight) {
-                waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_RIGHT);
-            } else if (v == imgDone) {
-                waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_CATCH);
-                countDownUtil.stop();
-                vCircleProgress.stop();
+            if (mSwitchCameraTimes % 2 == 1) {//
+                if (v == imgTop) {
+                    waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_LEFT);
+                } else if (v == imgDown) {
+                    waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_RIGHT);
+                } else if (v == imgLeft) {
+                    waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_DOWN);
+                } else if (v == imgRight) {
+                    waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_TOP);
+                } else if (v == imgDone) {
+                    waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_CATCH);
+                    countDownUtil.stop();
+                    vCircleProgress.stop();
+                }
+            } else {
+                if (v == imgTop) {
+                    waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_TOP);
+                } else if (v == imgDown) {
+                    waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_DOWN);
+                } else if (v == imgLeft) {
+                    waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_LEFT);
+                } else if (v == imgRight) {
+                    waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_RIGHT);
+                } else if (v == imgDone) {
+                    waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_CATCH);
+                    countDownUtil.stop();
+                    vCircleProgress.stop();
+                }
             }
+
             return false;
         } else if (action == MotionEvent.ACTION_UP) {
-            if (v == imgDone){
+            if (v == imgDone) {
                 return false;
             }
             waWaJiControlClient.action_up();
@@ -880,16 +905,39 @@ public class RoomActivity extends BaseActivity {
                 successDialog.setOnDialogBtnClick(new CaughtResultDialog.OnDialogBtnClick() {
                     @Override
                     public void onClick(Dialog dialog, int btnIndex, View btn) {
-                        dialog.dismiss();
+                        if (btnIndex == 0) {
+                            onViewClicked(vPlayLayout);
+                            dialogPlayContinue = true;
+                            dialog.dismiss();
+                        } else if (btnIndex == 1) {
+                            dialogPlayContinue = false;
+                            dialog.dismiss();
+                            quitRoom();
+
+                        }
+                    }
+                });
+                successDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        if (dialogPlayContinue) {
+
+                            setMachineFree();
+                            dialogPlayContinue = false;
+                        }
                     }
                 });
                 if (caught) {
                     successDialog.setTitle("抓取成功");
                     successDialog.setMessage("恭喜抓取成功！");
+                    successDialog.setContinueText("好运继续");
                 } else {
                     successDialog.setTitle("抓取失败");
                     successDialog.setMessage("抓取失败！");
+                    successDialog.setContinueText("再接再厉");
+
                 }
+//                successDialog.setCancelable(false);
                 successDialog.show();
 
             }
@@ -901,6 +949,7 @@ public class RoomActivity extends BaseActivity {
      * 设置抓取结果
      */
     private void setCaughtResult(boolean caught) {
+//        caught = true;
         roomModel.afterGrabToy(toyDetail.getMachineId(), caught, new BeanCallback<BaseJson>() {
             @Override
             public void response(boolean success, BaseJson response, int id) {
@@ -917,6 +966,7 @@ public class RoomActivity extends BaseActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     playing = false;
+                    quitRoom();
                     onBackPressed();
                 }
             }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -924,11 +974,65 @@ public class RoomActivity extends BaseActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                 }
-            });
+            }).show();
         } else {
             super.onBackPressed();
         }
     }
 
+
+    private void quitRoom() {
+        roomModel.quitRoom(toyDetail.getMachineId(), new BeanCallback<String>() {
+            @Override
+            public void response(boolean success, String response, int id) {
+                L.e("quit");
+            }
+        });
+    }
+
+    private void setMachineFree() {
+        roomModel.setMachineFree(toyDetail.getMachineId(), new BeanCallback<BaseJson>() {
+            @Override
+            public void response(boolean success, BaseJson response, int id) {
+                L.e("free");
+            }
+        });
+    }
+
+    private void onChangeRoomClick() {
+        List<Machine> roomList = homeToyResult.getMachineList();
+        int cr = currentRoom;
+        if (++currentRoom >= roomList.size() - 1) {
+            currentRoom = 0;
+        }
+        if (cr == currentRoom) {
+            T.showShort(getContext(), "没有房间可以切换");
+            return;
+        }
+        if (playing) {
+            new AlertDialog.Builder(getContext()).setMessage("游戏尚未结束，是否要换房").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    playing = false;
+
+                    connectRoom();
+                    doLogout();
+
+                }
+            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).show();
+
+        } else {
+            connectRoom();
+            doLogout();
+        }
+
+//        Machine machine = roomList.get(currentRoom);
+    }
 
 }

@@ -4,9 +4,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jyt.baseapp.R;
+import com.jyt.baseapp.api.Api;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -22,6 +24,8 @@ public class VersionInfoActivity extends BaseActivity {
     TextView mTvVersion;
     @BindView(R.id.tv_url)
     TextView mTvUrl;
+    @BindView(R.id.rl_evaluation)
+    RelativeLayout rlEvaluation;
 
     @Override
     protected int getLayoutId() {
@@ -44,6 +48,7 @@ public class VersionInfoActivity extends BaseActivity {
             e.printStackTrace();
         }
 
+        mTvUrl.setText(Api.domainText);
 
     }
 

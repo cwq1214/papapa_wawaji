@@ -1,9 +1,11 @@
 package com.jyt.baseapp.view.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -89,8 +91,19 @@ public class AddressListActivity extends BaseActivity {
         //删除地址
         adapter.setOnDeleteAddressClick(new BaseViewHolder.OnViewHolderClickListener() {
             @Override
-            public void onClick(BaseViewHolder holder) {
-                deleteAddress((Address) holder.getData());
+            public void onClick(final BaseViewHolder holder) {
+                new AlertDialog.Builder(getContext()).setMessage("是否要删除地址?").setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        deleteAddress((Address) holder.getData());
+                        dialogInterface.dismiss();
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).show();
             }
         });
         //设置默认地址

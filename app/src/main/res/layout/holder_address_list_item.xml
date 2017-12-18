@@ -18,16 +18,14 @@
             android:id="@+id/text_name"
             style="@style/commonText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="douhua" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/text_tel"
             style="@style/commonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="douhua" />
+            android:layout_alignParentRight="true" />
     </RelativeLayout>
 
     <LinearLayout
@@ -47,8 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="11dp"
-            android:layout_weight="1"
-            android:text="广东省天河区棠下街道上社合心商务中心C栋301号" />
+            android:layout_weight="1" />
     </LinearLayout>
 
     <View

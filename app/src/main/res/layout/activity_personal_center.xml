@@ -93,7 +93,7 @@
                    android:id="@+id/v_toAddress"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
-                   app:labelText="我的收获地址"
+                   app:labelText="我的收货地址"
                    app:showRightArrow="true">
 
                </com.jyt.baseapp.view.widget.LabelAndTextItem>
@@ -130,13 +130,15 @@
                        android:layout_centerVertical="true"
                        android:text="背景音效" />
 
-                   <ImageView
+                   <CheckBox
+                       android:button="@null"
+                       android:background="@drawable/sel_checkbox"
                        android:id="@+id/img_BGMControl"
                        android:layout_width="43dp"
                        android:layout_height="28dp"
                        android:layout_alignParentRight="true"
                        android:layout_centerVertical="true"
-                       android:src="@mipmap/selector_unsel" />
+                        />
                </RelativeLayout>
 
                <RelativeLayout
@@ -152,13 +154,15 @@
                        android:layout_centerVertical="true"
                        android:text="音效" />
 
-                   <ImageView
+                   <CheckBox
+                       android:button="@null"
+                       android:background="@drawable/sel_checkbox"
                        android:id="@+id/img_voiceControl"
                        android:layout_width="43dp"
                        android:layout_height="28dp"
                        android:layout_alignParentRight="true"
                        android:layout_centerVertical="true"
-                       android:src="@mipmap/selector_unsel" />
+                       />
                </RelativeLayout>
            </LinearLayout>
 

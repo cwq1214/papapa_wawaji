@@ -56,6 +56,8 @@ public class OrderListFragment extends BaseFragment {
                         response.getData()) {
                     order.setOrderType(type);
                 }
+//                response.getData().addAll(response.getData());
+//                response.getData().addAll(response.getData());
                 vRefreshRecyclerView.setDataList(response.getData());
             }
             vRefreshRecyclerView.finishRefreshing();
@@ -116,7 +118,7 @@ public class OrderListFragment extends BaseFragment {
                                 vRefreshRecyclerView.getRefreshLayout().startRefresh();
                                 //刷新已收货列表
 //                                ((BaseActivity) getActivity()).refreshFragment(2);
-                                getActivity().sendBroadcast(new Intent(IntentKey.KEY_TYPE+type));
+                                getActivity().sendBroadcast(new Intent(IntentKey.KEY_TYPE));
                             }else{
                                 T.showShort(getContext(),response.getForUser());
                             }
@@ -131,7 +133,7 @@ public class OrderListFragment extends BaseFragment {
 
 
         broadcastReceiver = new RefreshOrderBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter(IntentHelper.KEY_TYPE+type);
+        IntentFilter intentFilter = new IntentFilter(IntentHelper.KEY_TYPE);
         getActivity().registerReceiver(broadcastReceiver,intentFilter);
 
         vRefreshRecyclerView.setRefreshListener(new RefreshListenerAdapter() {

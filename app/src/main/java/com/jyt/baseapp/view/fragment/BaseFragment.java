@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.jyt.baseapp.model.BaseModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -24,7 +25,7 @@ public abstract class BaseFragment extends Fragment {
     protected View rootView;
     Unbinder unbinder;
 
-    List<BaseModel> models;
+    List<BaseModel> models = new ArrayList<>();
 
     @Nullable
     @Override
@@ -32,7 +33,7 @@ public abstract class BaseFragment extends Fragment {
         if (rootView==null){
             rootView = inflater.from(getContext()).inflate(getLayoutId(),container,false);
             ButterKnife.bind(this,rootView);
-            models = CreateModels();
+            createModels(models);
             allModelsStart(getContext());
             firstInit();
         }
@@ -50,8 +51,8 @@ public abstract class BaseFragment extends Fragment {
 
     }
 
-    public List<BaseModel> CreateModels(){
-        return null;
+    public void createModels(List<BaseModel> models){
+
     }
 
     public void allModelsStart(Context context){

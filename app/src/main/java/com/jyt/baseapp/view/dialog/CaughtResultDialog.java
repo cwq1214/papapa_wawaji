@@ -32,6 +32,7 @@ public class CaughtResultDialog extends Dialog {
 
     String title;
     String message;
+    String continueText;
 
 
     public CaughtResultDialog(@NonNull Context context) {
@@ -54,6 +55,15 @@ public class CaughtResultDialog extends Dialog {
         if (!TextUtils.isEmpty(message)) {
             textResultMessage.setText(message);
         }
+        if (!TextUtils.isEmpty(continueText)){
+            textResultMessage.setText(continueText);
+        }
+    }
+
+    @Override
+    public void show() {
+
+        super.show();
     }
 
     public void setOnDialogBtnClick(OnDialogBtnClick onDialogBtnClick) {
@@ -81,6 +91,10 @@ public class CaughtResultDialog extends Dialog {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setContinueText(String continueText){
+        this.continueText = continueText;
     }
 
     public interface OnDialogBtnClick {

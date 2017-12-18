@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jyt.baseapp.R;
+import com.jyt.baseapp.api.Api;
 import com.lcodecore.tkrefreshlayout.IBottomView;
 import com.lcodecore.tkrefreshlayout.IHeaderView;
 import com.lcodecore.tkrefreshlayout.OnAnimEndListener;
@@ -57,6 +58,8 @@ public class WhiteRefreshView extends FrameLayout implements IBottomView, IHeade
         objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
 
         textLoadingText.setText(preRefreshText);
+
+        textDomain.setText(Api.domainText);
     }
 
     @Override

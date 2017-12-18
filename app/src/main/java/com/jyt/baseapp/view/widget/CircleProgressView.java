@@ -32,7 +32,7 @@ public class CircleProgressView extends View {
 
     int progressRadius=0;
 
-    int duration = 30000;//ms
+    int duration = 30*1000;//ms
 
     int paintWidth;
 

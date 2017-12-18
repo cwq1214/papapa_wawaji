@@ -5,8 +5,10 @@ package com.jyt.baseapp.api;
  */
 
 public class Api {
-    public static final String domain = "http://192.168.3.16/babymc/";
-//    public static final String domain = "http://119.23.66.37/babymc/";
+//    public static final String domain = "http://192.168.3.16/babymc/";
+    public static final String domainText = "www.pppzww.cn";
+
+    public static final String domain = "http://wwj.pppzww.cn/";
 
     public static final String login = "api/login/do_login";
 
@@ -50,7 +52,7 @@ public class Api {
     public static final String orderDetail = "api/order/detail";
 
     //确认订单
-    public static final String receiveOrder = "api/order/comfirm";
+    public static final String receiveOrder = "api/order/confirm";
 
     //提交发货
     public static final String submitOrder = "api/order/submit";
@@ -81,5 +83,8 @@ public class Api {
 
     //修改头像 昵称
     public static final String modifyUserInfo = "/api/user/update";
+
+    //设置空闲
+    public static final String setMachineFree = "api/toy/set_machine_status";
 
 }
