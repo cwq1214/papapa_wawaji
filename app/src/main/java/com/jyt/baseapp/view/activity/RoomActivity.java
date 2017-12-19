@@ -43,9 +43,11 @@ import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.util.TimerUtil;
 import com.jyt.baseapp.util.UserInfo;
+import com.jyt.baseapp.util.WaWaAudioPlayUtil;
 import com.jyt.baseapp.view.dialog.CaughtResultDialog;
 import com.jyt.baseapp.view.dialog.LoadingDialog;
 import com.jyt.baseapp.view.dialog.RechargeCoinDialog;
+import com.jyt.baseapp.view.dialog.WaitingDialog;
 import com.jyt.baseapp.view.widget.CircleProgressView;
 import com.jyt.baseapp.waWaJiControl.WaWaJiControlClient;
 import com.jyt.baseapp.zego.ZegoApiManager;
@@ -157,7 +159,7 @@ public class RoomActivity extends BaseActivity {
 
     String TAG = getClass().getSimpleName();
 
-
+    WaWaAudioPlayUtil waWaAudioPlayUtil;
 
     private ZegoLiveRoom mZegoLiveRoom = ZegoApiManager.getInstance().getZegoLiveRoom();
 
@@ -168,6 +170,8 @@ public class RoomActivity extends BaseActivity {
     boolean playing;
 
     LoadingDialog loadingDialog;
+
+    WaitingDialog waitingDialog;
 
 
     private List<ZegoStream> mListStream = new ArrayList<>();
@@ -207,8 +211,17 @@ public class RoomActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         checkPublishPermission();
+
+        waitingDialog= new WaitingDialog(getContext());
+        waitingDialog.setCancelable(false);
+
+        waWaAudioPlayUtil = new WaWaAudioPlayUtil();
+        waWaAudioPlayUtil.init(getContext());
+
+
         Glide.with(this).load(R.mipmap.start).asGif().into(imgGif);
         homeToyResult = getIntent().getParcelableExtra(IntentKey.KEY_ROOM);
         if (homeToyResult.getMachineList() == null || homeToyResult.getMachineList().size() == 0) {
@@ -245,10 +258,17 @@ public class RoomActivity extends BaseActivity {
 //                    countDownUtil.stop();
 //                    vCircleProgress.stop();
 //                    setWaWaControl(playing = false);
+                    waitingDialog.show();
+
                     new Thread() {
                         @Override
                         public void run() {
-                            T.showShort(getContext(),"等待抓取结果");
+
+                            if (waWaAudioPlayUtil!=null)
+                            {
+                                waWaAudioPlayUtil.play(WaWaAudioPlayUtil.TYPE_CATCH);
+                            }
+//                            T.showShort(getContext(),"等待抓取结果");
                             waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_CATCH);
                             countDownUtil.stop();
                             vCircleProgress.stop();
@@ -267,6 +287,7 @@ public class RoomActivity extends BaseActivity {
         waWaJiControlClient.setOnWaWaPlayedListener(new WaWaJiControlClient.OnWaWaPlayedListener() {
             @Override
             public void onPlayed(boolean caught) {
+                waitingDialog.dismiss();
                 countDownUtil.stop();
                 setCaughtResult(caught);
                 showResultDialog(caught);
@@ -280,6 +301,9 @@ public class RoomActivity extends BaseActivity {
                 loadingDialog.dismiss();
                 countDownUtil.start();
                 setWaWaControl(playing = true);
+
+                if (UserInfo.getRoomEffectBgEnable())
+                    waWaAudioPlayUtil.play(WaWaAudioPlayUtil.TYPE_START);
             }
         });
         int dp_5 = DensityUtil.dpToPx(getContext(), 5);
@@ -652,6 +676,11 @@ public class RoomActivity extends BaseActivity {
 
     //连接房间
     private void connectRoom() {
+        if (waWaAudioPlayUtil!=null){
+            waWaAudioPlayUtil.stopPlayAction();
+            waWaAudioPlayUtil.stopPlayBackgroundMusic();
+        }
+
         if (homeToyResult.getMachineList() == null || homeToyResult.getMachineList().size() == 0) {
             return;
         }
@@ -676,6 +705,14 @@ public class RoomActivity extends BaseActivity {
     //设置房间基本详情
     private void setRoomInfo(final ToyDetail toyDetail) {
         String camUrl = "";
+
+        if (waWaAudioPlayUtil!=null){
+            waWaAudioPlayUtil.stopPlayAction();
+            waWaAudioPlayUtil.stopPlayBackgroundMusic();
+        }
+        if (UserInfo.getRoomBgEnable())
+            waWaAudioPlayUtil.setBackgroundMusicIndex(Integer.valueOf(toyDetail.getMusic()));
+//        waWaAudioPlayUtil.playBackgroundMusic();
 
         textToyName.setText(toyDetail.getToyName());
         textBalance.setText(toyDetail.getUserBalance());
@@ -736,6 +773,11 @@ public class RoomActivity extends BaseActivity {
 
         doLogout();
 
+        if (waWaAudioPlayUtil!=null){
+            waWaAudioPlayUtil.stopPlayAction();
+            waWaAudioPlayUtil.stopPlayBackgroundMusic();
+        }
+
         if (waWaJiControlClient != null)
             waWaJiControlClient.stop();
 
@@ -762,7 +804,9 @@ public class RoomActivity extends BaseActivity {
             return;
         }
         if (playing && view != imgChangeChannel) {
-            T.showShort(getContext(), "正在等待结果");
+
+            waitingDialog.show();
+//            T.showShort(getContext(), "正在等待结果");
             return;
         }
         switch (view.getId()) {
@@ -851,17 +895,49 @@ public class RoomActivity extends BaseActivity {
         int action = event.getAction();
 
         if (action == MotionEvent.ACTION_DOWN) {
+
+            if (v==imgTop || v == imgDown || v==imgLeft || v==imgRight){
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        if (UserInfo.getRoomEffectBgEnable())
+                            waWaAudioPlayUtil.play(WaWaAudioPlayUtil.TYPE_DIRECTION);
+
+                    }
+                }.start();
+            }else {
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        if (UserInfo.getRoomEffectBgEnable())
+                            waWaAudioPlayUtil.play(WaWaAudioPlayUtil.TYPE_CATCH);
+
+                    }
+                }.start();
+            }
+
             if (mSwitchCameraTimes % 2 == 1) {//
                 if (v == imgTop) {
                     waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_LEFT);
+
                 } else if (v == imgDown) {
+
                     waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_RIGHT);
+
                 } else if (v == imgLeft) {
+
                     waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_DOWN);
+
                 } else if (v == imgRight) {
                     waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_TOP);
+
                 } else if (v == imgDone) {
                     waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_CATCH);
+
+                    waitingDialog.show();
+
                     countDownUtil.stop();
                     vCircleProgress.stop();
                 }
@@ -982,6 +1058,8 @@ public class RoomActivity extends BaseActivity {
 
 
     private void quitRoom() {
+
+
         roomModel.quitRoom(toyDetail.getMachineId(), new BeanCallback<String>() {
             @Override
             public void response(boolean success, String response, int id) {

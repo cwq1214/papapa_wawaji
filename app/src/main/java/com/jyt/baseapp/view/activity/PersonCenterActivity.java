@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,7 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 
 /**
  * Created by chenweiqi on 2017/11/8.
@@ -80,6 +83,8 @@ public class PersonCenterActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
 
+        imgBGMControl.setChecked(UserInfo.getRoomBgEnable());
+        imgVoiceControl.setChecked(UserInfo.getRoomEffectBgEnable());
     }
 
     @Override
@@ -129,7 +134,7 @@ public class PersonCenterActivity extends BaseActivity {
         return list;
     }
 
-    @OnClick({R.id.img_header,R.id.v_toMyWaWa,R.id.img_function, R.id.v_toBalance, R.id.v_toAddress, R.id.v_toOrder, R.id.img_BGMControl, R.id.img_voiceControl, R.id.v_toGuidance, R.id.v_toAboutUs, R.id.v_toContractUs, R.id.v_toFeedback, R.id.v_viewVersion, R.id.text_logout})
+    @OnClick({R.id.img_header,R.id.v_toMyWaWa,R.id.img_function, R.id.v_toBalance, R.id.v_toAddress, R.id.v_toOrder, R.id.v_toGuidance, R.id.v_toAboutUs, R.id.v_toContractUs, R.id.v_toFeedback, R.id.v_viewVersion, R.id.text_logout})
     public void onViewClicked(View view) {
         int vid = view.getId();
         if (!UserInfo.isLogin() && (vid == R.id.img_header || vid == R.id.v_toBalance || vid == R.id.v_toAddress || vid == R.id.v_toOrder || vid == R.id.img_function || vid==R.id.v_toMyWaWa )) {
@@ -176,4 +181,14 @@ public class PersonCenterActivity extends BaseActivity {
                 break;
         }
     }
+    @OnCheckedChanged({R.id.img_BGMControl,R.id.img_voiceControl})
+    public void onBgCheckChanged(CompoundButton view,boolean checked){
+        if (view == imgBGMControl)
+        {
+            UserInfo.setRoomBgEnable(checked);
+        }else if (view == imgVoiceControl){
+            UserInfo.setRoomEffectBgEnable(checked);
+        }
+    }
+
 }

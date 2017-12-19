@@ -54,6 +54,21 @@ public class UserInfo extends UserInfoKey{
 
     }
 
+    public static void setRoomBgEnable(boolean enable){
+        editor.putBoolean(KEY_BGENABLE,enable);
+        editor.commit();
+    }
+    public static boolean getRoomBgEnable(){
+        return sharedPreferences.getBoolean(KEY_BGENABLE,true);
+    }
+    public static void setRoomEffectBgEnable(boolean enable){
+        editor.putBoolean(KEY_EFENABLE,enable);
+        editor.commit();
+    }
+    public static boolean getRoomEffectBgEnable(){
+        return sharedPreferences.getBoolean(KEY_EFENABLE,true);
+    }
+
 
     private static void remove(String key){
         editor.remove(key);

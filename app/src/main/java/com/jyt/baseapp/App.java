@@ -1,19 +1,32 @@
 package com.jyt.baseapp;
 
 import android.app.Application;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.jyt.baseapp.util.ImageLoader;
+import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.OkHttpPostInterceptor;
+import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.util.UserInfo;
 import com.jyt.baseapp.zego.ZegoApiManager;
 import com.zego.zegoliveroom.ZegoLiveRoom;
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.log.LoggerInterceptor;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -28,6 +41,7 @@ import javax.net.ssl.X509TrustManager;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+import okhttp3.Call;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -82,6 +96,8 @@ public class App  extends Application {
         if (UserInfo.isLogin()){
             setJPushAlias();
         }
+
+
     }
 
 

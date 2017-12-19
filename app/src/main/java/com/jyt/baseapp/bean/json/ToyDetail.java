@@ -23,6 +23,7 @@ public class ToyDetail implements Parcelable {
     private List<RechargePrice> rule;//充值规则
     private List<GrabHistory> hist;//历史成功抓取记录
     private String remoteId;
+    private String music;//1代表moinoi moinoi，2代表nyokki
 
 
     protected ToyDetail(Parcel in) {
@@ -39,6 +40,7 @@ public class ToyDetail implements Parcelable {
         rule = in.createTypedArrayList(RechargePrice.CREATOR);
         hist = in.createTypedArrayList(GrabHistory.CREATOR);
         remoteId = in.readString();
+        music = in.readString();
     }
 
     @Override
@@ -56,6 +58,7 @@ public class ToyDetail implements Parcelable {
         dest.writeTypedList(rule);
         dest.writeTypedList(hist);
         dest.writeString(remoteId);
+        dest.writeString(music);
     }
 
     @Override
@@ -179,5 +182,11 @@ public class ToyDetail implements Parcelable {
         this.hist = hist;
     }
 
+    public String getMusic() {
+        return music;
+    }
 
+    public void setMusic(String music) {
+        this.music = music;
+    }
 }

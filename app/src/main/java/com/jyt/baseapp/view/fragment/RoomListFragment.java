@@ -71,6 +71,10 @@ public class RoomListFragment extends BaseFragment {
     protected void firstInit() {
         type = getArguments().getInt(IntentKey.KEY_TYPE);
 
+        animator =  ObjectAnimator.ofFloat(imgLoading,"rotation",0,-360);
+        animator.setDuration(1000);
+        animator.setRepeatCount(ObjectAnimator.INFINITE);
+
         vRefreshRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 //        vRefreshRecyclerView.addItemDecoration(new RcvGridSpaceItemDecoration(2, DensityUtil.dpToPx(getContext(),16), true));
         vRefreshRecyclerView.getRefreshLayout().setEnableRefresh(false);
@@ -108,7 +112,7 @@ public class RoomListFragment extends BaseFragment {
                 getToyDatas(false,"8");
             }
         });
-        vRefreshRecyclerView.getRefreshLayout().startLoadMore();
+        onRefreshLayoutClick();
 
     }
 
@@ -152,9 +156,7 @@ public class RoomListFragment extends BaseFragment {
         // TODO: inflate a fragment view
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        animator =  ObjectAnimator.ofFloat(imgLoading,"rotation",0,-360);
-        animator.setDuration(1000);
-        animator.setRepeatCount(ObjectAnimator.INFINITE);
+
 
         unbinder = ButterKnife.bind(this, rootView);
         return rootView;

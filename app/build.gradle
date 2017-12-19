@@ -14,7 +14,7 @@ android {
             jniLibs.srcDirs = ['libs/zego', 'libs/wawacontrol']
         }
     }
-    compileSdkVersion 27
+    compileSdkVersion 25
     buildToolsVersion "27.0.2"
     defaultConfig {
         applicationId "com.jyt.pppwawaji"
