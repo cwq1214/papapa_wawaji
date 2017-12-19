@@ -81,17 +81,17 @@ public class WaWaJiControlClient {
 //                             while (i++ < timeourReceTimes){
                 while (isReceive) {
                     int nRet = AVAPIs.avRecvIOCtrl(avIndex, ioCtrlType, ioCtrlBuf, ioCtrlBuf.length, 0);
-                    L.e(String.format("avRecvIOCtrl ret[%d]\n", nRet));
+//                    L.e(String.format("avRecvIOCtrl ret[%d]\n", nRet));
                     if (nRet >= 0) {
 
 
                         if (ioCtrlType[0] == AVIOCTRLDEFs.IOTYPE_USER_IPCAM_EVENT_COMMAND) {
 
-                            L.e("IOTCamera", "avRecvIOCtrl(" +
-                                    0 + ", 0x" + Integer.toHexString(ioCtrlType[0]) + ", " + getHex(ioCtrlBuf, nRet) + ")");
+//                            L.e("IOTCamera", "avRecvIOCtrl(" +
+//                                    0 + ", 0x" + Integer.toHexString(ioCtrlType[0]) + ", " + getHex(ioCtrlBuf, nRet) + ")");
                             //recv get wawaji return Data
                             int evtType2 = Packet.byteArrayToInt_Little(ioCtrlBuf, 16);
-                            L.e(evtType2+"");
+//                            L.e(evtType2+"");
 
 
                             if (onWaWaPlayedListener!=null){
@@ -106,15 +106,15 @@ public class WaWaJiControlClient {
 
                         }
                         try {
-                            L.e(String.format("avRecvIOCtrl ret[%d]sleep start\n", nRet));
+//                            L.e(String.format("avRecvIOCtrl ret[%d]sleep start\n", nRet));
 
                             Thread.sleep(500);
                         } catch (InterruptedException e) {
-                            L.e(String.format("avRecvIOCtrl ret[%d]sleep out\n", nRet));
+//                            L.e(String.format("avRecvIOCtrl ret[%d]sleep out\n", nRet));
                             e.printStackTrace();
                         }
                     } else {
-                        L.e(String.format(" ret < 0 %d\n", nRet));
+//                        L.e(String.format(" ret < 0 %d\n", nRet));
 
                         try {
                             Thread.sleep(100);
@@ -245,14 +245,14 @@ public class WaWaJiControlClient {
 
         startIpcamStream(20);
 
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
+//        new Thread(){
+//            @Override
+//            public void run() {
+//                super.run();
                 isReceive = true;
                 receive.start();
-            }
-        }.start();
+//            }
+//        }.start();
 
 
     }

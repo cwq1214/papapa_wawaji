@@ -44,7 +44,7 @@ public class ZegoApiManager {
     private void initUserInfo(){
         // 初始化用户信息
         mUserID = UserInfo.getToken();
-        String userName =null;
+        String userName = "ssss";
 //        = PreferenceUtil.getInstance().getUserName();
 
         if (TextUtils.isEmpty(mUserID) || TextUtils.isEmpty(userName)) {

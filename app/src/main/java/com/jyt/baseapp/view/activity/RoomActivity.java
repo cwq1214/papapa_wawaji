@@ -21,22 +21,33 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.alipay.sdk.app.PayTask;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.jyt.baseapp.App;
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.annotation.ActivityAnnotation;
 import com.jyt.baseapp.api.BeanCallback;
 import com.jyt.baseapp.bean.BaseJson;
+import com.jyt.baseapp.bean.PayResult;
+import com.jyt.baseapp.bean.json.AliPayResult;
 import com.jyt.baseapp.bean.json.GrabHistory;
 import com.jyt.baseapp.bean.json.HomeToyResult;
 import com.jyt.baseapp.bean.json.Machine;
 import com.jyt.baseapp.bean.json.MachineStateAndPeopleResult;
+import com.jyt.baseapp.bean.json.PersonalInfo;
 import com.jyt.baseapp.bean.json.RechargePrice;
 import com.jyt.baseapp.bean.json.ToyDetail;
+import com.jyt.baseapp.bean.json.WxPayResult;
 import com.jyt.baseapp.helper.IntentHelper;
 import com.jyt.baseapp.helper.IntentKey;
+import com.jyt.baseapp.helper.WeChartHelper;
 import com.jyt.baseapp.model.BaseModel;
+import com.jyt.baseapp.model.PayModel;
+import com.jyt.baseapp.model.PersonalInfoModel;
 import com.jyt.baseapp.model.RoomModel;
+import com.jyt.baseapp.model.impl.PayModelImpl;
+import com.jyt.baseapp.model.impl.PersonalInfoModelImpl;
 import com.jyt.baseapp.model.impl.RoomModelImpl;
 import com.jyt.baseapp.util.CountDownUtil;
 import com.jyt.baseapp.util.DensityUtil;
@@ -47,6 +58,7 @@ import com.jyt.baseapp.util.UserInfo;
 import com.jyt.baseapp.util.WaWaAudioPlayUtil;
 import com.jyt.baseapp.view.dialog.CaughtResultDialog;
 import com.jyt.baseapp.view.dialog.LoadingDialog;
+import com.jyt.baseapp.view.dialog.PayDialog;
 import com.jyt.baseapp.view.dialog.RechargeCoinDialog;
 import com.jyt.baseapp.view.dialog.WaitingDialog;
 import com.jyt.baseapp.view.widget.CircleProgressView;
@@ -56,9 +68,11 @@ import com.jyt.baseapp.zego.ZegoApiManager;
 import com.jyt.baseapp.zego.ZegoStream;
 import com.zego.zegoliveroom.ZegoLiveRoom;
 import com.zego.zegoliveroom.callback.IZegoLivePlayerCallback;
+import com.zego.zegoliveroom.callback.IZegoLivePublisherCallback;
 import com.zego.zegoliveroom.callback.IZegoLoginCompletionCallback;
 import com.zego.zegoliveroom.constants.ZegoConstants;
 import com.zego.zegoliveroom.constants.ZegoVideoViewMode;
+import com.zego.zegoliveroom.entity.AuxData;
 import com.zego.zegoliveroom.entity.ZegoStreamInfo;
 import com.zego.zegoliveroom.entity.ZegoStreamQuality;
 import com.zego.zegoliveroom.entity.ZegoUser;
@@ -154,6 +168,8 @@ public class RoomActivity extends BaseActivity {
     int currentRoom = 0;
 
     RoomModel roomModel;
+    PayModel payModel;
+    PersonalInfoModel personalInfoModel;
 
     //房间娃娃实体类
     ToyDetail toyDetail;
@@ -166,6 +182,8 @@ public class RoomActivity extends BaseActivity {
     String TAG = getClass().getSimpleName();
 
     WaWaAudioPlayUtil waWaAudioPlayUtil;
+    @BindView(R.id.v_selfPreview)
+    TextureView vSelfPreview;
 
 
     private ZegoLiveRoom mZegoLiveRoom = ZegoApiManager.getInstance().getZegoLiveRoom();
@@ -179,6 +197,10 @@ public class RoomActivity extends BaseActivity {
     LoadingDialog loadingDialog;
 
     WaitingDialog waitingDialog;
+
+    PayDialog payDialog;
+
+    WeChartHelper weChartHelper;
 
 
     private List<ZegoStream> mListStream = new ArrayList<>();
@@ -229,6 +251,28 @@ public class RoomActivity extends BaseActivity {
         waWaAudioPlayUtil.init(getContext());
 
 
+        weChartHelper = new WeChartHelper();
+        weChartHelper.init(getContext(), App.weiXin_AppKey);
+        weChartHelper.registerToWx();
+        weChartHelper.setReceivePayResultListener(new WeChartHelper.ReceivePayResultListener() {
+            @Override
+            public void onPayResult(boolean payResult) {
+                if (payResult) {
+                    T.showShort(getContext(), "支付成功");
+
+                    getSelfCoin();
+
+                    if (payDialog != null) {
+                        payDialog.dismiss();
+                    }
+
+                } else {
+                    T.showShort(getContext(), "支付失败");
+                }
+            }
+        });
+
+
         Glide.with(this).load(R.mipmap.start).asGif().into(imgGif);
         homeToyResult = getIntent().getParcelableExtra(IntentKey.KEY_ROOM);
         if (homeToyResult.getMachineList() == null || homeToyResult.getMachineList().size() == 0) {
@@ -237,6 +281,11 @@ public class RoomActivity extends BaseActivity {
             return;
         }
         ZegoApiManager.getInstance().initSDK();
+        // 设置开关，直接从 ZEGO 服务器拉流
+//        String config = ZegoConstants.Config.PREFER_PLAY_ULTRA_SOURCE + "=1";
+//        ZegoLiveRoom.setConfig(config);
+
+
         loadingDialog = new LoadingDialog(getContext());
         loadingDialog.setCancelable(false);
         timer = new TimerUtil(getContext(), 30 * 1000);
@@ -272,7 +321,8 @@ public class RoomActivity extends BaseActivity {
                         public void run() {
 
                             if (waWaAudioPlayUtil != null) {
-                                waWaAudioPlayUtil.play(WaWaAudioPlayUtil.TYPE_CATCH);
+                                if (UserInfo.getRoomEffectBgEnable())
+                                    waWaAudioPlayUtil.play(WaWaAudioPlayUtil.TYPE_CATCH);
                             }
 //                            T.showShort(getContext(),"等待抓取结果");
                             waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_CATCH);
@@ -310,6 +360,18 @@ public class RoomActivity extends BaseActivity {
 
                 if (UserInfo.getRoomEffectBgEnable())
                     waWaAudioPlayUtil.play(WaWaAudioPlayUtil.TYPE_START);
+
+
+                // 开启流量自动控制
+                int properties = ZegoConstants.ZegoTrafficControlProperty.ZEGOAPI_TRAFFIC_FPS
+                        | ZegoConstants.ZegoTrafficControlProperty.ZEGOAPI_TRAFFIC_RESOLUTION;
+                mZegoLiveRoom.enableTrafficControl(properties, true);
+//                mZegoLiveRoom.setPreviewView(vSelfPreview);
+//                mZegoLiveRoom.startPreview();
+                mZegoLiveRoom.enableMic(false);
+                mZegoLiveRoom.enableCamera(false);
+                mZegoLiveRoom.startPublishing(toyDetail.getMachineId() + UserInfo.getToken()+System.currentTimeMillis(), "主动连接", 0);
+
             }
         });
         int dp_5 = DensityUtil.dpToPx(getContext(), 5);
@@ -372,7 +434,8 @@ public class RoomActivity extends BaseActivity {
 
     //初始化播放器
     private void initPlayer(String url) {
-        mZegoLiveRoom.loginRoom(homeToyResult.getMachineList().get(currentRoom).getMachineId(), ZegoConstants.RoomRole.Audience, new IZegoLoginCompletionCallback() {
+        mZegoLiveRoom.setRoomConfig(true, true);
+        mZegoLiveRoom.loginRoom(homeToyResult.getMachineList().get(currentRoom).getMachineId(), ZegoConstants.RoomRole.Anchor, new IZegoLoginCompletionCallback() {
             @Override
             public void onLoginCompletion(int errCode, ZegoStreamInfo[] zegoStreamInfos) {
                 if (errCode == 0) {
@@ -499,42 +562,45 @@ public class RoomActivity extends BaseActivity {
                     currentShowStream.show();
                 }
 
+                if (mListStream != null && mListStream.size() != 0 && mListStream.get(0).isPlaySuccess()) {
+                    vBgLayout.setVisibility(View.GONE);
+                }
                 L.e("[onVideoSizeChanged], streamID: " + streamID + ", currentShowIndex: " + currentShowIndex);
 //                CommandUtil.getInstance().printLog("[onVideoSizeChanged], streamID: " + streamID + ", currentShowIndex: " + currentShowIndex);
             }
         });
 
-//        mZegoLiveRoom.setZegoLivePublisherCallback(new IZegoLivePublisherCallback() {
-//            @Override
-//            public void onPublishStateUpdate(int errCode, String streamID, HashMap<String, Object> hashMap) {
-//                L.e("[onPublishStateUpdate], streamID: " + streamID + ", errorCode: " + errCode);
-//            }
-//
-//            @Override
-//            public void onJoinLiveRequest(int i, String s, String s1, String s2) {
-//
-//            }
-//
-//            @Override
-//            public void onPublishQualityUpdate(String s, ZegoStreamQuality zegoStreamQuality) {
-//
-//            }
-//
-//            @Override
-//            public AuxData onAuxCallback(int i) {
-//                return null;
-//            }
-//
-//            @Override
-//            public void onCaptureVideoSizeChangedTo(int i, int i1) {
-//
-//            }
-//
-//            @Override
-//            public void onMixStreamConfigUpdate(int i, String s, HashMap<String, Object> hashMap) {
-//
-//            }
-//        });
+        mZegoLiveRoom.setZegoLivePublisherCallback(new IZegoLivePublisherCallback() {
+            @Override
+            public void onPublishStateUpdate(int errCode, String streamID, HashMap<String, Object> hashMap) {
+                L.e("[onPublishStateUpdate], streamID: " + streamID + ", errorCode: " + errCode);
+            }
+
+            @Override
+            public void onJoinLiveRequest(int i, String s, String s1, String s2) {
+
+            }
+
+            @Override
+            public void onPublishQualityUpdate(String s, ZegoStreamQuality zegoStreamQuality) {
+
+            }
+
+            @Override
+            public AuxData onAuxCallback(int i) {
+                return null;
+            }
+
+            @Override
+            public void onCaptureVideoSizeChangedTo(int i, int i1) {
+
+            }
+
+            @Override
+            public void onMixStreamConfigUpdate(int i, String s, HashMap<String, Object> hashMap) {
+
+            }
+        });
 
 //        mZegoLiveRoom.setZegoRoomCallback(new IZegoRoomCallback() {
 //            @Override
@@ -623,22 +689,25 @@ public class RoomActivity extends BaseActivity {
         if (currentShowIndex == 1) {
             // 隐藏第一路流
             mListStream.get(0).hide();
-
             // 显示第二路流
             if (mListStream.get(1).isPlaySuccess()) {
                 mListStream.get(1).show();
+                vBgLayout.setVisibility(View.GONE);
             } else {
+                vBgLayout.setVisibility(View.VISIBLE);
 //                mTvStreamSate.setText(mListStream.get(1).getStateString());
 //                mTvStreamSate.setVisibility(View.VISIBLE);
             }
         } else {
             // 隐藏第二路流
             mListStream.get(1).hide();
-
             // 显示第一路流
             if (mListStream.get(0).isPlaySuccess()) {
                 mListStream.get(0).show();
+                vBgLayout.setVisibility(View.GONE);
+
             } else {
+                vBgLayout.setVisibility(View.VISIBLE);
 //                mTvStreamSate.setText(mListStream.get(0).getStateString());
 //                mTvStreamSate.setVisibility(View.VISIBLE);
             }
@@ -678,6 +747,8 @@ public class RoomActivity extends BaseActivity {
         List list = new ArrayList();
         roomModel = new RoomModelImpl();
         list.add(roomModel);
+        list.add(payModel = new PayModelImpl());
+        list.add(personalInfoModel = new PersonalInfoModelImpl());
         return list;
     }
 
@@ -727,7 +798,7 @@ public class RoomActivity extends BaseActivity {
 
 
         vRecordLayout.removeAllViews();
-        for(GrabHistory grabHistory:toyDetail.getHist()){
+        for (GrabHistory grabHistory : toyDetail.getHist()) {
 
             GrabRecordItemView grabRecordItemView = new GrabRecordItemView(getContext());
             grabRecordItemView.setBean(grabHistory);
@@ -761,10 +832,65 @@ public class RoomActivity extends BaseActivity {
         rechargeCoinDialog.setPriceList(rechargePrices);
         rechargeCoinDialog.setOnPriceClick(new RechargeCoinDialog.OnPriceClick() {
             @Override
-            public void onPriceClick(RechargePrice price) {
+            public void onPriceClick(final RechargePrice price) {
+                rechargeCoinDialog.dismiss();
 
-                if (rechargeCoinDialog != null)
-                    rechargeCoinDialog.dismiss();
+                payDialog = new PayDialog(getContext());
+                payDialog.setOnDoneClickListener(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 1) {//wx
+                            payModel.chargeCoinByWeChart("1", price.getRuleId(), new BeanCallback<BaseJson<WxPayResult>>() {
+                                @Override
+                                public void response(boolean success, BaseJson<WxPayResult> response, int id) {
+                                    if (response.isRet()) {
+                                        weChartHelper.pay(response.getData().getPartnerId(), response.getData().getPrepayId(), response.getData().getTimeStamp(), response.getData().getNonceStr(), response.getData().getPaySign());
+                                    } else {
+                                        T.showShort(getContext(), response.getForUser());
+                                    }
+
+                                }
+                            });
+                        } else if (which == 2) {//ali
+                            payModel.chargeCoinByAli("1", price.getRuleId(), new BeanCallback<BaseJson<AliPayResult>>() {
+                                @Override
+                                public void response(boolean success, final BaseJson<AliPayResult> response, int id) {
+                                    if (response.isRet()) {
+                                        Runnable payRunnable = new Runnable() {
+
+                                            @Override
+                                            public void run() {
+                                                PayTask alipay = new PayTask(getActivity());
+                                                Map<String, String> result = alipay.payV2(response.getData().getSign(), true);
+                                                PayResult payResult = new PayResult(result);
+                                                String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                                                String resultStatus = payResult.getResultStatus();
+                                                if (TextUtils.equals(resultStatus, "9000")) {
+                                                    // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                                                    T.showShort(getContext(), "支付成功");
+                                                    getSelfCoin();
+                                                } else {
+                                                    // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                                                    T.showShort(getContext(), "支付失败");
+                                                }
+                                                if (payDialog != null)
+                                                    payDialog.dismiss();
+
+                                            }
+                                        };
+                                        new Thread(payRunnable).start();
+                                    } else {
+                                        T.showShort(getContext(), response.getForUser());
+                                    }
+                                }
+                            });
+                        }
+
+                    }
+                });
+                payDialog.show();
+
+
             }
         });
     }
@@ -789,6 +915,9 @@ public class RoomActivity extends BaseActivity {
 
         doLogout();
 
+        if (weChartHelper != null)
+            weChartHelper.unInit();
+
         if (waWaAudioPlayUtil != null) {
             waWaAudioPlayUtil.stopPlayAction();
             waWaAudioPlayUtil.stopPlayBackgroundMusic();
@@ -801,6 +930,9 @@ public class RoomActivity extends BaseActivity {
             quitRoom();
         }
 
+        if (loadingDialog!=null){
+            loadingDialog.dismiss();
+        }
 
         if (timer != null) {
             timer.stop();
@@ -837,7 +969,6 @@ public class RoomActivity extends BaseActivity {
                 onChangeRoomClick();
                 break;
             case R.id.v_recharge:
-
                 if (rechargeCoinDialog != null)
                     rechargeCoinDialog.show();
                 break;
@@ -1130,6 +1261,17 @@ public class RoomActivity extends BaseActivity {
         }
 
 //        Machine machine = roomList.get(currentRoom);
+    }
+
+    private void getSelfCoin() {
+        personalInfoModel.getUserInfo(new BeanCallback<BaseJson<PersonalInfo>>() {
+            @Override
+            public void response(boolean success, BaseJson<PersonalInfo> response, int id) {
+                if (response.isRet()) {
+                    textBalance.setText(response.getData().getBalance());
+                }
+            }
+        });
     }
 
 }

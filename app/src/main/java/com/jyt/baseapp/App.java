@@ -91,8 +91,6 @@ public class App  extends Application {
         app = this;
         UserInfo.init(getApplicationContext());
 
-        // TODO: 2017/12/19 测试token
-            UserInfo.setToken("3");
 
         ZegoLiveRoom.setTestEnv(true);
         ZegoLiveRoom.setVerbose(BuildConfig.DEBUG);
@@ -101,7 +99,6 @@ public class App  extends Application {
         if (UserInfo.isLogin()){
             setJPushAlias();
         }
-
 
 
     }
@@ -119,7 +116,7 @@ public class App  extends Application {
 //            }
 //        }).sslSocketFactory(createSSLSocketFactory());
 
-//        builder.addInterceptor(new OkHttpPostInterceptor());
+        builder.addInterceptor(new OkHttpPostInterceptor());
         //统一请求头添加header
         builder.addInterceptor(new Interceptor() {
             @Override

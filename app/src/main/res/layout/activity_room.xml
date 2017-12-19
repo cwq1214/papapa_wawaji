@@ -71,7 +71,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/gray">
-
+                            <TextureView
+                                android:id="@+id/v_selfPreview"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp" />
                             <FrameLayout
                                 android:id="@+id/v_videoView"
                                 android:layout_width="match_parent"
@@ -214,7 +217,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
                     android:background="@drawable/bg_white_4radius"
                     android:divider="@drawable/divider_full_pink"
                     android:minHeight="80dp"

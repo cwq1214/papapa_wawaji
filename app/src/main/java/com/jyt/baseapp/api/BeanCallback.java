@@ -1,5 +1,6 @@
 package com.jyt.baseapp.api;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
@@ -7,6 +8,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.jyt.baseapp.App;
 import com.jyt.baseapp.bean.BaseJson;
+import com.jyt.baseapp.helper.IntentHelper;
+import com.jyt.baseapp.util.FinishActivityManager;
 import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.util.UserInfo;
@@ -125,7 +128,6 @@ public abstract class BeanCallback<T> extends Callback<T> {
         Type type = this.getClass().getGenericSuperclass();
         ParameterizedType parameterizedType = (ParameterizedType) type;
         Type beanType = parameterizedType.getActualTypeArguments()[0];
-        L.e(beanType.getClass().getName());
         while (!(beanType instanceof Class)){
             beanType = ((ParameterizedType) beanType).getRawType();
         }
@@ -140,6 +142,13 @@ public abstract class BeanCallback<T> extends Callback<T> {
 
     @Override
     public void onResponse(T response, int id) {
+        if (response instanceof BaseJson){
+            if (((BaseJson) response).getCode()==503){
+                FinishActivityManager.getManager().finishAllActivity();
+                IntentHelper.openLoginActivity(App.getApplication());
+                return;
+            }
+        }
         response(true,response,id);
     }
 

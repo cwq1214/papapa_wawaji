@@ -118,7 +118,7 @@ public class WeChartHelper {
                     receivePayResultListener.onPayResult(intent.getBooleanExtra("data",false));
                 }
             }
-            abortBroadcast();
+//            abortBroadcast();
         }
     }
 
