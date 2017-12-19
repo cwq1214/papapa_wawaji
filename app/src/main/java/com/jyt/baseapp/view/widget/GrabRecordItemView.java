@@ -1,6 +1,7 @@
 package com.jyt.baseapp.view.widget;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -10,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jyt.baseapp.R;
+import com.jyt.baseapp.bean.json.GrabHistory;
+import com.jyt.baseapp.util.ImageLoader;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,5 +38,19 @@ public class GrabRecordItemView extends FrameLayout {
 
         LayoutInflater.from(getContext()).inflate(R.layout.layout_grab_record,this,true);
         ButterKnife.bind(this);
+    }
+
+
+    public void setBean(GrabHistory grabHistory){
+        String image = grabHistory.getUserImg();
+        String name = grabHistory.getNickname();
+        String date = grabHistory.getCreatedTime();
+
+        ImageLoader.getInstance().loadCircle(imgUserHeader,image);
+
+        textName.setText(grabHistory.getNickname());
+
+        textDate.setText(grabHistory.getCreatedTime());
+
     }
 }

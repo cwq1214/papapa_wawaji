@@ -27,6 +27,7 @@ import com.jyt.baseapp.R;
 import com.jyt.baseapp.annotation.ActivityAnnotation;
 import com.jyt.baseapp.api.BeanCallback;
 import com.jyt.baseapp.bean.BaseJson;
+import com.jyt.baseapp.bean.json.GrabHistory;
 import com.jyt.baseapp.bean.json.HomeToyResult;
 import com.jyt.baseapp.bean.json.Machine;
 import com.jyt.baseapp.bean.json.MachineStateAndPeopleResult;
@@ -49,6 +50,7 @@ import com.jyt.baseapp.view.dialog.LoadingDialog;
 import com.jyt.baseapp.view.dialog.RechargeCoinDialog;
 import com.jyt.baseapp.view.dialog.WaitingDialog;
 import com.jyt.baseapp.view.widget.CircleProgressView;
+import com.jyt.baseapp.view.widget.GrabRecordItemView;
 import com.jyt.baseapp.waWaJiControl.WaWaJiControlClient;
 import com.jyt.baseapp.zego.ZegoApiManager;
 import com.jyt.baseapp.zego.ZegoStream;
@@ -140,6 +142,10 @@ public class RoomActivity extends BaseActivity {
     ImageView imgGif;
     @BindView(R.id.v_start_play_layout)
     RelativeLayout vStartPlayLayout;
+    @BindView(R.id.v_bgLayout)
+    FrameLayout vBgLayout;
+    @BindView(R.id.v_recordLayout)
+    LinearLayout vRecordLayout;
 
     //充值对话框
     RechargeCoinDialog rechargeCoinDialog;
@@ -160,6 +166,7 @@ public class RoomActivity extends BaseActivity {
     String TAG = getClass().getSimpleName();
 
     WaWaAudioPlayUtil waWaAudioPlayUtil;
+
 
     private ZegoLiveRoom mZegoLiveRoom = ZegoApiManager.getInstance().getZegoLiveRoom();
 
@@ -215,7 +222,7 @@ public class RoomActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         checkPublishPermission();
 
-        waitingDialog= new WaitingDialog(getContext());
+        waitingDialog = new WaitingDialog(getContext());
         waitingDialog.setCancelable(false);
 
         waWaAudioPlayUtil = new WaWaAudioPlayUtil();
@@ -264,8 +271,7 @@ public class RoomActivity extends BaseActivity {
                         @Override
                         public void run() {
 
-                            if (waWaAudioPlayUtil!=null)
-                            {
+                            if (waWaAudioPlayUtil != null) {
                                 waWaAudioPlayUtil.play(WaWaAudioPlayUtil.TYPE_CATCH);
                             }
 //                            T.showShort(getContext(),"等待抓取结果");
@@ -325,6 +331,7 @@ public class RoomActivity extends BaseActivity {
         vWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
 //        vWebView.setEnabled(false);
         vWebView.getSettings().setUseWideViewPort(true);
+        vWebView.getSettings().setLoadWithOverviewMode(true);
         vWebView.getSettings().setJavaScriptEnabled(true);
         vWebView.setScrollContainer(false);
         vWebView.setVerticalScrollBarEnabled(false);
@@ -676,7 +683,7 @@ public class RoomActivity extends BaseActivity {
 
     //连接房间
     private void connectRoom() {
-        if (waWaAudioPlayUtil!=null){
+        if (waWaAudioPlayUtil != null) {
             waWaAudioPlayUtil.stopPlayAction();
             waWaAudioPlayUtil.stopPlayBackgroundMusic();
         }
@@ -706,7 +713,7 @@ public class RoomActivity extends BaseActivity {
     private void setRoomInfo(final ToyDetail toyDetail) {
         String camUrl = "";
 
-        if (waWaAudioPlayUtil!=null){
+        if (waWaAudioPlayUtil != null) {
             waWaAudioPlayUtil.stopPlayAction();
             waWaAudioPlayUtil.stopPlayBackgroundMusic();
         }
@@ -717,6 +724,15 @@ public class RoomActivity extends BaseActivity {
         textToyName.setText(toyDetail.getToyName());
         textBalance.setText(toyDetail.getUserBalance());
         textPrice.setText(toyDetail.getNeedPay() + "/次");
+
+
+        vRecordLayout.removeAllViews();
+        for(GrabHistory grabHistory:toyDetail.getHist()){
+
+            GrabRecordItemView grabRecordItemView = new GrabRecordItemView(getContext());
+            grabRecordItemView.setBean(grabHistory);
+            vRecordLayout.addView(grabRecordItemView);
+        }
 
 //        toyDetail.setMainFlowLink("rtmp://live.hkstv.hk.lxdns.com/live/hks");
 //        toyDetail.setFlankFlowLink("rtmp://live.hkstv.hk.lxdns.com/live/hks");
@@ -773,7 +789,7 @@ public class RoomActivity extends BaseActivity {
 
         doLogout();
 
-        if (waWaAudioPlayUtil!=null){
+        if (waWaAudioPlayUtil != null) {
             waWaAudioPlayUtil.stopPlayAction();
             waWaAudioPlayUtil.stopPlayBackgroundMusic();
         }
@@ -835,10 +851,12 @@ public class RoomActivity extends BaseActivity {
     }
 
 
+    // 点击 开始玩
     private void playWaWaJi() {
-        loadingDialog.show();
 
-        if (toyDetail != null)
+
+        if (toyDetail != null) {
+            loadingDialog.show();
             roomModel.play(toyDetail.getMachineId(), new BeanCallback<BaseJson>() {
                 @Override
                 public void response(boolean success, BaseJson response, int id) {
@@ -855,6 +873,7 @@ public class RoomActivity extends BaseActivity {
 
                 }
             });
+        }
 
     }
 
@@ -896,8 +915,8 @@ public class RoomActivity extends BaseActivity {
 
         if (action == MotionEvent.ACTION_DOWN) {
 
-            if (v==imgTop || v == imgDown || v==imgLeft || v==imgRight){
-                new Thread(){
+            if (v == imgTop || v == imgDown || v == imgLeft || v == imgRight) {
+                new Thread() {
                     @Override
                     public void run() {
                         super.run();
@@ -906,8 +925,8 @@ public class RoomActivity extends BaseActivity {
 
                     }
                 }.start();
-            }else {
-                new Thread(){
+            } else {
+                new Thread() {
                     @Override
                     public void run() {
                         super.run();

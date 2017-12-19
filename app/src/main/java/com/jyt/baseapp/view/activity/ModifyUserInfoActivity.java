@@ -21,7 +21,9 @@ import com.jyt.baseapp.helper.IntentKey;
 import com.jyt.baseapp.model.BaseModel;
 import com.jyt.baseapp.model.PersonalInfoModel;
 import com.jyt.baseapp.model.impl.PersonalInfoModelImpl;
+import com.jyt.baseapp.util.FileUtil;
 import com.jyt.baseapp.util.ImageLoader;
+import com.jyt.baseapp.util.ImageUtil;
 import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.T;
 import com.linchaolong.android.imagepicker.ImagePicker;
@@ -100,11 +102,11 @@ public class ModifyUserInfoActivity extends BaseActivity {
 
     public void modifyUserInfo() {
 
-        if (localTempImage!=null) {
-            Bitmap bitmap = imgHead.getDrawingCache();
-
-            saveBitmap(localTempImage.getAbsolutePath(), bitmap);
-        }
+//        if (localTempImage!=null) {
+//            Bitmap bitmap = imgHead.getDrawingCache();
+//
+//            saveBitmap(localTempImage.getAbsolutePath(), bitmap);
+//        }
         personalInfoModel.modifyUserInfo(localTempImage == null ? null : localTempImage.getAbsolutePath(), inputNickName.getText().toString(), new BeanCallback<BaseJson>() {
             @Override
             public void response(boolean success, BaseJson response, int id) {
@@ -144,8 +146,8 @@ public class ModifyUserInfoActivity extends BaseActivity {
             @Override public void onCropImage(Uri imageUri) {
                 L.e("裁剪图片回调");
                 ImageLoader.getInstance().loadHeader(imgHead,imageUri.toString());
-
-                localTempImage = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/temp.png");
+                localTempImage = new File(FileUtil.getPath(getContext(),imageUri));
+//                localTempImage = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/temp.png");
 
 //                draweeView.setImageURI(imageUri);
 //                draweeView.getHierarchy().setRoundingParams(RoundingParams.asCircle());

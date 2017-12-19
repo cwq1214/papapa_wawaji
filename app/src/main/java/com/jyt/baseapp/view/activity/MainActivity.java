@@ -107,6 +107,7 @@ public class MainActivity extends BaseActivity {
 
             }
         });
+
         model.getBanner(new BeanCallback<BaseJson<Banner>>() {
             @Override
             public void response(boolean success, BaseJson<Banner> response, int id) {

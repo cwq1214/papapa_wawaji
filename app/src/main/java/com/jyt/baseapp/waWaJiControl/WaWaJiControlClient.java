@@ -199,42 +199,49 @@ public class WaWaJiControlClient {
      * @param pwd
      */
     private void startConnection(String uid, String pwd ){
-        L.e(String.format("StreamClient start..."));
-        int port = (int) (10000 + (System.currentTimeMillis() % 10000));
-        int ret = IOTCAPIs.IOTC_Initialize2(port);
-        L.e(String.format("IOTC_Initialize() ret = %d\n", ret));
-        if (ret != IOTCAPIs.IOTC_ER_NoERROR) {
-            L.e(String.format("IOTCAPIs_Device exit...!!\n"));
-            isReceive = false;
-            return;
+        while (true){
+            L.e(String.format("StreamClient start..."));
+            int port = (int) (10000 + (System.currentTimeMillis() % 10000));
+            int ret = IOTCAPIs.IOTC_Initialize2(port);
+            L.e(String.format("IOTC_Initialize() ret = %d\n", ret));
+            if (ret != IOTCAPIs.IOTC_ER_NoERROR) {
+                L.e(String.format("IOTCAPIs_Device exit...!!\n"));
+                isReceive = false;
+                continue;
+//                return;
+            }
+
+            AVAPIs.avInitialize(10);
+
+            sid = IOTCAPIs.IOTC_Get_SessionID();
+            if (sid < 0) {
+                L.e(String.format("IOTC_Get_SessionID error code [%d]\n", sid));
+                isReceive= false;
+                continue;
+//                return;
+            }
+
+            ret = IOTCAPIs.IOTC_Connect_ByUID_Parallel(uid, sid);
+
+            L.e(String.format("Step 2: call IOTC_Connect_ByUID_Parallel(%s).......(%d)\n", uid, ret));
+            int[] mResend = new int[1];
+            int[] srvType = new int[1];
+            // avIndex = AVAPIs.avClientStart2(mSID, mAVChannel.getViewAcc(),
+            // mAVChannel.getViewPwd(), 30, nServType, mAVChannel.getChannel(),
+            // mResend);
+            avIndex = AVAPIs.avClientStart2(sid, "admin", pwd, 20, srvType, 0,
+                    mResend);
+            L.e("Step 2: call avClientStart(%d).......\n", avIndex);
+
+            if (avIndex < 0) {
+                isReceive = false;
+                L.e(String.format("avClientStart failed[%d]\n", avIndex));
+//                return;
+                continue;
+            }
+            break;
         }
 
-        AVAPIs.avInitialize(10);
-
-        sid = IOTCAPIs.IOTC_Get_SessionID();
-        if (sid < 0) {
-            L.e(String.format("IOTC_Get_SessionID error code [%d]\n", sid));
-            isReceive= false;
-            return;
-        }
-
-        ret = IOTCAPIs.IOTC_Connect_ByUID_Parallel(uid, sid);
-
-        L.e(String.format("Step 2: call IOTC_Connect_ByUID_Parallel(%s).......(%d)\n", uid, ret));
-        int[] mResend = new int[1];
-        int[] srvType = new int[1];
-        // avIndex = AVAPIs.avClientStart2(mSID, mAVChannel.getViewAcc(),
-        // mAVChannel.getViewPwd(), 30, nServType, mAVChannel.getChannel(),
-        // mResend);
-        avIndex = AVAPIs.avClientStart2(sid, "admin", pwd, 20, srvType, 0,
-                mResend);
-        L.e("Step 2: call avClientStart(%d).......\n", avIndex);
-
-        if (avIndex < 0) {
-            isReceive = false;
-            L.e(String.format("avClientStart failed[%d]\n", avIndex));
-            return;
-        }
 
         startIpcamStream(20);
 

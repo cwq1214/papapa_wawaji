@@ -10,6 +10,7 @@ import android.util.Log;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.jyt.baseapp.bean.json.User;
 import com.jyt.baseapp.util.ImageLoader;
 import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.OkHttpPostInterceptor;
@@ -30,6 +31,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Set;
 
 import javax.net.ssl.HostnameVerifier;
@@ -87,7 +90,9 @@ public class App  extends Application {
         initUtil();
         app = this;
         UserInfo.init(getApplicationContext());
-        UserInfo.setToken("3");
+
+        // TODO: 2017/12/19 测试token
+            UserInfo.setToken("3");
 
         ZegoLiveRoom.setTestEnv(true);
         ZegoLiveRoom.setVerbose(BuildConfig.DEBUG);
@@ -98,34 +103,23 @@ public class App  extends Application {
         }
 
 
+
     }
 
 
 
     private void initUtil() {
 
-//        WeChartHelper.getInstance().init(getApplicationContext(),weiXin_AppKey);
-//        WeChartHelper.getInstance().registerToWx();
-//        Hawk.init(getApplicationContext()).setLogInterceptor(new LogInterceptor() {
-//            @Override
-//            public void onLog(String message) {
-//                if (isDebug()) {
-//                    L.e(message);
-//                }
-//            }
-//        }).build();
-
-
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         LoggerInterceptor interceptor = new LoggerInterceptor("--HTTP--", true);
-        builder.addInterceptor(interceptor).hostnameVerifier(new HostnameVerifier() {
-            @Override
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        }).sslSocketFactory(createSSLSocketFactory());
+//        builder.addInterceptor(interceptor).hostnameVerifier(new HostnameVerifier() {
+//            @Override
+//            public boolean verify(String hostname, SSLSession session) {
+//                return true;
+//            }
+//        }).sslSocketFactory(createSSLSocketFactory());
 
-        builder.addInterceptor(new OkHttpPostInterceptor());
+//        builder.addInterceptor(new OkHttpPostInterceptor());
         //统一请求头添加header
         builder.addInterceptor(new Interceptor() {
             @Override

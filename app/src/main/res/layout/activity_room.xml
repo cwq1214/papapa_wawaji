@@ -61,7 +61,7 @@
                     android:layout_weight="1"
                     android:visibility="visible">
 
-                    <RelativeLayout
+                    <com.jyt.baseapp.view.widget.RoundRelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -90,8 +90,22 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:visibility="invisible" />
+
+                                <FrameLayout
+                                    android:id="@+id/v_bgLayout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="#6f5057"
+                                    android:scaleType="matrix">
+
+                                    <ImageView
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:layout_gravity="center"
+                                        android:src="@mipmap/ppp" />
+                                </FrameLayout>
+                                
                                 <!--开始控制按钮-->
-                                <include layout="@layout/layout_start_play"/>
                             </FrameLayout>
 
                             <TextView
@@ -105,6 +119,8 @@
                                 android:textColor="@color/white"
                                 android:textSize="36dp"
                                 android:visibility="gone" />
+
+                            <include layout="@layout/layout_start_play" />
                         </FrameLayout>
 
 
@@ -170,11 +186,12 @@
                                 <ImageView
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
+                                    android:layout_marginRight="8dp"
                                     android:src="@mipmap/pink_refresh" />
                             </LinearLayout>
                         </LinearLayout>
 
-                    </RelativeLayout>
+                    </com.jyt.baseapp.view.widget.RoundRelativeLayout>
 
                     <ImageView
                         android:id="@+id/img_changeChannel"
@@ -192,32 +209,38 @@
 
                 <!--抓取记录-->
                 <LinearLayout
-                    android:visibility="gone"
-                    android:layout_marginTop="5dp"
+                    android:id="@+id/v_grabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:id="@+id/v_grabLayout"
-                    android:divider="@drawable/divider_full_pink"
-                    android:showDividers="middle"
+                    android:layout_marginTop="5dp"
                     android:background="@drawable/bg_white_4radius"
+                    android:divider="@drawable/divider_full_pink"
+                    android:minHeight="80dp"
                     android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:showDividers="middle"
+                    android:visibility="visible">
+
                     <TextView
                         style="@style/commonText"
-                        android:text="最近抓中记录"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
                         android:gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp" />
+                        android:text="最近抓中记录" />
+
                     <LinearLayout
-                        android:divider="@drawable/divider_pink"
-                        android:showDividers="middle"
-                        android:orientation="vertical"
+                        android:id="@+id/v_recordLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:divider="@drawable/divider_pink"
+                        android:orientation="vertical"
+                        android:showDividers="middle">
+
                         <com.jyt.baseapp.view.widget.GrabRecordItemView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"></com.jyt.baseapp.view.widget.GrabRecordItemView>
+
                         <com.jyt.baseapp.view.widget.GrabRecordItemView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"></com.jyt.baseapp.view.widget.GrabRecordItemView>

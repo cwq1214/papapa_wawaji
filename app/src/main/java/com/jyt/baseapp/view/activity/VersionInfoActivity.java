@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.api.Api;
+import com.jyt.baseapp.util.T;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -54,6 +55,6 @@ public class VersionInfoActivity extends BaseActivity {
 
     @OnClick(R.id.rl_evaluation)
     public void setStart() {
-
+        T.showShort(getContext(),"敬请期待");
     }
 }

@@ -37,7 +37,7 @@ public class ImageLoader {
         Glide.with(imageView.getContext()).load(url).thumbnail(Glide.with(imageView.getContext()).load(R.drawable.loading_gif)).centerCrop().into(imageView);
     }
     public void loadCircle(ImageView imageView, String url){
-        Glide.with(imageView.getContext()).load(url).thumbnail(Glide.with(imageView.getContext()).load(R.drawable.loading_gif)).bitmapTransform(new CropCircleTransformation(imageView.getContext())).centerCrop().into(imageView);
+        Glide.with(imageView.getContext()).load(url).thumbnail(Glide.with(imageView.getContext()).load(R.drawable.loading_gif)).bitmapTransform(new CropCircleTransformation(imageView.getContext())).into(imageView);
 
     }
     public void loadHeader(ImageView imageView, String url){
