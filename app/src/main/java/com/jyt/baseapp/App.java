@@ -86,13 +86,13 @@ public class App  extends Application {
     public void onCreate() {
         super.onCreate();
 
+        app = this;
 
         initUtil();
-        app = this;
         UserInfo.init(getApplicationContext());
 
 
-        ZegoLiveRoom.setTestEnv(true);
+        ZegoLiveRoom.setTestEnv(false);
         ZegoLiveRoom.setVerbose(BuildConfig.DEBUG);
         ZegoApiManager.getInstance().initSDK();
         initJPush();
@@ -109,7 +109,8 @@ public class App  extends Application {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         LoggerInterceptor interceptor = new LoggerInterceptor("--HTTP--", true);
-//        builder.addInterceptor(interceptor).hostnameVerifier(new HostnameVerifier() {
+        builder.addInterceptor(interceptor);
+//        builder.hostnameVerifier(new HostnameVerifier() {
 //            @Override
 //            public boolean verify(String hostname, SSLSession session) {
 //                return true;

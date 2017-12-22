@@ -43,12 +43,22 @@
             android:orientation="vertical"
             android:visibility="visible">
 
-            <cn.bingoogolapple.bgabanner.BGABanner
-                android:id="@+id/v_banner"
+            <com.jyt.baseapp.view.widget.RoundRelativeLayout
+                android:id="@+id/v_bannerLayout"
                 android:layout_width="match_parent"
-                android:layout_height="193dp">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/white">
 
-            </cn.bingoogolapple.bgabanner.BGABanner>
+                <cn.bingoogolapple.bgabanner.BGABanner
+                    android:id="@+id/v_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="193dp"></cn.bingoogolapple.bgabanner.BGABanner>
+
+
+            </com.jyt.baseapp.view.widget.RoundRelativeLayout>
+
 
             <LinearLayout
                 android:layout_margin="5dp"
@@ -82,6 +92,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
             android:background="@drawable/bg_half_circle_white"
             android:src="@mipmap/arrow_down_pink" />
 

@@ -1,5 +1,7 @@
 package com.jyt.baseapp.bean.json;
 
+import android.text.TextUtils;
+
 import java.util.List;
 
 /**
@@ -37,8 +39,8 @@ public class MachineStateAndPeopleResult {
 
 
     public String getRoomPeopleCount(){
-        if (user!=null){
-            return user.size()+"人";
+        if (!TextUtils.isEmpty(userCount)){
+            return Integer.valueOf(userCount)+"人";
         }
         return 0+"人";
     }

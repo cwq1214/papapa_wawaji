@@ -3,6 +3,8 @@ package com.jyt.baseapp.view.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.text.TextUtils;
@@ -10,6 +12,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.jyt.baseapp.R;
+import com.jyt.baseapp.util.CountDownUtil;
+import com.jyt.baseapp.util.TimerUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +38,9 @@ public class CaughtResultDialog extends Dialog {
     String message;
     String continueText;
 
+    Handler handler;
+
+    CountDownUtil countDownUtil;
 
     public CaughtResultDialog(@NonNull Context context) {
         this(context, R.style.pinkDimDialog);
@@ -41,6 +48,19 @@ public class CaughtResultDialog extends Dialog {
 
     protected CaughtResultDialog(@NonNull Context context, @StyleRes int themeResId) {
         super(context, themeResId);
+
+        countDownUtil = new CountDownUtil(getContext(),5,1000);
+
+        countDownUtil.setCountDownCallback(new CountDownUtil.CountDownCallback() {
+            @Override
+            public void countDownCallback(boolean finish, int currentCount) {
+                if (finish){
+                        dismiss();
+                }else {
+                    textShare.setText("   关    闭("+currentCount+")");
+                }
+            }
+        });
     }
 
     @Override
@@ -56,7 +76,7 @@ public class CaughtResultDialog extends Dialog {
             textResultMessage.setText(message);
         }
         if (!TextUtils.isEmpty(continueText)){
-            textResultMessage.setText(continueText);
+            textContinue.setText(continueText);
         }
     }
 
@@ -64,6 +84,13 @@ public class CaughtResultDialog extends Dialog {
     public void show() {
 
         super.show();
+        countDownUtil.start();
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        countDownUtil.stop();
     }
 
     public void setOnDialogBtnClick(OnDialogBtnClick onDialogBtnClick) {
@@ -84,6 +111,7 @@ public class CaughtResultDialog extends Dialog {
                 break;
         }
     }
+
 
     public void setTitle(String title) {
         this.title = title;

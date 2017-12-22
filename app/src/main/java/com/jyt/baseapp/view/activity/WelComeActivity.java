@@ -34,16 +34,16 @@ public class WelComeActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        CountDownUtil countDownUtil = new CountDownUtil(getContext(),5,1000);
-//        countDownUtil.setCountDownCallback(new CountDownUtil.CountDownCallback() {
-//            @Override
-//            public void countDownCallback(boolean finish, int currentCount) {
-//                if (finish){
+        CountDownUtil countDownUtil = new CountDownUtil(getContext(),2,1000);
+        countDownUtil.setCountDownCallback(new CountDownUtil.CountDownCallback() {
+            @Override
+            public void countDownCallback(boolean finish, int currentCount) {
+                if (finish){
                     IntentHelper.openMainActivity(getContext());
-//                }
-//            }
-//        });
-//        countDownUtil.start();
+                }
+            }
+        });
+        countDownUtil.start();
 
 
     }

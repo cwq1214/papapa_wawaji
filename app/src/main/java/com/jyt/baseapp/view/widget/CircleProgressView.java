@@ -16,6 +16,7 @@ import android.view.animation.LinearInterpolator;
 
 import com.jyt.baseapp.util.DensityUtil;
 import com.jyt.baseapp.util.L;
+import com.jyt.baseapp.util.ValueAnimatorUtil;
 
 /**
  * 倒计时圆形进度
@@ -28,7 +29,7 @@ public class CircleProgressView extends View {
     Paint b_paint;
 
     //最小直径
-    int minDiameter = 50;//px
+    int minDiameter = 30;//px
 
     int progressRadius=0;
 
@@ -48,6 +49,9 @@ public class CircleProgressView extends View {
         super(context, attrs);
 
         initPaint();
+
+        ValueAnimatorUtil.resetDurationScale();
+
 
         animator = ValueAnimator.ofInt(0,-360);
         animator.setInterpolator(new LinearInterpolator());

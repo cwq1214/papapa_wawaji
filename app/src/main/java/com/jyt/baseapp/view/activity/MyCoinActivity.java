@@ -116,12 +116,14 @@ public class MyCoinActivity extends BaseActivity {
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 super.onRefresh(refreshLayout);
                 personalInfoModel.getUserCoinTransactionDetails(refreshCallback);
+                getSelfCoin();
             }
 
             @Override
             public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
                 super.onLoadMore(refreshLayout);
                 personalInfoModel.getUserCoinTransactionDetails(loadMoreCallback);
+                getSelfCoin();
             }
         });
         vCoinTransactionDetails.getRefreshLayout().startRefresh();

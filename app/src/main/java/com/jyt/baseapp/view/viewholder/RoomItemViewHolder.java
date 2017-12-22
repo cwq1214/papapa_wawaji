@@ -1,8 +1,8 @@
 package com.jyt.baseapp.view.viewholder;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,7 +13,9 @@ import com.jyt.baseapp.R;
 import com.jyt.baseapp.bean.json.HomeToyResult;
 import com.jyt.baseapp.util.DensityUtil;
 import com.jyt.baseapp.util.ImageLoader;
+import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.ScreenUtils;
+import com.jyt.baseapp.view.widget.RoundLinearLayout;
 import com.jyt.baseapp.view.widget.RoundRelativeLayout;
 
 import butterknife.BindView;
@@ -34,7 +36,9 @@ public class RoomItemViewHolder extends BaseViewHolder<HomeToyResult> {
     @BindView(R.id.v_imgLayout)
     RelativeLayout vImgLayout;
     @BindView(R.id.v_roundLayout1)
-    RoundRelativeLayout vRoundLayout1;
+    RoundLinearLayout vRoundLayout1;
+    @BindView(R.id.v_bottomTitleLayout)
+    LinearLayout vBottomTitleLayout;
 
 
     public RoomItemViewHolder(ViewGroup parent) {
@@ -46,18 +50,20 @@ public class RoomItemViewHolder extends BaseViewHolder<HomeToyResult> {
 
 
         ViewGroup.LayoutParams vRoundLayout1Params = vRoundLayout1.getLayoutParams();
-        vRoundLayout1Params.height = itemWidth + DensityUtil.dpToPx(context,33);
+        vRoundLayout1Params.height = itemWidth + DensityUtil.dpToPx(context, 40);
         vRoundLayout1Params.width = itemWidth;
 
         vRoundLayout1.setLayoutParams(vRoundLayout1Params);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams( itemWidth - DensityUtil.dpToPx(context,1) , itemWidth - DensityUtil.dpToPx(context,1));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(itemWidth - DensityUtil.dpToPx(context, 1), itemWidth - DensityUtil.dpToPx(context, 1));
         vImgLayout.setLayoutParams(params);
 
+//        LinearLayout.LayoutParams titleParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,DensityUtil.dpToPx(itemView.getContext(),40));
+//        titleParam.gravity = Gravity.CENTER_VERTICAL;
+//        vBottomTitleLayout.setLayoutParams(titleParam);
+//        vBottomTitleLayout.setGravity(Gravity.CENTER_VERTICAL);
 //        RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(itemWidth - DensityUtil.dpToPx(context,1), itemWidth - DensityUtil.dpToPx(context,1) );
 //        imgGoods.setLayoutParams(params1);
-
-
 
 
     }
@@ -78,5 +84,7 @@ public class RoomItemViewHolder extends BaseViewHolder<HomeToyResult> {
 
 //        ImageLoader.getInstance().loadWithRadiusBorder(imgGoods, data.getToyImg(), DensityUtil.dpToPx(itemView.getContext(),4),DensityUtil.dpToPx(itemView.getContext(),1),itemView.getResources().getColor(R.color.colorPrimary));
         ImageLoader.getInstance().load(imgGoods, data.getToyImg());
+
+
     }
 }

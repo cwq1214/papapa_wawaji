@@ -44,10 +44,10 @@ public class ImageLoader {
         Context context = imageView.getContext();
 //        AnimationDrawable animationDrawable  = (AnimationDrawable) context.getResources().getDrawable(R.drawable.frame_loading);
 //        url = "http://pic62.nipic.com/file/20150322/19858325_125956421000_2.jpg";
-        Glide.with(context).load(url).thumbnail(Glide.with(context).load(R.drawable.loading_gif)).bitmapTransform(new CropCircleTransformation(context)).diskCacheStrategy(DiskCacheStrategy.NONE).into(imageView);
+        Glide.with(context).load(url).thumbnail(Glide.with(context).load(R.drawable.loading_gif)).bitmapTransform(new CropCircleTransformation(context)).into(imageView);
     }
 
     public void loadWithRadiusBorder(ImageView imageView, String url,int borderRadius_px,int borderWidth_px ,int borderColor){
-        Glide.with(imageView.getContext()).load(url).thumbnail(Glide.with(imageView.getContext()).load(R.drawable.loading_gif)).diskCacheStrategy(DiskCacheStrategy.NONE).transform(new ImageBorderTransformation(imageView.getContext(),borderRadius_px,borderWidth_px,borderColor)).into(imageView);
+        Glide.with(imageView.getContext()).load(url).thumbnail(Glide.with(imageView.getContext()).load(R.drawable.loading_gif)).transform(new ImageBorderTransformation(imageView.getContext(),borderRadius_px,borderWidth_px,borderColor)).into(imageView);
     }
 }

@@ -199,9 +199,18 @@ public class WaWaJiControlClient {
      * @param pwd
      */
     private void startConnection(String uid, String pwd ){
-        while (true){
+        int i=0;
+        while (i++ < 5){
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             L.e(String.format("StreamClient start..."));
-            int port = (int) (10000 + (System.currentTimeMillis() % 10000));
+//            int port = (int) (10000 + (System.currentTimeMillis() % 10000)+i);
+            int port = 0;
             int ret = IOTCAPIs.IOTC_Initialize2(port);
             L.e(String.format("IOTC_Initialize() ret = %d\n", ret));
             if (ret != IOTCAPIs.IOTC_ER_NoERROR) {

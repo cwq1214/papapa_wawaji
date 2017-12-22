@@ -22,7 +22,7 @@ public class WaWaAudioPlayUtil {
     MediaPlayer direction;
     MediaPlayer catchit;
     MediaPlayer start;
-    String[] bgmName = {"moinoi.mp3","nyokki.mp3"};
+    String[] bgmName = {"bgm_1.mp3","bgm_2.mp3"};
 
     public static final int TYPE_BACKGROUND = 0;
 
@@ -56,7 +56,7 @@ public class WaWaAudioPlayUtil {
         }
         try {
             start = new MediaPlayer();
-            AssetFileDescriptor afd = mContext.getAssets().openFd("start.wav");
+            AssetFileDescriptor afd = mContext.getAssets().openFd("start.mp3");
             start.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(), afd.getLength());
             start.prepareAsync();
         } catch (IOException e) {
@@ -127,8 +127,10 @@ public class WaWaAudioPlayUtil {
 
 
     public void stopPlayBackgroundMusic(){
-        if (backgroundMusicPlayer!=null)
+        if (backgroundMusicPlayer!=null) {
+            backgroundMusicPlayer.setOnCompletionListener(null);
             backgroundMusicPlayer.stop();
+        }
     }
     public void stopPlayAction(){
         actionPlayer .stop();

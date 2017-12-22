@@ -6,8 +6,10 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.adapter.FragmentViewPagerAdapter;
 import com.jyt.baseapp.annotation.ActivityAnnotation;
@@ -19,10 +21,13 @@ import com.jyt.baseapp.helper.IntentKey;
 import com.jyt.baseapp.model.BaseModel;
 import com.jyt.baseapp.model.MainActModel;
 import com.jyt.baseapp.model.impl.MainActModelImpl;
+import com.jyt.baseapp.util.DensityUtil;
 import com.jyt.baseapp.util.ImageLoader;
+import com.jyt.baseapp.util.ScreenUtils;
 import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.view.fragment.RoomListFragment;
 import com.jyt.baseapp.view.widget.NoScrollViewPager;
+import com.jyt.baseapp.view.widget.RoundRelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +55,8 @@ public class MainActivity extends BaseActivity {
     ImageView imgShowHideBanner;
     @BindView(R.id.img_gifppp)
     ImageView imgGifppp;
+    @BindView(R.id.v_bannerLayout)
+    RoundRelativeLayout vBannerLayout;
     private RoomListFragment dollFragment;
     private RoomListFragment cabbageFragment;
 
@@ -75,7 +82,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Glide.with(this).load(R.mipmap.start).asGif().into(imgGifppp);
+        Glide.with(this).load(R.mipmap.start).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(imgGifppp);
 
         dollFragment = new RoomListFragment();
         Bundle dollFragmentBundle = new Bundle();
@@ -93,6 +100,10 @@ public class MainActivity extends BaseActivity {
         adapter.addFragment(new Fragment(), "玩家分享");
         adapter.notifyDataSetChanged();
         vTabLayout.setupWithViewPager(vViewPager);
+
+        int bannerWidth = ScreenUtils.getScreenWidth(getContext())- DensityUtil.dpToPx(getContext(),10);
+        RelativeLayout.LayoutParams bannerParams = new RelativeLayout.LayoutParams(bannerWidth,bannerWidth * 193/366);
+        vBanner.setLayoutParams(bannerParams);
 
         vBanner.setDelegate(new BGABanner.Delegate() {
             @Override
@@ -142,12 +153,12 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.img_showHideBanner)
     public void onShowHideBannerClick() {
-        if (vBanner.getVisibility() == View.VISIBLE) {
+        if (vBannerLayout.getVisibility() == View.VISIBLE) {
             imgShowHideBanner.setImageDrawable(getResources().getDrawable(R.mipmap.arrow_up_pink));
-            vBanner.setVisibility(View.GONE);
+            vBannerLayout.setVisibility(View.GONE);
         } else {
             imgShowHideBanner.setImageDrawable(getResources().getDrawable(R.mipmap.arrow_down_pink));
-            vBanner.setVisibility(View.VISIBLE);
+            vBannerLayout.setVisibility(View.VISIBLE);
         }
     }
 }

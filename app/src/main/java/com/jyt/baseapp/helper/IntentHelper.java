@@ -7,7 +7,9 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 
+import com.jyt.baseapp.bean.json.HomeToyResult;
 import com.jyt.baseapp.util.FinishActivityManager;
+import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.util.UserInfo;
 import com.jyt.baseapp.view.activity.AddressListActivity;
 import com.jyt.baseapp.view.activity.DollDetailActivity;
@@ -108,6 +110,14 @@ public class IntentHelper extends IntentKey{
         if (!UserInfo.isLogin()){
             openLoginActivity(context);
             return;
+        }
+
+        if (room instanceof HomeToyResult) {
+            HomeToyResult homeToyResult = (HomeToyResult) room;
+            if (homeToyResult.getMachineList() == null || homeToyResult.getMachineList().size() == 0) {
+                T.showShort(context, "此房间内无可用机器");
+                return;
+            }
         }
 
         Intent intent = getIntent(context, RoomActivity.class);

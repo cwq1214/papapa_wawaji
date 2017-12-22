@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.jyt.baseapp.App;
 import com.jyt.baseapp.R;
@@ -38,6 +39,7 @@ import com.jyt.baseapp.bean.json.MachineStateAndPeopleResult;
 import com.jyt.baseapp.bean.json.PersonalInfo;
 import com.jyt.baseapp.bean.json.RechargePrice;
 import com.jyt.baseapp.bean.json.ToyDetail;
+import com.jyt.baseapp.bean.json.User;
 import com.jyt.baseapp.bean.json.WxPayResult;
 import com.jyt.baseapp.helper.IntentHelper;
 import com.jyt.baseapp.helper.IntentKey;
@@ -51,6 +53,7 @@ import com.jyt.baseapp.model.impl.PersonalInfoModelImpl;
 import com.jyt.baseapp.model.impl.RoomModelImpl;
 import com.jyt.baseapp.util.CountDownUtil;
 import com.jyt.baseapp.util.DensityUtil;
+import com.jyt.baseapp.util.ImageLoader;
 import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.util.TimerUtil;
@@ -92,8 +95,7 @@ import butterknife.OnTouch;
  */
 @ActivityAnnotation(showActionBar = false)
 public class RoomActivity extends BaseActivity {
-    @BindView(R.id.img_help)
-    ImageView imgHelp;
+    //region view
     @BindView(R.id.img_back2)
     ImageView imgBack2;
     @BindView(R.id.text_roomIndex)
@@ -122,8 +124,8 @@ public class RoomActivity extends BaseActivity {
     TextView textBalance;
     @BindView(R.id.v_recharge)
     LinearLayout vRecharge;
-    @BindView(R.id.imageView)
-    ImageView imageView;
+    @BindView(R.id.img_play)
+    ImageView imgPlay;
     @BindView(R.id.text_price)
     TextView textPrice;
     @BindView(R.id.v_playLayout)
@@ -160,7 +162,19 @@ public class RoomActivity extends BaseActivity {
     FrameLayout vBgLayout;
     @BindView(R.id.v_recordLayout)
     LinearLayout vRecordLayout;
-
+    @BindView(R.id.v_selfPreview)
+    TextureView vSelfPreview;
+    @BindView(R.id.img_pppgif)
+    ImageView imgPppgif;
+    @BindView(R.id.img_help)
+    ImageView imgHelp;
+    @BindView(R.id.v_userHeaderImg)
+    LinearLayout vUserHeaderImg;
+    @BindView(R.id.v_peopleCountAndChangeRoomBackgroundLayout)
+    View vPeopleCountAndChangeRoomBackgroundLayout;
+    @BindView(R.id.v_peopleCountAndChangeRoomLayout)
+    LinearLayout vPeopleCountAndChangeRoomLayout;
+    //endregion
     //充值对话框
     RechargeCoinDialog rechargeCoinDialog;
 
@@ -182,8 +196,7 @@ public class RoomActivity extends BaseActivity {
     String TAG = getClass().getSimpleName();
 
     WaWaAudioPlayUtil waWaAudioPlayUtil;
-    @BindView(R.id.v_selfPreview)
-    TextureView vSelfPreview;
+
 
 
     private ZegoLiveRoom mZegoLiveRoom = ZegoApiManager.getInstance().getZegoLiveRoom();
@@ -242,7 +255,26 @@ public class RoomActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        vUserHeaderImg.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(vPeopleCountAndChangeRoomLayout.getWidth(),vPeopleCountAndChangeRoomLayout.getHeight());
+                vPeopleCountAndChangeRoomBackgroundLayout.setLayoutParams(params);
+            }
+        });
+
+        homeToyResult = getIntent().getParcelableExtra(IntentKey.KEY_ROOM);
+        if (homeToyResult.getMachineList() == null || homeToyResult.getMachineList().size() == 0) {
+            T.showShort(getContext(), "此房间内无可用机器");
+            finish();
+            return;
+        }
+
         checkPublishPermission();
+
+        Glide.with(this).load(R.drawable.room_loading_gif).asGif().diskCacheStrategy(DiskCacheStrategy.NONE).into(imgPppgif);
+        Glide.with(this).load(R.mipmap.start).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(imgGif);
 
         waitingDialog = new WaitingDialog(getContext());
         waitingDialog.setCancelable(false);
@@ -272,14 +304,7 @@ public class RoomActivity extends BaseActivity {
             }
         });
 
-
-        Glide.with(this).load(R.mipmap.start).asGif().into(imgGif);
-        homeToyResult = getIntent().getParcelableExtra(IntentKey.KEY_ROOM);
-        if (homeToyResult.getMachineList() == null || homeToyResult.getMachineList().size() == 0) {
-            T.showShort(getContext(), "此房间内无可用机器");
-            finish();
-            return;
-        }
+        mZegoLiveRoom.setAudioDeviceMode(ZegoConstants.AudioDeviceMode.General);
         ZegoApiManager.getInstance().initSDK();
         // 设置开关，直接从 ZEGO 服务器拉流
 //        String config = ZegoConstants.Config.PREFER_PLAY_ULTRA_SOURCE + "=1";
@@ -288,7 +313,7 @@ public class RoomActivity extends BaseActivity {
 
         loadingDialog = new LoadingDialog(getContext());
         loadingDialog.setCancelable(false);
-        timer = new TimerUtil(getContext(), 30 * 1000);
+        timer = new TimerUtil(getContext(), 3 * 1000);
         timer.setOnTimeCallback(new TimerUtil.OnTimeCallback() {
             @Override
             public void onTime() {
@@ -309,30 +334,19 @@ public class RoomActivity extends BaseActivity {
             @Override
             public void countDownCallback(boolean finish, int currentCount) {
                 if (finish && playing) {
-//                    waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_CATCH);
-//                    waWaJiControlClient.action_up();
-//                    countDownUtil.stop();
-//                    vCircleProgress.stop();
-//                    setWaWaControl(playing = false);
                     waitingDialog.show();
-
                     new Thread() {
                         @Override
                         public void run() {
 
-                            if (waWaAudioPlayUtil != null) {
-                                if (UserInfo.getRoomEffectBgEnable())
-                                    waWaAudioPlayUtil.play(WaWaAudioPlayUtil.TYPE_CATCH);
+                            if (UserInfo.getRoomEffectBgEnable() && waWaAudioPlayUtil != null) {
+                                waWaAudioPlayUtil.play(WaWaAudioPlayUtil.TYPE_CATCH);
                             }
-//                            T.showShort(getContext(),"等待抓取结果");
                             waWaJiControlClient.action_down(WaWaJiControlClient.MOVE_CATCH);
                             countDownUtil.stop();
                             vCircleProgress.stop();
-//                            waWaJiControlClient.action_up();
                         }
                     }.start();
-
-
                 }
                 if (!finish) {
                     textTime.setText(currentCount + "''");
@@ -370,7 +384,9 @@ public class RoomActivity extends BaseActivity {
 //                mZegoLiveRoom.startPreview();
                 mZegoLiveRoom.enableMic(false);
                 mZegoLiveRoom.enableCamera(false);
-                mZegoLiveRoom.startPublishing(toyDetail.getMachineId() + UserInfo.getToken()+System.currentTimeMillis(), "主动连接", 0);
+                mZegoLiveRoom.enableSpeaker(false);
+                mZegoLiveRoom.setAudioChannelCount(0);
+                mZegoLiveRoom.startPublishing(toyDetail.getMachineId() + UserInfo.getToken() + System.currentTimeMillis(), "主动连接", 0);
 
             }
         });
@@ -381,9 +397,16 @@ public class RoomActivity extends BaseActivity {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 int width = right - left;
-                v.setLayoutParams(new RelativeLayout.LayoutParams(width, width * 500 / 360));
-                textureview1.setLayoutParams(new FrameLayout.LayoutParams(width, width * 500 / 360));
-                textureview2.setLayoutParams(new FrameLayout.LayoutParams(width, width * 500 / 360));
+                int srcWidth = 360;
+                int scrHeight = 640;
+                int cropHeight = DensityUtil.dpToPx(getContext(), 30);
+                v.setLayoutParams(new RelativeLayout.LayoutParams(width, width * scrHeight / srcWidth - cropHeight));
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, width * scrHeight / srcWidth);
+                params.setMargins(0, -cropHeight, 0, 0);
+                textureview1.setLayoutParams(params);
+                textureview2.setLayoutParams(params);
+
+                v.setPadding(0, 0, 0, 0);
 
                 v.removeOnLayoutChangeListener(this);
 
@@ -726,7 +749,7 @@ public class RoomActivity extends BaseActivity {
 
     private ZegoStream constructStream(int index, String streamID) {
 //        if (streamID.startsWith("rtmp://")) {
-        streamID = streamID.substring(streamID.lastIndexOf("-") + 1);
+        streamID = streamID.substring(streamID.lastIndexOf("/") + 1);
 //        }
 
         String sateStrings[];
@@ -822,8 +845,33 @@ public class RoomActivity extends BaseActivity {
     //设置房间刷新数据
     public void setRoomRefreshInfo(MachineStateAndPeopleResult machineStateAndPeopleResult) {
         textRoomIndex.setText(currentRoom + 1 + "");
-        textPeopleCounts.setText(machineStateAndPeopleResult.getRoomPeopleCount());
+        if (machineStateAndPeopleResult != null) {
 
+            if ("0".equals(machineStateAndPeopleResult.getMachineStatus())) {
+//            if (System.currentTimeMillis()%2==0){
+                System.out.println("1");
+                imgPlay.setImageDrawable(getResources().getDrawable(R.mipmap.play));
+            } else {
+                System.out.println("2");
+
+                imgPlay.setImageDrawable(getResources().getDrawable(R.mipmap.startgamenoctrl));
+            }
+
+
+            textPeopleCounts.setText(machineStateAndPeopleResult.getRoomPeopleCount());
+
+            vUserHeaderImg.removeAllViews();
+            for (User browser : machineStateAndPeopleResult.getUser()) {
+
+
+                ImageView imageView = new ImageView(getContext());
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DensityUtil.dpToPx(getContext(), 30), DensityUtil.dpToPx(getContext(), 30));
+                params.setMargins(4, 0, 0, 0);
+                imageView.setLayoutParams(params);
+                ImageLoader.getInstance().loadHeader(imageView, browser.getUserImg());
+                vUserHeaderImg.addView(imageView);
+            }
+        }
     }
 
 
@@ -930,7 +978,7 @@ public class RoomActivity extends BaseActivity {
             quitRoom();
         }
 
-        if (loadingDialog!=null){
+        if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
 
@@ -1001,6 +1049,7 @@ public class RoomActivity extends BaseActivity {
 
                         T.showShort(getContext(), response.getForUser());
                     }
+                    getSelfCoin();
 
                 }
             });
@@ -1024,12 +1073,12 @@ public class RoomActivity extends BaseActivity {
 
                 vBottomControl.setVisibility(play ? View.VISIBLE : View.GONE);
 
-                vMainScrollView.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View arg0, MotionEvent arg1) {
-                        return play;
-                    }
-                });
+//                vMainScrollView.setOnTouchListener(new View.OnTouchListener() {
+//                    @Override
+//                    public boolean onTouch(View arg0, MotionEvent arg1) {
+//                        return play;
+//                    }
+//                });
                 vStartPlayLayout.setVisibility(!play ? View.VISIBLE : View.GONE);
 
 
@@ -1138,7 +1187,7 @@ public class RoomActivity extends BaseActivity {
                         } else if (btnIndex == 1) {
                             dialogPlayContinue = false;
                             dialog.dismiss();
-                            quitRoom();
+
 
                         }
                     }
@@ -1146,11 +1195,11 @@ public class RoomActivity extends BaseActivity {
                 successDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialogInterface) {
-                        if (dialogPlayContinue) {
-
+                        if (!dialogPlayContinue) {
                             setMachineFree();
-                            dialogPlayContinue = false;
+//                            dialogPlayContinue = true;
                         }
+                        dialogPlayContinue = false;
                     }
                 });
                 if (caught) {
@@ -1192,6 +1241,7 @@ public class RoomActivity extends BaseActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     playing = false;
+//                    setMachineFree();
                     quitRoom();
                     onBackPressed();
                 }
@@ -1203,6 +1253,7 @@ public class RoomActivity extends BaseActivity {
             }).show();
         } else {
             super.onBackPressed();
+            quitRoom();
         }
     }
 
@@ -1243,9 +1294,9 @@ public class RoomActivity extends BaseActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     playing = false;
-
                     connectRoom();
                     doLogout();
+
 
                 }
             }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
