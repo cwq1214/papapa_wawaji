@@ -28,7 +28,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
-import butterknife.OnTouch;
 
 /**
  * Created by chenweiqi on 2017/11/8.
@@ -68,6 +67,11 @@ public class PersonCenterActivity extends BaseActivity {
     PersonalInfoModel personalInfoModel;
 
     PersonalInfo personalInfo;
+    @BindView(R.id.v_toShareCode)
+    LabelAndTextItem vToShareCode;
+    @BindView(R.id.v_toInputCode)
+    LabelAndTextItem vToInputCode;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_personal_center;
@@ -105,6 +109,7 @@ public class PersonCenterActivity extends BaseActivity {
         } else {
             textName.setText("未登录");
             textRecord.setText("");
+            imgHeader.setImageDrawable(null);
         }
     }
 
@@ -134,10 +139,10 @@ public class PersonCenterActivity extends BaseActivity {
         return list;
     }
 
-    @OnClick({R.id.img_header,R.id.v_toMyWaWa,R.id.img_function, R.id.v_toBalance, R.id.v_toAddress, R.id.v_toOrder, R.id.v_toGuidance, R.id.v_toAboutUs, R.id.v_toContractUs, R.id.v_toFeedback, R.id.v_viewVersion, R.id.text_logout})
+    @OnClick({R.id.v_toShareCode,R.id.v_toInputCode,R.id.img_header, R.id.v_toMyWaWa, R.id.img_function, R.id.v_toBalance, R.id.v_toAddress, R.id.v_toOrder, R.id.v_toGuidance, R.id.v_toAboutUs, R.id.v_toContractUs, R.id.v_toFeedback, R.id.v_viewVersion, R.id.text_logout})
     public void onViewClicked(View view) {
         int vid = view.getId();
-        if (!UserInfo.isLogin() && (vid == R.id.img_header || vid == R.id.v_toBalance || vid == R.id.v_toAddress || vid == R.id.v_toOrder || vid == R.id.img_function || vid==R.id.v_toMyWaWa )) {
+        if (!UserInfo.isLogin() && (vid == R.id.v_toShareCode||vid == R.id.v_toInputCode ||vid == R.id.img_header || vid == R.id.v_toBalance || vid == R.id.v_toAddress || vid == R.id.v_toOrder || vid == R.id.img_function || vid == R.id.v_toMyWaWa)) {
             IntentHelper.openLoginActivity(getContext());
             return;
         }
@@ -145,8 +150,8 @@ public class PersonCenterActivity extends BaseActivity {
 
         switch (vid) {
             case R.id.img_header:
-                if (personalInfo!=null)
-                    IntentHelper.openModifyUserInfoActivity(personalInfo.getNickname(),personalInfo.getUserImg(),getContext());
+                if (personalInfo != null)
+                    IntentHelper.openModifyUserInfoActivity(personalInfo.getNickname(), personalInfo.getUserImg(), getContext());
                 break;
             case R.id.v_toMyWaWa:
                 IntentHelper.openMyWaWaActivity(getContext());
@@ -160,14 +165,26 @@ public class PersonCenterActivity extends BaseActivity {
             case R.id.v_toOrder:
                 IntentHelper.openOrderListActivity(getContext());
                 break;
-            case R.id.v_toGuidance:
             case R.id.v_toAboutUs:
+                IntentHelper.openAboutUsActivity(getContext(), personalInfo);
+                break;
             case R.id.v_toContractUs:
+                IntentHelper.openContactUsActivity(getContext(), personalInfo);
+                break;
+            case R.id.v_toGuidance:
+                T.showShort(getContext(), "敬请期待");
+                break;
             case R.id.v_toFeedback:
-                T.showShort(getContext(),"敬请期待");
+                IntentHelper.openFeedbackQuesActivity(getContext());
                 break;
             case R.id.v_viewVersion:
                 IntentHelper.openVersionInfoActivity(getContext());
+                break;
+            case R.id.v_toShareCode:
+                IntentHelper.openBrowserInviteCodeActivity(getContext(),personalInfo);
+                break;
+            case R.id.v_toInputCode:
+                IntentHelper.openInputInviteCodeActivity(getContext(),personalInfo);
                 break;
             case R.id.text_logout:
                 if (UserInfo.isLogin()) {
@@ -181,12 +198,12 @@ public class PersonCenterActivity extends BaseActivity {
                 break;
         }
     }
-    @OnCheckedChanged({R.id.img_BGMControl,R.id.img_voiceControl})
-    public void onBgCheckChanged(CompoundButton view,boolean checked){
-        if (view == imgBGMControl)
-        {
+
+    @OnCheckedChanged({R.id.img_BGMControl, R.id.img_voiceControl})
+    public void onBgCheckChanged(CompoundButton view, boolean checked) {
+        if (view == imgBGMControl) {
             UserInfo.setRoomBgEnable(checked);
-        }else if (view == imgVoiceControl){
+        } else if (view == imgVoiceControl) {
             UserInfo.setRoomEffectBgEnable(checked);
         }
     }

@@ -32,4 +32,39 @@ public interface PersonalInfoModel extends BaseModel {
      */
     void modifyUserInfo(String userImg,String nickname,Callback callback);
 
+
+    /**
+     * 意见反馈
+     * @param content
+     * @param phone
+     * @param callback
+     */
+    void submitFeedBack(String content,String phone,Callback callback);
+
+    /**
+     * 输入邀请码
+     * @param userCode
+     * @param callback
+     */
+    void submitInviteCode(String userCode,Callback callback);
+
+    /**
+     * 游戏后分享获取积分
+     * @param callback
+     */
+    void afterShareToGetScore(Callback callback);
+
+    /**
+     * 签到
+     * @param callback
+     */
+    void sign(Callback callback);
+
+
+    /**
+     * 今天是否已签到
+     * @param callback
+     */
+    void isSign(Callback callback);
+
 }

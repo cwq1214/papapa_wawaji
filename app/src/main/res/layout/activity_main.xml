@@ -13,18 +13,18 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:padding="12dp"
+            android:padding="14dp"
             android:src="@mipmap/setting" />
 
         <ImageView
-            android:visibility="gone"
-            android:id="@+id/img_personalCenter"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:id="@+id/img_qiandao"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="12dp"
-            android:src="@mipmap/personal" />
+            android:padding="14dp"
+            android:src="@mipmap/sign_nor"
+            android:visibility="visible" />
 
         <ImageView
             android:id="@+id/img_gifppp"
@@ -47,6 +47,7 @@
                 android:id="@+id/v_bannerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@color/white">
@@ -61,40 +62,46 @@
 
 
             <LinearLayout
-                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:orientation="vertical">
+
                 <LinearLayout
-                    android:background="@drawable/bg_4raidus_top_left_top_right"
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_4raidus_top_left_top_right"
+                    android:orientation="vertical">
+
                     <android.support.design.widget.TabLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/v_tabLayout"
                         android:layout_width="match_parent"
                         android:layout_height="43dp"></android.support.design.widget.TabLayout>
+
                     <View
-                        android:background="@color/colorPrimary"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"></View>
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimary"></View>
                 </LinearLayout>
+
                 <com.jyt.baseapp.view.widget.NoScrollViewPager
-                    android:background="@drawable/bg_4radius_bottom_left_bottom_right"
                     android:id="@+id/v_viewPager"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></com.jyt.baseapp.view.widget.NoScrollViewPager>
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_4radius_bottom_left_bottom_right"></com.jyt.baseapp.view.widget.NoScrollViewPager>
             </LinearLayout>
         </LinearLayout>
 
         <ImageView
             android:id="@+id/img_showHideBanner"
             android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_height="15dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
             android:background="@drawable/bg_half_circle_white"
-            android:src="@mipmap/arrow_down_pink" />
+            android:src="@mipmap/arrow_up_pink" />
 
     </RelativeLayout>
 

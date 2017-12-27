@@ -69,6 +69,11 @@ import com.jyt.baseapp.view.widget.GrabRecordItemView;
 import com.jyt.baseapp.waWaJiControl.WaWaJiControlClient;
 import com.jyt.baseapp.zego.ZegoApiManager;
 import com.jyt.baseapp.zego.ZegoStream;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 import com.zego.zegoliveroom.ZegoLiveRoom;
 import com.zego.zegoliveroom.callback.IZegoLivePlayerCallback;
 import com.zego.zegoliveroom.callback.IZegoLivePublisherCallback;
@@ -399,7 +404,7 @@ public class RoomActivity extends BaseActivity {
                 int width = right - left;
                 int srcWidth = 360;
                 int scrHeight = 640;
-                int cropHeight = DensityUtil.dpToPx(getContext(), 30);
+                int cropHeight = DensityUtil.dpToPx(getContext(), 60);
                 v.setLayoutParams(new RelativeLayout.LayoutParams(width, width * scrHeight / srcWidth - cropHeight));
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, width * scrHeight / srcWidth);
                 params.setMargins(0, -cropHeight, 0, 0);
@@ -1187,7 +1192,7 @@ public class RoomActivity extends BaseActivity {
                         } else if (btnIndex == 1) {
                             dialogPlayContinue = false;
                             dialog.dismiss();
-
+                            openShareDialog();
 
                         }
                     }
@@ -1257,10 +1262,46 @@ public class RoomActivity extends BaseActivity {
         }
     }
 
+    public void openShareDialog(){
+        if (TextUtils.isEmpty(UserInfo.getShareLink())){
+            return;
+        }
+        UMWeb umWeb = new UMWeb(UserInfo.getShareLink());
+        umWeb.setTitle("PPP抓娃娃");
+        umWeb.setDescription("不一样的线上抓娃娃机");
+        new ShareAction(getActivity()).withMedia(umWeb)
+                .setPlatform(SHARE_MEDIA.WEIXIN)
+                .setDisplayList(SHARE_MEDIA.WEIXIN)
+                .setCallback(new UMShareListener() {
+                    @Override
+                    public void onStart(SHARE_MEDIA share_media) {
+                        L.e("[onStart]" + share_media);
+                    }
 
+                    @Override
+                    public void onResult(SHARE_MEDIA share_media) {
+                        L.e("[onResult]" + share_media);
+                        afterShareToGetScore();
+                    }
+
+                    @Override
+                    public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+                        L.e("[onError]" + share_media);
+
+                    }
+
+                    @Override
+                    public void onCancel(SHARE_MEDIA share_media) {
+                        L.e("[onCancel]" + share_media);
+
+                    }
+                }).open();
+    }
+
+    /**
+     * 退出房间
+     */
     private void quitRoom() {
-
-
         roomModel.quitRoom(toyDetail.getMachineId(), new BeanCallback<String>() {
             @Override
             public void response(boolean success, String response, int id) {
@@ -1269,6 +1310,9 @@ public class RoomActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 不玩的时候设置机器空闲
+     */
     private void setMachineFree() {
         roomModel.setMachineFree(toyDetail.getMachineId(), new BeanCallback<BaseJson>() {
             @Override
@@ -1321,6 +1365,18 @@ public class RoomActivity extends BaseActivity {
                 if (response.isRet()) {
                     textBalance.setText(response.getData().getBalance());
                 }
+            }
+        });
+    }
+
+    /**
+     * 分享后获取积分
+     */
+    private void afterShareToGetScore(){
+        personalInfoModel.afterShareToGetScore(new BeanCallback<BaseJson>() {
+            @Override
+            public void response(boolean success, BaseJson response, int id) {
+
             }
         });
     }

@@ -116,6 +116,32 @@
                android:background="@drawable/bg_white_4radius"
                android:layout_width="match_parent"
                android:layout_height="wrap_content">
+               <com.jyt.baseapp.view.widget.LabelAndTextItem
+                   android:id="@+id/v_toShareCode"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   app:labelText="邀请奖励"
+                   app:showRightArrow="true">
+
+               </com.jyt.baseapp.view.widget.LabelAndTextItem>
+               <com.jyt.baseapp.view.widget.LabelAndTextItem
+                   android:id="@+id/v_toInputCode"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   app:labelText="输入邀请码"
+                   app:showRightArrow="true">
+
+               </com.jyt.baseapp.view.widget.LabelAndTextItem>
+           </LinearLayout>
+
+           <LinearLayout
+               android:showDividers="middle"
+               android:divider="@drawable/divider_pink"
+               android:layout_marginTop="10dp"
+               android:orientation="vertical"
+               android:background="@drawable/bg_white_4radius"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
 
                <RelativeLayout
                    android:layout_width="match_parent"
@@ -124,6 +150,8 @@
                    android:paddingRight="20dp">
 
                    <TextView
+                       android:textColor="#949494"
+                       android:textSize="13dp"
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:layout_centerInParent="false"
@@ -148,6 +176,8 @@
                    android:paddingRight="20dp">
 
                    <TextView
+                       android:textColor="#949494"
+                       android:textSize="13dp"
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:layout_centerInParent="false"
@@ -177,6 +207,7 @@
                android:layout_height="wrap_content">
 
                <com.jyt.baseapp.view.widget.LabelAndTextItem
+                   android:visibility="gone"
                    android:id="@+id/v_toGuidance"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
@@ -232,7 +263,7 @@
                android:layout_marginTop="25dp"
                android:background="@drawable/bg_white_4radius"
                android:gravity="center"
-               android:text="退出登录"
+               android:text="登录"
                android:textColor="#1A1A1A"
                android:textSize="14dp" />
            </LinearLayout>

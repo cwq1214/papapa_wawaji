@@ -6,9 +6,9 @@ package com.jyt.baseapp.api;
 
 public class Api {
 //    public static final String domain = "http://192.168.3.16/babymc/";
-    public static final String domainText = "www.pppzww.cn";
+        public static final String domain = "http://wwj.pppzww.cn/";
 
-    public static final String domain = "http://wwj.pppzww.cn/";
+    public static final String domainText = "www.pppzww.cn";
 
     public static final String login = "api/login/do_login";
 
@@ -87,4 +87,18 @@ public class Api {
     //设置空闲
     public static final String setMachineFree = "api/toy/set_machine_status";
 
+    //意见反馈
+    public static final String submitFeedbackQues = "api/user/feedback";
+
+    //输入邀请码加娃娃币
+    public static final String submitInviteCode = "api/user/exchange_invite_code";
+
+    //分享加积分
+    public static final String afterShareToGetScore = "api/user/share_give";
+
+    //签到
+    public static final String sign = "api/user/sign";
+
+    //检测今日是否已经签到
+    public static final String isSign = "api/user/check_sign";
 }

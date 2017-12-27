@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+
+    <com.jyt.baseapp.view.widget.RoundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:divider="@drawable/divider_pink"
+        android:orientation="vertical"
+        android:showDividers="middle">
+
+        <EditText
+            android:id="@+id/input_ques"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="top|left"
+            android:hint="请输入您的意见"
+            android:minHeight="240dp"
+            android:padding="8dp"
+            android:textColorHint="#CCCCCC"
+            android:textSize="12dp" />
+
+        <EditText
+            android:id="@+id/input_contactWay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="输入您的联系方式"
+            android:minHeight="50dp"
+            android:padding="8dp"
+            android:singleLine="true"
+            android:textColorHint="#CCCCCC"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/text_submit"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="提交"
+            android:textColor="#333333"
+            android:textSize="14dp" />
+    </com.jyt.baseapp.view.widget.RoundLinearLayout>
+
+</ScrollView>

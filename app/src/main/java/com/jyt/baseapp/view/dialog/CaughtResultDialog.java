@@ -57,7 +57,7 @@ public class CaughtResultDialog extends Dialog {
                 if (finish){
                         dismiss();
                 }else {
-                    textShare.setText("   关    闭("+currentCount+")");
+//                    textShare.setText("   关    闭("+currentCount+")");
                 }
             }
         });

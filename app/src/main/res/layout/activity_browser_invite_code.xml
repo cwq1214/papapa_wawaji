@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+
+    >
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <ImageView
+        android:src="@mipmap/bg_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.jyt.baseapp.view.widget.RoundLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="我的邀请码"
+            android:textColor="#1A1A1A"
+            android:textSize="16dp" />
+
+        <LinearLayout
+            android:id="@+id/v_code"
+            android:layout_width="241dp"
+            android:layout_height='wrap_content'
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:textSize="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:background="@drawable/bg_pink_solid_4radius"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:text="1"
+                android:textColor="@color/white"
+                android:textSize="24dp" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/text_shareInviteCodeDesc"
+            android:layout_width="241dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="31dp"
+            android:textColor="#1A1A1A"
+            android:textSize="12dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/colorPrimary"></View>
+
+        <TextView
+            android:id="@+id/text_submit"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="分享邀请码"
+            android:textColor="#1A1A1A"
+            android:textSize="16dp" />
+    </com.jyt.baseapp.view.widget.RoundLinearLayout>
+
+    <TextView
+        android:id="@+id/text_shareInviteCodeDesc2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/white"
+        android:textSize="10dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_weight="1"
+        ></View>
+
+    <TextView
+        android:id="@+id/text_domain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="25dp"
+        android:textColor="@color/white"
+        android:textSize="10dp" />
+</LinearLayout>
+</ScrollView>

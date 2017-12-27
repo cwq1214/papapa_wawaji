@@ -9,4 +9,5 @@ public class UserInfoKey {
     public static final String KEY_TOKEN = "KEY_TOKEN";
     public static final String KEY_BGENABLE = "KEY_BGENABLE";
     public static final String KEY_EFENABLE = "KEY_EFENABLE";
+    public static final String KEY_SHARE_LINK = "KEY_SHARE_LINK";
 }

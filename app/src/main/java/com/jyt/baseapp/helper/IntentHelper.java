@@ -11,9 +11,15 @@ import com.jyt.baseapp.bean.json.HomeToyResult;
 import com.jyt.baseapp.util.FinishActivityManager;
 import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.util.UserInfo;
+import com.jyt.baseapp.view.activity.AboutUsActivity;
 import com.jyt.baseapp.view.activity.AddressListActivity;
+import com.jyt.baseapp.view.activity.BrowserInviteCodeActivity;
+import com.jyt.baseapp.view.activity.BrowserWebActivity;
+import com.jyt.baseapp.view.activity.ContactUsActivity;
 import com.jyt.baseapp.view.activity.DollDetailActivity;
 import com.jyt.baseapp.view.activity.EditAddressActivity;
+import com.jyt.baseapp.view.activity.FeedbackQuesActivity;
+import com.jyt.baseapp.view.activity.InputInviteCodeActivity;
 import com.jyt.baseapp.view.activity.LoginActivity;
 import com.jyt.baseapp.view.activity.MainActivity;
 import com.jyt.baseapp.view.activity.ModifyUserInfoActivity;
@@ -32,6 +38,41 @@ import com.jyt.baseapp.view.activity.VersionInfoActivity;
 
 public class IntentHelper extends IntentKey{
 
+    public static void openBrowserWebActivity(Context context,String url){
+        Intent intent = getIntent(context, BrowserWebActivity.class);
+        intent.putExtra(IntentKey.KEY_URL,url);
+        context.startActivity(intent);
+    }
+
+    public static void openBrowserInviteCodeActivity(Context context,Parcelable data){
+        Intent intent = getIntent(context, BrowserInviteCodeActivity.class);
+        intent.putExtra(IntentKey.KEY_DATA,data);
+        context.startActivity(intent);
+    }
+
+    public static void openInputInviteCodeActivity(Context context,Parcelable data){
+        Intent intent = getIntent(context, InputInviteCodeActivity.class);
+        intent.putExtra(IntentKey.KEY_DATA,data);
+        context.startActivity(intent);
+    }
+
+    public static void openFeedbackQuesActivity(Context context){
+        Intent intent = getIntent(context, FeedbackQuesActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void openContactUsActivity(Context context,Parcelable data){
+        Intent intent = getIntent(context, ContactUsActivity.class);
+        intent.putExtra(IntentKey.KEY_DATA,data);
+        context.startActivity(intent);
+    }
+
+    public static void openAboutUsActivity(Context context,Parcelable data){
+        Intent intent = getIntent(context, AboutUsActivity.class);
+        intent.putExtra(IntentKey.KEY_DATA,data);
+        context.startActivity(intent);
+
+    }
 
     public static void openSelImageActivityForResult(Object context,int requestCode){
 //        Intent intent = new Intent(Intent.ACTION_PICK);

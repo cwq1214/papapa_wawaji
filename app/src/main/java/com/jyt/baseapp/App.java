@@ -17,6 +17,9 @@ import com.jyt.baseapp.util.OkHttpPostInterceptor;
 import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.util.UserInfo;
 import com.jyt.baseapp.zego.ZegoApiManager;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.commonsdk.UMConfigure;
+import com.umeng.socialize.PlatformConfig;
 import com.zego.zegoliveroom.ZegoLiveRoom;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
@@ -87,6 +90,13 @@ public class App  extends Application {
         super.onCreate();
 
         app = this;
+
+        PlatformConfig.setWeixin(weiXin_AppKey, weiXin_AppSecret);
+
+        UMConfigure.init(this,"5a40ec83b27b0a47d900007c"
+                ,"umeng",UMConfigure.DEVICE_TYPE_PHONE,"");
+        MobclickAgent.setScenarioType(getApplicationContext(), MobclickAgent.EScenarioType.E_UM_NORMAL);
+        MobclickAgent.setCatchUncaughtExceptions(true);
 
         initUtil();
         UserInfo.init(getApplicationContext());

@@ -44,7 +44,7 @@ public class VersionInfoActivity extends BaseActivity {
         try {
             PackageManager pm = getContext().getPackageManager();
             PackageInfo pi = pm.getPackageInfo(getContext().getPackageName(), 0);
-            mTvVersion.setText("啪啪啪抓娃娃 " + pi.versionName);
+            mTvVersion.setText("PPP抓娃娃 " + pi.versionName);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

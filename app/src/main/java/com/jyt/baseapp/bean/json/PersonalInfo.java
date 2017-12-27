@@ -18,6 +18,11 @@ public class PersonalInfo  implements Parcelable{
     private String version;//版本信息
     private String getCount;//成功抓取次数
     private String balance;//用户余额
+    private String inviteContent;//邀请界面文本信息
+    private String inviteContentDown;//邀请界面下方小的文本信息
+    private String inviteContentSubmit;//输入邀请码页面文本信息
+    private String inviteContentSubmitDown;//输入邀请码页面下方小的文本信息
+    private String inviteShare;//邀请分享页
 
 
     protected PersonalInfo(Parcel in) {
@@ -31,6 +36,11 @@ public class PersonalInfo  implements Parcelable{
         version = in.readString();
         getCount = in.readString();
         balance = in.readString();
+        inviteContent = in.readString();
+        inviteContentDown = in.readString();
+        inviteContentSubmit = in.readString();
+        inviteContentSubmitDown = in.readString();
+        inviteShare = in.readString();
     }
 
     @Override
@@ -45,6 +55,11 @@ public class PersonalInfo  implements Parcelable{
         dest.writeString(version);
         dest.writeString(getCount);
         dest.writeString(balance);
+        dest.writeString(inviteContent);
+        dest.writeString(inviteContentDown);
+        dest.writeString(inviteContentSubmit);
+        dest.writeString(inviteContentSubmitDown);
+        dest.writeString(inviteShare);
     }
 
     @Override
@@ -142,5 +157,45 @@ public class PersonalInfo  implements Parcelable{
 
     public void setBalance(String balance) {
         this.balance = balance;
+    }
+
+    public String getInviteContent() {
+        return inviteContent;
+    }
+
+    public void setInviteContent(String inviteContent) {
+        this.inviteContent = inviteContent;
+    }
+
+    public String getInviteContentDown() {
+        return inviteContentDown;
+    }
+
+    public void setInviteContentDown(String inviteContentDown) {
+        this.inviteContentDown = inviteContentDown;
+    }
+
+    public String getInviteContentSubmit() {
+        return inviteContentSubmit;
+    }
+
+    public void setInviteContentSubmit(String inviteContentSubmit) {
+        this.inviteContentSubmit = inviteContentSubmit;
+    }
+
+    public String getInviteContentSubmitDown() {
+        return inviteContentSubmitDown;
+    }
+
+    public void setInviteContentSubmitDown(String inviteContentSubmitDown) {
+        this.inviteContentSubmitDown = inviteContentSubmitDown;
+    }
+
+    public String getInviteShare() {
+        return inviteShare;
+    }
+
+    public void setInviteShare(String inviteShare) {
+        this.inviteShare = inviteShare;
     }
 }

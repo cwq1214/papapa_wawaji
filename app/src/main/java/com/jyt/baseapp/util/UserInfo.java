@@ -39,6 +39,13 @@ public class UserInfo extends UserInfoKey{
         }
     }
 
+    public static String getShareLink(){
+        return get(KEY_SHARE_LINK);
+    }
+    public static void setShareLink(String shareLink){
+        put(KEY_SHARE_LINK,shareLink);
+    }
+
     public static String getToken(){
         return get(KEY_TOKEN);
     }
@@ -51,7 +58,7 @@ public class UserInfo extends UserInfoKey{
 
     public static void setUserInfo(LoginResult result){
         setToken(result.getTokenSession());
-
+        setShareLink(result.getInviteShare());
     }
 
     public static void setRoomBgEnable(boolean enable){

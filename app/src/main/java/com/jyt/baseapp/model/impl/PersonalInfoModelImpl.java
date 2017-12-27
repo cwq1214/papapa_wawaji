@@ -66,7 +66,6 @@ public class PersonalInfoModelImpl implements PersonalInfoModel {
     @Override
     public void getChargeRole(Callback callback) {
         OkHttpUtils.get().url(Api.domain+Api.getChargeRole).addParams("token", UserInfo.getToken()).tag(context).build().execute(callback);
-
     }
 
     @Override
@@ -99,6 +98,32 @@ public class PersonalInfoModelImpl implements PersonalInfoModel {
         }else {
             uploadToRemoteService(null,nickname,callback);
         }
+    }
+
+    @Override
+    public void submitFeedBack(String content, String phone, Callback callback) {
+        OkHttpUtils.post().url(Api.domain+Api.submitFeedbackQues).addParams("content",content).addParams("phone",phone).tag(context).build().execute(callback);
+    }
+
+    @Override
+    public void submitInviteCode(String userCode, Callback callback) {
+        OkHttpUtils.post().url(Api.domain+Api.submitInviteCode).addParams("userCode",userCode).tag(context).build().execute(callback);
+    }
+
+    @Override
+    public void afterShareToGetScore(Callback callback) {
+        OkHttpUtils.post().url(Api.domain+Api.afterShareToGetScore).build().execute(callback);
+    }
+
+
+    @Override
+    public void sign(Callback callback) {
+        OkHttpUtils.post().url(Api.domain+Api.sign).build().execute(callback);
+    }
+
+    @Override
+    public void isSign(Callback callback) {
+        OkHttpUtils.get().url(Api.domain+Api.isSign).build().execute(callback);
     }
 
 

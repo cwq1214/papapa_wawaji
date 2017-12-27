@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -19,6 +20,7 @@ import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
+import com.umeng.socialize.weixin.view.WXCallbackActivity;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -35,12 +37,11 @@ import okhttp3.Call;
  * Created by chenweiqi on 2017/12/12.
  */
 
-public class WXEntryActivity extends AppCompatActivity implements IWXAPIEventHandler {
+public class WXEntryActivity extends WXCallbackActivity {
 
     WeChartHelper weChartHelper;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
         weChartHelper = new WeChartHelper();
         weChartHelper.init(this,App.weiXin_AppKey);
@@ -48,6 +49,7 @@ public class WXEntryActivity extends AppCompatActivity implements IWXAPIEventHan
         IWXAPI api = weChartHelper.getWxApi();
         api.handleIntent(getIntent(),this);
 
+        super.onCreate(savedInstanceState);
 
 
     }
@@ -56,6 +58,11 @@ public class WXEntryActivity extends AppCompatActivity implements IWXAPIEventHan
 
     @Override
     public void onReq(BaseReq baseReq) {
+        if (baseReq.getType() == ConstantsAPI.COMMAND_SENDAUTH){
+
+        }else if (baseReq .getType() == ConstantsAPI.COMMAND_SENDMESSAGE_TO_WX){
+            super.onReq(baseReq);
+        }
         L.e(baseReq.toString());
 
     }
@@ -64,41 +71,59 @@ public class WXEntryActivity extends AppCompatActivity implements IWXAPIEventHan
     @Override
     public void onResp(BaseResp resp) {
         L.e(resp.toString());
-        switch (resp.errCode) {
-            case BaseResp.ErrCode.ERR_OK:
-                Log.i("WXTest","onResp OK");
-
-                if(resp instanceof SendAuth.Resp){
-//                    if (resp.getType()== ConstantsAPI.COMMAND_SENDAUTH){
-                        SendAuth.Resp newResp = (SendAuth.Resp) resp;
-                        //获取微信传回的code
-                        String code = newResp.code;
-                        getToken(code);
-                        Log.i("WXTest","onResp code = "+code);
-//                    }else {
-//                        finish();
-//                    }
-                }else {
-                    finish();
-                }
-
-                break;
-            case BaseResp.ErrCode.ERR_USER_CANCEL:
-                Log.i("WXTest","onResp ERR_USER_CANCEL ");
-                //发送取消
+        if(resp.getType() == ConstantsAPI.COMMAND_SENDAUTH){
+            if (resp instanceof SendAuth.Resp && resp.errCode==BaseResp.ErrCode.ERR_OK ){
+                SendAuth.Resp newResp = (SendAuth.Resp) resp;
+                //获取微信传回的code
+                String code = newResp.code;
+                getToken(code);
+                Log.i("WXTest","onResp code = "+code);
+            }else {
                 finish();
-                break;
-            case BaseResp.ErrCode.ERR_AUTH_DENIED:
-                Log.i("WXTest","onResp ERR_AUTH_DENIED");
-                //发送被拒绝
-                finish();
-                break;
-            default:
-                Log.i("WXTest","onResp default errCode " + resp.errCode);
-                finish();
-                //发送返回
-                break;
+            }
+        }else {
+            if (resp .getType() == ConstantsAPI.COMMAND_SENDMESSAGE_TO_WX){
+                L.e("分享成功");
+            }
+            super.onResp(resp);
         }
+
+//        switch (resp.errCode) {
+//            case BaseResp.ErrCode.ERR_OK:
+//                Log.i("WXTest","onResp OK");
+//
+//                if(resp instanceof SendAuth.Resp){
+////                    if (resp.getType()== ConstantsAPI.COMMAND_SENDAUTH){
+//                        SendAuth.Resp newResp = (SendAuth.Resp) resp;
+//                        //获取微信传回的code
+//                        String code = newResp.code;
+//                        getToken(code);
+//                        Log.i("WXTest","onResp code = "+code);
+////                    }else {
+////                        finish();
+////                    }
+//                }else {
+//                    finish();
+//                }
+//
+//                break;
+//            case BaseResp.ErrCode.ERR_USER_CANCEL:
+//                Log.i("WXTest","onResp ERR_USER_CANCEL ");
+//                //发送取消
+//                finish();
+//                break;
+//            case BaseResp.ErrCode.ERR_AUTH_DENIED:
+//                Log.i("WXTest","onResp ERR_AUTH_DENIED");
+//                //发送被拒绝
+//                finish();
+//                break;
+//            default:
+//                Log.i("WXTest","onResp default errCode " + resp.errCode);
+//                finish();
+//                //发送返回
+//                break;
+//        }
+
     }
 
     //这个方法会取得accesstoken  和openID
@@ -114,9 +139,13 @@ public class WXEntryActivity extends AppCompatActivity implements IWXAPIEventHan
             public void onResponse(String response, int id) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    String openid = jsonObject.getString("openid");
-                    String access_token = jsonObject.getString("access_token");
+                    String openid = jsonObject.optString("openid");
+                    String access_token = jsonObject.optString("access_token");
 
+                    if (TextUtils.isEmpty(openid)||TextUtils.isEmpty(access_token)){
+                        L.e("empty openid and access_token");
+                        return;
+                    }
                     getUserInfo(access_token,openid);
 
 
@@ -126,7 +155,6 @@ public class WXEntryActivity extends AppCompatActivity implements IWXAPIEventHan
             }
         });
     }
-
     private void  getUserInfo(String access_token, final String openId){
         OkHttpUtils.get().url("https://api.weixin.qq.com/sns/userinfo?access_token=" +access_token+"&openid=" +openId).build().execute(new StringCallback() {
             @Override
@@ -154,4 +182,5 @@ public class WXEntryActivity extends AppCompatActivity implements IWXAPIEventHan
         super.onDestroy();
         weChartHelper.unInit();
     }
+
 }

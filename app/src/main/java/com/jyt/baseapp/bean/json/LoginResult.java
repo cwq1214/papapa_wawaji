@@ -7,6 +7,7 @@ package com.jyt.baseapp.bean.json;
 public class LoginResult {
     private String userId;
     private String tokenSession;
+    private String inviteShare;
 
     public String getUserId() {
         return userId;
@@ -24,6 +25,13 @@ public class LoginResult {
         this.tokenSession = tokenSession;
     }
 
+    public String getInviteShare() {
+        return inviteShare;
+    }
+
+    public void setInviteShare(String inviteShare) {
+        this.inviteShare = inviteShare;
+    }
 
     @Override
     public String toString() {

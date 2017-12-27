@@ -44,6 +44,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/icon"
@@ -52,7 +58,10 @@
         android:theme="@style/AppTheme"
         android:name=".App"
         >
-
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5a40ec83b27b0a47d900007c" >
+        </meta-data>
         <activity android:name=".view.activity.WelComeActivity" android:screenOrientation="portrait" android:theme="@style/FlashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN">
@@ -95,14 +104,23 @@
 
         <activity android:name=".view.activity.OrderDetailActivity" android:screenOrientation="portrait" android:label="订单详情"></activity>
 
-
-        <activity android:name="com.jyt.pppwawaji.wxapi.WXEntryActivity" android:exported="true"></activity>
-        <activity android:name="com.jyt.pppwawaji.wxapi.WXPayEntryActivity" android:exported="true"></activity>
-
         <activity android:name=".view.activity.ModifyUserInfoActivity" android:screenOrientation="portrait" android:label="修改个人信息"></activity>
 
         <activity android:name="com.linchaolong.android.imagepicker.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"/>
+
+        <activity android:name=".view.activity.AboutUsActivity" android:label="关于我们"></activity>
+
+        <activity android:name=".view.activity.ContactUsActivity" android:label="联系我们"></activity>
+
+        <activity android:name=".view.activity.FeedbackQuesActivity" android:label="意见反馈" android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
+        <activity android:name=".view.activity.InputInviteCodeActivity" android:label="邀请码兑换" android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
+        <activity android:name=".view.activity.BrowserInviteCodeActivity" android:label="邀请奖励" android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
+        <!--浏览网页-->
+        <activity android:name=".view.activity.BrowserWebActivity" android:label="" ></activity>
+
+        <activity android:name="com.jyt.pppwawaji.wxapi.WXEntryActivity" android:exported="true" android:launchMode="singleInstance"></activity>
+        <activity android:name="com.jyt.pppwawaji.wxapi.WXPayEntryActivity" android:exported="true"></activity>
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.jyt.baseapp.util.T;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -111,7 +112,12 @@ public class WeChartHelper {
             int type = intent.getIntExtra(BROADCAST_TYPE,-1);
             if ( type == BROADCAST_TYPE_LOGIN){
                 if (receiveUserInfoListener!=null) {
-                    receiveUserInfoListener.onGotUserInfo((WxUser) intent.getParcelableExtra("data"));
+                    WxUser wxUser =  intent.getParcelableExtra("data");
+                    if (wxUser==null){
+                        T.showShort(context,"获取登录信息失败");
+                        return;
+                    }
+                    receiveUserInfoListener.onGotUserInfo(wxUser);
                 }
             }else if ( type == BROADCAST_TYPE_PAY){
                 if (receivePayResultListener != null){

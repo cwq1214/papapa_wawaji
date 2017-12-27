@@ -142,4 +142,18 @@ public class FinishActivityManager {
             e.printStackTrace();
         }
     }
+
+    public boolean isInStack(Class cls){
+
+        for (WeakReference<Activity> a :
+                mActivityStack) {
+            if (a!=null){
+                Activity act = a.get();
+                if (act.getClass() == cls){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

@@ -176,7 +176,8 @@ public class RoomListFragment extends BaseFragment {
     public void stopRefreshAnim(){
         if (animator.isRunning()){
             animator.cancel();
-            imgLoading.setRotation(0);
+            if (imgLoading!=null)
+                imgLoading.setRotation(0);
         }
 
     }

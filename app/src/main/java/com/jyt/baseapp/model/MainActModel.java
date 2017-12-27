@@ -9,4 +9,7 @@ import com.zhy.http.okhttp.callback.Callback;
 public interface MainActModel extends BaseModel {
 
     void getBanner(Callback callback);
+
+
+
 }

@@ -21,6 +21,7 @@ import com.jyt.baseapp.model.BaseModel;
 import com.jyt.baseapp.model.LoginLogoutModel;
 import com.jyt.baseapp.model.impl.LoginLoutModelImpl;
 import com.jyt.baseapp.util.CountDownUtil;
+import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.util.UserInfo;
 
@@ -107,7 +108,19 @@ public class LoginActivity extends BaseActivity {
         weChartHelper.setReceiveUserInfoListener(new WeChartHelper.ReceiveUserInfoListener() {
             @Override
             public void onGotUserInfo(WeChartHelper.WxUser user) {
-                loginModel.loginByWeiXin(user.getOpenid(), user.getNickname(), user.getHeadimgurl(), new BeanCallback<BaseJson<LoginResult>>() {
+                if (user==null){
+                    return;
+                }
+                String openId = user.getOpenid();
+                String nickName = user.getNickname();
+                String img = user.getHeadimgurl();
+                L.e("getOpenid "+openId);
+                L.e("getNickname "+nickName);
+                L.e("getHeadimgurl "+img);
+                if (TextUtils.isEmpty(openId) || TextUtils.isEmpty(nickName) || TextUtils.isEmpty(img)){
+                    return;
+                }
+                loginModel.loginByWeiXin(openId, nickName, img, new BeanCallback<BaseJson<LoginResult>>() {
                     @Override
                     public void response(boolean success, BaseJson<LoginResult> response, int id) {
                         if (response.isRet()) {

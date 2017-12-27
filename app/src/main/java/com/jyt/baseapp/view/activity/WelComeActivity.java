@@ -8,6 +8,8 @@ import com.jyt.baseapp.R;
 import com.jyt.baseapp.annotation.ActivityAnnotation;
 import com.jyt.baseapp.helper.IntentHelper;
 import com.jyt.baseapp.util.CountDownUtil;
+import com.jyt.baseapp.util.FinishActivityManager;
+import com.umeng.analytics.MobclickAgent;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 
@@ -33,6 +35,15 @@ public class WelComeActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        if (FinishActivityManager.getManager().isInStack(MainActivity.class)){
+//            finish();
+//            return;
+//        }
+
+//        if (true){
+//            throw new RuntimeException("boom");
+//        }
 
         CountDownUtil countDownUtil = new CountDownUtil(getContext(),2,1000);
         countDownUtil.setCountDownCallback(new CountDownUtil.CountDownCallback() {

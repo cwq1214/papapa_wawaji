@@ -11,7 +11,7 @@ android {
     }
     sourceSets {
         main {
-            jniLibs.srcDirs = ['libs/zego', 'libs/wawacontrol']
+            jniLibs.srcDirs = ['libs/zego', 'libs/wawacontrol','libs/umeng-error','libs/umeng-share']
         }
     }
     compileSdkVersion 25
@@ -20,11 +20,11 @@ android {
         applicationId "com.jyt.pppwawaji"
         minSdkVersion 22
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86'// 'armeabi' ,
+            abiFilters 'armeabi-v7a', 'arm64-v8a'//, 'x86'// 'armeabi' ,
 
         }
         manifestPlaceholders = [

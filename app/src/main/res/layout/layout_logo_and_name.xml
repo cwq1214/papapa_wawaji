@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+    <!--<com.jyt.baseapp.view.widget.RoundLinearLayout-->
+    <!--android:layout_width="61dp"-->
+    <!--android:layout_height="61dp">-->
+    <ImageView
+        android:id="@+id/img_logo"
+        android:layout_width="61dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="15dp"
+        android:src="@mipmap/icon" />
+    <!--</com.jyt.baseapp.view.widget.RoundLinearLayout>-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="啪啪啪抓娃娃"
+        android:textColor="#848484"
+        android:textSize="14dp" />
+</LinearLayout>
