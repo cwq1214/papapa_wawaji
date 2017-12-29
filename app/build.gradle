@@ -18,10 +18,10 @@ android {
     buildToolsVersion "27.0.2"
     defaultConfig {
         applicationId "com.jyt.pppwawaji"
-        minSdkVersion 22
+        minSdkVersion 21
         targetSdkVersion 22
-        versionCode 2
-        versionName "1.2"
+        versionCode 4
+        versionName "1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'//, 'x86'// 'armeabi' ,

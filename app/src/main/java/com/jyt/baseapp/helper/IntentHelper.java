@@ -97,7 +97,9 @@ public class IntentHelper extends IntentKey{
     }
 
     public static void openLoginActivity(Context context){
-        context.startActivity(getIntent(context, LoginActivity.class));
+        Intent intent =getIntent(context, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     public static void openResetPsdActivity(Context context){

@@ -1,6 +1,7 @@
 package com.jyt.baseapp.zego;
 
 
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -44,8 +45,8 @@ public class ZegoApiManager {
     private void initUserInfo(){
         // 初始化用户信息
         mUserID = UserInfo.getToken();
-        String userName = "ssss";
-//        = PreferenceUtil.getInstance().getUserName();
+        String userName = System.currentTimeMillis()+"";
+//        = PreferenceUtil.getInstance().getUserName()";
 
         if (TextUtils.isEmpty(mUserID) || TextUtils.isEmpty(userName)) {
             long ms = System.currentTimeMillis();

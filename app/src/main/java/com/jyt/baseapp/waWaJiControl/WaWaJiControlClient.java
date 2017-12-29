@@ -67,6 +67,18 @@ public class WaWaJiControlClient {
         };
         //endregion
         //region 接收
+        createReceiveThread();
+
+        //endregion
+        send.start();
+
+        AVAPIs avapIs = new AVAPIs();
+//        receive = new Thread();
+
+    }
+
+    private void createReceiveThread()
+    {
         receive = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -81,7 +93,7 @@ public class WaWaJiControlClient {
 //                             while (i++ < timeourReceTimes){
                 while (isReceive) {
                     int nRet = AVAPIs.avRecvIOCtrl(avIndex, ioCtrlType, ioCtrlBuf, ioCtrlBuf.length, 0);
-//                    L.e(String.format("avRecvIOCtrl ret[%d]\n", nRet));
+                    L.e(String.format("avRecvIOCtrl ret[%d]\n", nRet));
                     if (nRet >= 0) {
 
 
@@ -126,13 +138,6 @@ public class WaWaJiControlClient {
                 }
             }
         });
-
-        //endregion
-        send.start();
-
-        AVAPIs avapIs = new AVAPIs();
-//        receive = new Thread();
-
     }
 
     /**
@@ -201,20 +206,23 @@ public class WaWaJiControlClient {
     private void startConnection(String uid, String pwd ){
         int i=0;
         while (i++ < 5){
+//        while (i == 0){
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
             L.e(String.format("StreamClient start..."));
-//            int port = (int) (10000 + (System.currentTimeMillis() % 10000)+i);
-            int port = 0;
+            int port = (int) (10000 + (System.currentTimeMillis() % 10000)+i);
+//            int port = 0;
             int ret = IOTCAPIs.IOTC_Initialize2(port);
             L.e(String.format("IOTC_Initialize() ret = %d\n", ret));
             if (ret != IOTCAPIs.IOTC_ER_NoERROR) {
                 L.e(String.format("IOTCAPIs_Device exit...!!\n"));
+
+                IOTCAPIs.IOTC_DeInitialize();
                 isReceive = false;
                 continue;
 //                return;
@@ -226,10 +234,13 @@ public class WaWaJiControlClient {
             if (sid < 0) {
                 L.e(String.format("IOTC_Get_SessionID error code [%d]\n", sid));
                 isReceive= false;
+                IOTCAPIs.IOTC_DeInitialize();
                 continue;
 //                return;
             }
 
+            IOTCAPIs.IOTC_Setup_LANConnection_Timeout(0);
+            IOTCAPIs.IOTC_Setup_P2PConnection_Timeout(0);
             ret = IOTCAPIs.IOTC_Connect_ByUID_Parallel(uid, sid);
 
             L.e(String.format("Step 2: call IOTC_Connect_ByUID_Parallel(%s).......(%d)\n", uid, ret));
@@ -246,6 +257,8 @@ public class WaWaJiControlClient {
                 isReceive = false;
                 L.e(String.format("avClientStart failed[%d]\n", avIndex));
 //                return;
+                IOTCAPIs.IOTC_DeInitialize();
+
                 continue;
             }
             break;
@@ -254,14 +267,13 @@ public class WaWaJiControlClient {
 
         startIpcamStream(20);
 
-//        new Thread(){
-//            @Override
-//            public void run() {
-//                super.run();
+        createReceiveThread();
                 isReceive = true;
+            try {
                 receive.start();
-//            }
-//        }.start();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
 
     }
