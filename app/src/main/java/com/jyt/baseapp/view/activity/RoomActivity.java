@@ -7,8 +7,10 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
@@ -202,7 +204,8 @@ public class RoomActivity extends BaseActivity {
 
     WaWaAudioPlayUtil waWaAudioPlayUtil;
 
-
+    PowerManager powerManager = null;
+    PowerManager.WakeLock wakeLock = null;
 
     private ZegoLiveRoom mZegoLiveRoom = ZegoApiManager.getInstance().getZegoLiveRoom();
 
@@ -260,6 +263,8 @@ public class RoomActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        powerManager = (PowerManager)this.getSystemService(this.POWER_SERVICE);
+        wakeLock = this.powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "pingmuchangliang");
 
         vUserHeaderImg.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -309,8 +314,8 @@ public class RoomActivity extends BaseActivity {
             }
         });
 
-        mZegoLiveRoom.setAudioDeviceMode(ZegoConstants.AudioDeviceMode.General);
-        ZegoApiManager.getInstance().initSDK();
+//        mZegoLiveRoom.setAudioDeviceMode(ZegoConstants.AudioDeviceMode.General);
+//        ZegoApiManager.getInstance().initSDK();
         // 设置开关，直接从 ZEGO 服务器拉流
 //        String config = ZegoConstants.Config.PREFER_PLAY_ULTRA_SOURCE + "=1";
 //        ZegoLiveRoom.setConfig(config);
@@ -318,6 +323,7 @@ public class RoomActivity extends BaseActivity {
 
         loadingDialog = new LoadingDialog(getContext());
         loadingDialog.setCancelable(false);
+
         timer = new TimerUtil(getContext(), 3 * 1000);
         timer.setOnTimeCallback(new TimerUtil.OnTimeCallback() {
             @Override
@@ -367,7 +373,7 @@ public class RoomActivity extends BaseActivity {
                 setCaughtResult(caught);
                 showResultDialog(caught);
                 setWaWaControl(playing = false);
-
+//                mZegoLiveRoom.stopPublishing();
 
             }
 
@@ -381,17 +387,6 @@ public class RoomActivity extends BaseActivity {
                     waWaAudioPlayUtil.play(WaWaAudioPlayUtil.TYPE_START);
 
 
-                // 开启流量自动控制
-                int properties = ZegoConstants.ZegoTrafficControlProperty.ZEGOAPI_TRAFFIC_FPS
-                        | ZegoConstants.ZegoTrafficControlProperty.ZEGOAPI_TRAFFIC_RESOLUTION;
-                mZegoLiveRoom.enableTrafficControl(properties, true);
-//                mZegoLiveRoom.setPreviewView(vSelfPreview);
-//                mZegoLiveRoom.startPreview();
-                mZegoLiveRoom.enableMic(false);
-                mZegoLiveRoom.enableCamera(false);
-                mZegoLiveRoom.enableSpeaker(false);
-                mZegoLiveRoom.setAudioChannelCount(0);
-                mZegoLiveRoom.startPublishing(toyDetail.getMachineId() + UserInfo.getToken() + System.currentTimeMillis(), "主动连接", 0);
 
             }
         });
@@ -461,7 +456,19 @@ public class RoomActivity extends BaseActivity {
     }
 
     //初始化播放器
-    private void initPlayer(String url) {
+    private void initPlayer() {
+        int properties = ZegoConstants.ZegoTrafficControlProperty.ZEGOAPI_TRAFFIC_FPS
+                | ZegoConstants.ZegoTrafficControlProperty.ZEGOAPI_TRAFFIC_RESOLUTION;
+
+
+        mZegoLiveRoom.enableTrafficControl(properties, true);
+//                mZegoLiveRoom.setPreviewView(vSelfPreview);
+//                mZegoLiveRoom.startPreview();
+        mZegoLiveRoom.enableMic(false);
+        mZegoLiveRoom.enableCamera(false);
+        mZegoLiveRoom.enableSpeaker(false);
+        mZegoLiveRoom.setAudioChannelCount(0);
+
         mZegoLiveRoom.setRoomConfig(true, true);
         mZegoLiveRoom.loginRoom(homeToyResult.getMachineList().get(currentRoom).getMachineId(), ZegoConstants.RoomRole.Anchor, new IZegoLoginCompletionCallback() {
             @Override
@@ -672,7 +679,10 @@ public class RoomActivity extends BaseActivity {
 //        });
     }
 
-    private void doLogout() {
+    /**
+     * 机构 退出房间是调用  停止机构推流
+     */
+    private void zegoDoLogout() {
 
         // 回复从CDN拉流
         ZegoLiveRoom.setConfig(ZegoConstants.Config.PREFER_PLAY_ULTRA_SOURCE + "=0");
@@ -832,19 +842,12 @@ public class RoomActivity extends BaseActivity {
             grabRecordItemView.setBean(grabHistory);
             vRecordLayout.addView(grabRecordItemView);
         }
-
 //        toyDetail.setMainFlowLink("rtmp://live.hkstv.hk.lxdns.com/live/hks");
 //        toyDetail.setFlankFlowLink("rtmp://live.hkstv.hk.lxdns.com/live/hks");
-
         initStreamList(toyDetail.getMainFlowLink(), toyDetail.getFlankFlowLink());
-        initPlayer(null);
-
-
+        initPlayer();
         createRechargeDialog(toyDetail.getRule());
-
         vWebView.loadData(toyDetail.getToyDesc(), "text/html; charset=UTF-8", "UTF-8");
-
-
     }
 
     //设置房间刷新数据
@@ -951,14 +954,14 @@ public class RoomActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        if (mLivePlayer != null)
-//            mLivePlayer.resume();
+        wakeLock.acquire();
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        wakeLock.release();
 
     }
 
@@ -966,7 +969,7 @@ public class RoomActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        doLogout();
+        zegoDoLogout();
 
         if (weChartHelper != null)
             weChartHelper.unInit();
@@ -1047,6 +1050,14 @@ public class RoomActivity extends BaseActivity {
                     if (response.isRet()) {
                         waWaJiControlClient.stop();
                         waWaJiControlClient.start(toyDetail.getRemoteId(), "pppzww168");
+
+                        if (!dialogPlayContinue) {
+                            // 开启流量自动控制
+
+                            mZegoLiveRoom.startPublishing(toyDetail.getMachineId() + UserInfo.getToken() + System.currentTimeMillis(), "主动连接", 0);
+
+                            L.e(TAG,"dialogPlayContinue");
+                        }
                     } else {
                         setWaWaControl(false);
                         if (loadingDialog.isShowing())
@@ -1085,12 +1096,8 @@ public class RoomActivity extends BaseActivity {
 //                    }
 //                });
                 vStartPlayLayout.setVisibility(!play ? View.VISIBLE : View.GONE);
-
-
             }
         });
-
-
     }
 
     //娃娃机控制
@@ -1202,6 +1209,8 @@ public class RoomActivity extends BaseActivity {
                     public void onDismiss(DialogInterface dialogInterface) {
                         if (!dialogPlayContinue) {
                             setMachineFree();
+
+                            mZegoLiveRoom.stopPublishing();
 //                            dialogPlayContinue = true;
                         }
                         dialogPlayContinue = false;
@@ -1248,7 +1257,9 @@ public class RoomActivity extends BaseActivity {
                     playing = false;
 //                    setMachineFree();
                     quitRoom();
+                    zegoDoLogout();
                     onBackPressed();
+
                 }
             }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                 @Override
@@ -1259,6 +1270,7 @@ public class RoomActivity extends BaseActivity {
         } else {
             super.onBackPressed();
             quitRoom();
+            zegoDoLogout();
         }
     }
 
@@ -1267,11 +1279,12 @@ public class RoomActivity extends BaseActivity {
             return;
         }
         UMWeb umWeb = new UMWeb(UserInfo.getShareLink());
+        umWeb.setThumb(new UMImage(getContext(),R.mipmap.icon));
         umWeb.setTitle("PPP抓娃娃");
         umWeb.setDescription("不一样的线上抓娃娃机");
         new ShareAction(getActivity()).withMedia(umWeb)
                 .setPlatform(SHARE_MEDIA.WEIXIN)
-                .setDisplayList(SHARE_MEDIA.WEIXIN)
+                .setDisplayList(SHARE_MEDIA.WEIXIN,SHARE_MEDIA.WEIXIN_CIRCLE)
                 .setCallback(new UMShareListener() {
                     @Override
                     public void onStart(SHARE_MEDIA share_media) {
@@ -1299,7 +1312,7 @@ public class RoomActivity extends BaseActivity {
     }
 
     /**
-     * 退出房间
+     * 服务器 退出房间
      */
     private void quitRoom() {
         roomModel.quitRoom(toyDetail.getMachineId(), new BeanCallback<String>() {
@@ -1325,21 +1338,24 @@ public class RoomActivity extends BaseActivity {
     private void onChangeRoomClick() {
         List<Machine> roomList = homeToyResult.getMachineList();
         int cr = currentRoom;
-        if (++currentRoom >= roomList.size() - 1) {
-            currentRoom = 0;
+        if (++cr >= roomList.size() - 1) {
+            cr = 0;
         }
         if (cr == currentRoom) {
             T.showShort(getContext(), "没有房间可以切换");
             return;
         }
+
+        quitRoom();
+        currentRoom = cr;
         if (playing) {
             new AlertDialog.Builder(getContext()).setMessage("游戏尚未结束，是否要换房").setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     playing = false;
+                    zegoDoLogout();
                     connectRoom();
-                    doLogout();
 
 
                 }
@@ -1352,7 +1368,7 @@ public class RoomActivity extends BaseActivity {
 
         } else {
             connectRoom();
-            doLogout();
+            zegoDoLogout();
         }
 
 //        Machine machine = roomList.get(currentRoom);

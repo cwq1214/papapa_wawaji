@@ -15,8 +15,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.helper.IntentKey;
 import com.jyt.baseapp.util.T;
@@ -25,7 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by chenweiqi on 2017/12/26.
@@ -37,6 +39,11 @@ public class BrowserWebActivity extends BaseActivity {
 
 
     String url;
+    @BindView(R.id.img_gif)
+    ImageView imgGif;
+    @BindView(R.id.img_back2)
+    ImageView imgBack2;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_browser_web;
@@ -49,11 +56,13 @@ public class BrowserWebActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        hideActionBar();
+        Glide.with(this).load(R.mipmap.start).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(imgGif);
+
         url = getIntent().getStringExtra(IntentKey.KEY_URL);
-        if (TextUtils.isEmpty(url)){
-            T.showShort(getContext(),"无链接");
+        if (TextUtils.isEmpty(url)) {
+            T.showShort(getContext(), "无链接");
             finish();
             return;
         }
@@ -61,9 +70,12 @@ public class BrowserWebActivity extends BaseActivity {
 
         vWebView.loadUrl(url);
     }
+    @OnClick(R.id.img_back2)
+    public void onBack2Click() {
+        onBackPressed();
+    }
 
-
-    private void initWebView(){
+    private void initWebView() {
         WebSettings settings = vWebView.getSettings();
         //如果访问的页面中有Javascript，则webview必须设置支持Javascript
         settings.setJavaScriptEnabled(true);
@@ -77,9 +89,9 @@ public class BrowserWebActivity extends BaseActivity {
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             vWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
-        }else{
+        } else {
             try {
                 Class<?> clazz = vWebView.getSettings().getClass();
                 Method method = clazz.getMethod("setAllowUniversalAccessFromFileURLs", boolean.class);
@@ -103,8 +115,7 @@ public class BrowserWebActivity extends BaseActivity {
         });
 
 
-
-        vWebView.setWebChromeClient(new WebChromeClient(){
+        vWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
 //                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -125,7 +136,7 @@ public class BrowserWebActivity extends BaseActivity {
 //                if (message.equals("登录失效，请重新登录")){
 //                    webView.loadUrl(loginUrl);
 //                }
-                T.showShort(getContext(),message);
+                T.showShort(getContext(), message);
                 result.confirm();
                 return true;
             }
@@ -147,9 +158,9 @@ public class BrowserWebActivity extends BaseActivity {
                 }).setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        if (done[0]){
+                        if (done[0]) {
                             result.confirm();
-                        }else {
+                        } else {
                             result.cancel();
                         }
                         dialog.dismiss();
@@ -190,10 +201,10 @@ public class BrowserWebActivity extends BaseActivity {
             }
         });
 
-        vWebView.setWebViewClient(new WebViewClient(){
+        vWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains("tel:")){
+                if (url.contains("tel:")) {
 
                     return true;
                 }

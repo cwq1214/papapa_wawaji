@@ -86,8 +86,8 @@ public class SelAddressDialog extends AlertDialog {
                 Area data = (Area) holder.getData();
                 if (type == 0){//设置省
 
-                    province = ((Area) data).name;
-                    getCityList(((Area) data).id+"");
+                    province = ((Area) data).areaName;
+                    getCityList(((Area) data).areaId+"");
 
                     tabLayout.removeAllTabs();
                     tabLayout.addTab(tabLayout.newTab().setText(province));
@@ -234,7 +234,7 @@ public class SelAddressDialog extends AlertDialog {
                     JSONArray json = null;
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        json = jsonObject.optJSONObject("result").optJSONObject("jingdong_area_province_get_responce").optJSONArray("province_areas");
+                        json = jsonObject.optJSONObject("jingdong_areas_province_get_responce").optJSONObject("baseAreaServiceResponse").optJSONArray("data");
                     } catch (JSONException e1) {
                         e1.printStackTrace();
                     }
@@ -259,7 +259,7 @@ public class SelAddressDialog extends AlertDialog {
                     JSONArray json = null;
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        json = jsonObject.optJSONObject("result").optJSONObject("jingdong_areas_city_get_responce").optJSONObject("baseAreaServiceResponse").optJSONArray("data");
+                        json = jsonObject.optJSONObject("jingdong_areas_city_get_responce").optJSONObject("baseAreaServiceResponse").optJSONArray("data");
                     } catch (JSONException e1) {
                         e1.printStackTrace();
                     }
@@ -287,7 +287,7 @@ public class SelAddressDialog extends AlertDialog {
                     JSONArray json = null;
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        json = jsonObject.optJSONObject("result").optJSONObject("jingdong_areas_county_get_responce").optJSONObject("baseAreaServiceResponse").optJSONArray("data");
+                        json = jsonObject.optJSONObject("jingdong_areas_county_get_responce").optJSONObject("baseAreaServiceResponse").optJSONArray("data");
                     } catch (JSONException e1) {
                         e1.printStackTrace();
                     }
@@ -322,7 +322,7 @@ public class SelAddressDialog extends AlertDialog {
         int scrollTo = -1;
         for (int i=0,max = areas.size();i<max;i++){
             areas.get(i).isSel = false;
-            if (areas.get(i).name.equals(province)){
+            if (areas.get(i).areaName.equals(province)){
                 areas.get(i).isSel = true;
                 scrollTo = i;
                 TabLayout.Tab tab=tabLayout.getTabAt(0);
@@ -431,8 +431,8 @@ public class SelAddressDialog extends AlertDialog {
                         location.put("province",provinces);
 
                         for (int i=0,maxP = provinces.size();i<maxP;i++){
-                            if (provinces.get(i).name.equals(province)){
-                                getCityList(context, provinces.get(i).id+"", new BeanCallback<String>(context,true) {
+                            if (provinces.get(i).areaName.equals(province)){
+                                getCityList(context, provinces.get(i).areaId+"", new BeanCallback<String>(context,true) {
                                     @Override
                                     public void response(boolean success, String response, int id) {
                                         if (success) {
@@ -490,14 +490,14 @@ public class SelAddressDialog extends AlertDialog {
 
     //获取省列表
     public static void getProvinceList(Context context,BeanCallback callback){
-        OkHttpUtils.get().url("https://way.jd.com/JDCloud/getProvince?appkey=98a367c4465dd4efb99ca7b072033244").build().execute(callback);
+        OkHttpUtils.get().url("https://api.jd.com/routerjson").addParams("v","2.0").addParams("app_key","D12788CCEAD3329DB8A4BC72A7B6846C").addParams("method","jingdong.areas.province.get").addParams("app_secret","5e88dae81132459e9e128c50d228dab1").build().execute(callback);
     }
     //获取市列表
     public static void getCityList(Context context,String parentId,BeanCallback callback){
-        OkHttpUtils.get().url("https://way.jd.com/JDCloud/getCity").addParams("parent_id",parentId).addParams("appkey","98a367c4465dd4efb99ca7b072033244").build().execute(callback);
+        OkHttpUtils.get().url("https://api.jd.com/routerjson").addParams("v","2.0").addParams("parent_id",parentId).addParams("method","jingdong.areas.city.get").addParams("app_key","D12788CCEAD3329DB8A4BC72A7B6846C").addParams("app_secret","5e88dae81132459e9e128c50d228dab1").build().execute(callback);
     }
     //获取区列表
     public static void getCountryList(Context context,String parentId,BeanCallback callback){
-        OkHttpUtils.get().url("https://way.jd.com/JDCloud/getCountry").addParams("parent_id",parentId).addParams("appkey","98a367c4465dd4efb99ca7b072033244").build().execute(callback);
+        OkHttpUtils.get().url("https://api.jd.com/routerjson").addParams("v","2.0").addParams("parent_id",parentId).addParams("method","jingdong.areas.county.get").addParams("app_key","D12788CCEAD3329DB8A4BC72A7B6846C").addParams("app_secret","5e88dae81132459e9e128c50d228dab1").build().execute(callback);
     }
 }

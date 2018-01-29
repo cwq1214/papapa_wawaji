@@ -42,15 +42,22 @@ public class RoomItemViewHolder extends BaseViewHolder<HomeToyResult> {
 
 
     public RoomItemViewHolder(ViewGroup parent) {
-        super(LayoutInflater.from(parent.getContext()).inflate(R.layout.holder_room_item, parent, false));
+        super(LayoutInflater.from(parent.getContext()).inflate(R.layout.holder_room_item, parent,false));
 
         Context context = itemView.getContext();
         int windowWidth = ScreenUtils.getScreenWidth(itemView.getContext());
         int itemWidth = (windowWidth - DensityUtil.dpToPx(context, 16 + 16 + 16)) / 2;
 
+        int height = itemWidth + DensityUtil.dpToPx(context, 40);
+        int width = itemWidth;
 
         ViewGroup.LayoutParams vRoundLayout1Params = vRoundLayout1.getLayoutParams();
-        vRoundLayout1Params.height = itemWidth + DensityUtil.dpToPx(context, 40);
+//        if (vRoundLayout1Params==null){
+//            vRoundLayout1Params = new ViewGroup.LayoutParams(width,height);
+//        }
+
+
+        vRoundLayout1Params.height = height;
         vRoundLayout1Params.width = itemWidth;
 
         vRoundLayout1.setLayoutParams(vRoundLayout1Params);

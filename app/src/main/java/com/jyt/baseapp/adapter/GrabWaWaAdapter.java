@@ -10,8 +10,16 @@ import com.jyt.baseapp.view.viewholder.GrabWaWaItemViewHolder;
  */
 
 public class GrabWaWaAdapter extends BaseRcvAdapter {
+    BaseViewHolder.OnViewHolderClickListener onCheckClickListener;
+
     @Override
     BaseViewHolder CreateViewHolder(ViewGroup parent, int viewType) {
-        return new GrabWaWaItemViewHolder(parent);
+        GrabWaWaItemViewHolder holder = new GrabWaWaItemViewHolder(parent);
+        holder.setOnCheckClickListener(onCheckClickListener);
+        return holder;
+    }
+
+    public void setOnCheckClickListener(BaseViewHolder.OnViewHolderClickListener onCheckClickListener) {
+        this.onCheckClickListener = onCheckClickListener;
     }
 }

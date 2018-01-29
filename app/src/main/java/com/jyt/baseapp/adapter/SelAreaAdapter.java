@@ -40,11 +40,11 @@ public class SelAreaAdapter extends BaseRcvAdapter {
         public void setData(Object data) {
             super.setData(data);
             Area area = (Area) data;
-            if (TextUtils.isEmpty(area.name)){
+//            if (TextUtils.isEmpty(area.name)){
                 ((TextView) itemView).setText(area.areaName);
-            }else {
-                ((TextView) itemView).setText(area.name);
-            }
+//            }else {
+//                ((TextView) itemView).setText(area.name);
+//            }
 
             if (area.isSel){
                 ((TextView) itemView).setTextColor(itemView.getContext().getResources().getColor(R.color.colorPrimary));

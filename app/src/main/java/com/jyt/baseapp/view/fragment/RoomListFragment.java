@@ -112,6 +112,8 @@ public class RoomListFragment extends BaseFragment {
                 getToyDatas(false,"8");
             }
         });
+
+//        vRefreshRecyclerView.getRecyclerView().setHasFixedSize(true);
         onRefreshLayoutClick();
 
     }
@@ -121,25 +123,57 @@ public class RoomListFragment extends BaseFragment {
         startRefreshAnim();
         vRefreshLayout.setEnabled(false);
         getToyDatas(true,"8");
+
+        vRefreshRecyclerView.setDataList(null);
     }
 
     private void getToyDatas(final boolean isTop, String count) {
-        mToyModel.getHomeToyData(count, type + "", new BeanCallback<BaseJson<List<HomeToyResult>>>() {
+        String sequeue  = "0";
+        if (!isTop){
+            List<HomeToyResult> results = adapter.getDataList();
+            if (results!=null && results.size()!=0){
+                sequeue = results.get(results.size()-1).getSequeue();
+            }
+        }
+
+        mToyModel.getHomeToyData(count, type + "",sequeue ,new BeanCallback<BaseJson<List<HomeToyResult>>>() {
 
 
             @Override
             public void response(boolean success, BaseJson<List<HomeToyResult>> response, int id) {
                 if (response.isRet()) {
-                    mlist = response.getData();
-                    vRefreshRecyclerView.setDataList(mlist);
-                }
-                if (isTop){
-                    stopRefreshAnim();
-                    vRefreshLayout.setEnabled(true);
-                }else {
-                    vRefreshRecyclerView.finishLoadMore();
+                    if (isTop){
+                        vRefreshRecyclerView.getRecyclerView().smoothScrollToPosition(0);
+                        stopRefreshAnim();
+                        vRefreshLayout.setEnabled(true);
 
+                    }else {
+
+                        vRefreshRecyclerView.finishLoadMore();
+//                        vRefreshRecyclerView.getRecyclerView().scrollTo(0,vRefreshRecyclerView.getRecyclerView().getHeight());
+
+                    }
+                    if (isTop){
+
+//                        if (System.currentTimeMillis()%2==0){
+//                            mlist = new ArrayList<HomeToyResult>();
+//                            mlist.add( response.getData().get(0));
+//                            vRefreshRecyclerView.setDataList(mlist);
+//                        }else {
+                            mlist = response.getData();
+                            vRefreshRecyclerView.setDataList(mlist);
+                        vRefreshRecyclerView.getRecyclerView().scrollTo(0,0);
+
+//                        }
+                    }else {
+                        if (mlist == null){
+                            mlist = new ArrayList<HomeToyResult>();
+                        }
+                        mlist.addAll(response.getData());
+                        vRefreshRecyclerView.setDataList(mlist);
+                    }
                 }
+
 //                T.showShort(getContext(),response.getForUser());
 
             }
@@ -165,7 +199,7 @@ public class RoomListFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+//        unbinder.unbind();
     }
 
 

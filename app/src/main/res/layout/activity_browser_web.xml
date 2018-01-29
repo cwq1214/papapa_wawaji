@@ -1,7 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WebView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/v_webView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<!--actionbar-->
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary">
 
-</WebView>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="-20dp"
+            android:scaleType="matrix"></ImageView>
+
+        <ImageView
+            android:id="@+id/img_gif"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+        <ImageView
+            android:id="@+id/img_back2"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:src="@mipmap/back" />
+
+        <!--<ImageView-->
+            <!--android:id="@+id/img_help"-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginRight="12dp"-->
+            <!--android:src="@mipmap/help" />-->
+
+    </RelativeLayout>
+
+    <WebView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/v_webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </WebView>
+</LinearLayout>

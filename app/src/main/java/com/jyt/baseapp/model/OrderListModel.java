@@ -2,6 +2,8 @@ package com.jyt.baseapp.model;
 
 import com.zhy.http.okhttp.callback.Callback;
 
+import java.util.List;
+
 /**
  * Created by v7 on 2017/11/13.
  */
@@ -41,4 +43,22 @@ public interface OrderListModel extends BaseModel{
      * @param callback
      */
     public void submitOrder(String orderNo,String addressId,Callback callback);
+
+
+    /**+
+     *  提交发货
+     * @param orderNo
+     * @param addressId
+     * @param callback
+     */
+    public void submitOrder(List<String> orderNo,String addressId,Callback callback);
+
+
+    /**
+     * 退回金币
+     * @param orderNo
+     * @param callback
+     */
+    public void exchangeToCoin(List<String> orderNo,Callback callback);
+
 }

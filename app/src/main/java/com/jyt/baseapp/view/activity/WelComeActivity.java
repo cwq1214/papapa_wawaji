@@ -9,6 +9,7 @@ import com.jyt.baseapp.annotation.ActivityAnnotation;
 import com.jyt.baseapp.helper.IntentHelper;
 import com.jyt.baseapp.util.CountDownUtil;
 import com.jyt.baseapp.util.FinishActivityManager;
+import com.jyt.baseapp.util.UserInfo;
 import com.umeng.analytics.MobclickAgent;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
@@ -50,7 +51,12 @@ public class WelComeActivity extends BaseActivity {
             @Override
             public void countDownCallback(boolean finish, int currentCount) {
                 if (finish){
-                    IntentHelper.openMainActivity(getContext());
+                    if (UserInfo.isLogin()){
+                        IntentHelper.openMainActivity(getContext());
+                    }else {
+                        IntentHelper.openLoginActivity(getContext());
+                    }
+                    finish();
                 }
             }
         });

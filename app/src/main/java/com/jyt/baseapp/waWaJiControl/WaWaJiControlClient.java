@@ -240,7 +240,7 @@ public class WaWaJiControlClient {
             }
 
             IOTCAPIs.IOTC_Setup_LANConnection_Timeout(0);
-            IOTCAPIs.IOTC_Setup_P2PConnection_Timeout(0);
+//            IOTCAPIs.IOTC_Setup_P2PConnection_Timeout(0);
             ret = IOTCAPIs.IOTC_Connect_ByUID_Parallel(uid, sid);
 
             L.e(String.format("Step 2: call IOTC_Connect_ByUID_Parallel(%s).......(%d)\n", uid, ret));

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="300dp"
+    android:layout_height="250dp"
+    android:gravity="center"
+    android:background="@drawable/bg_white_4radius"
+    >
+
+    <TextView
+        style="@style/commonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="兑换娃娃币" />
+    <RelativeLayout
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="96dp">
+
+    <com.jyt.baseapp.view.widget.RoundLinearLayout
+        android:layout_centerInParent="true"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:layout_width="96dp"
+        android:layout_height="96dp">
+        <com.jyt.baseapp.view.widget.RoundLinearLayout
+            android:background="@color/white"
+            android:layout_width="95dp"
+            android:layout_height="95dp">
+
+            <ImageView
+                android:id="@+id/img_toy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.jyt.baseapp.view.widget.RoundLinearLayout>
+    </com.jyt.baseapp.view.widget.RoundLinearLayout>
+
+        <TextView
+            android:id="@+id/text_toyCount"
+            style="@style/commonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:text="共3个"
+            android:textSize="12dp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:src="@mipmap/coin"
+            android:layout_width="14dp"
+            android:layout_height="14dp" />
+
+        <TextView
+            android:id="@+id/text_allCoin"
+            style="@style/commonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="240娃娃币" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/divider_pink" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+            android:id="@+id/text_left"
+            style="@style/smallText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="确定" />
+
+        <TextView
+            android:id="@+id/text_right"
+            style="@style/smallText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="取消" />
+    </LinearLayout>
+</LinearLayout>

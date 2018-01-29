@@ -202,7 +202,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * 隐藏ActionBar
      */
-    public void HideActionBar() {
+    public void hideActionBar() {
         vActionBar.setVisibility(View.GONE);
     }
 

@@ -28,7 +28,7 @@ public class ImageLoader {
     }
 
     public void load(ImageView imageView, String url){
-        Glide.with(imageView.getContext()).load(url).diskCacheStrategy(DiskCacheStrategy.NONE).centerCrop().into(imageView);
+        Glide.with(imageView.getContext()).load(url).centerCrop().into(imageView);
     }
     public void loadRectangle(ImageView imageView, String url){
         Glide.with(imageView.getContext()).load(url).centerCrop().into(imageView);

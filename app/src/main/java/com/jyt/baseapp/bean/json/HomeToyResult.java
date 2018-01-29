@@ -15,7 +15,9 @@ public class HomeToyResult implements Parcelable{
     private String needPay;
     private String leisure;
     private String useing;
+    private String sequeue;
     private List<Machine> machineList;
+
 
     protected HomeToyResult(Parcel in) {
         toyId = in.readString();
@@ -24,7 +26,25 @@ public class HomeToyResult implements Parcelable{
         needPay = in.readString();
         leisure = in.readString();
         useing = in.readString();
+        sequeue = in.readString();
         machineList = in.createTypedArrayList(Machine.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(toyId);
+        dest.writeString(toyImg);
+        dest.writeString(toyName);
+        dest.writeString(needPay);
+        dest.writeString(leisure);
+        dest.writeString(useing);
+        dest.writeString(sequeue);
+        dest.writeTypedList(machineList);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<HomeToyResult> CREATOR = new Creator<HomeToyResult>() {
@@ -38,6 +58,14 @@ public class HomeToyResult implements Parcelable{
             return new HomeToyResult[size];
         }
     };
+
+    public String getSequeue() {
+        return sequeue;
+    }
+
+    public void setSequeue(String sequeue) {
+        this.sequeue = sequeue;
+    }
 
     public String getToyId() {
         return toyId;
@@ -95,19 +123,6 @@ public class HomeToyResult implements Parcelable{
         this.machineList = machineList;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(toyId);
-        dest.writeString(toyImg);
-        dest.writeString(toyName);
-        dest.writeString(needPay);
-        dest.writeString(leisure);
-        dest.writeString(useing);
-        dest.writeTypedList(machineList);
-    }
+
 }

@@ -258,9 +258,13 @@ public class RefreshRecyclerView extends LinearLayout {
     }
 
     public void setDataList(List dataList){
+
         adapter.setDataList(dataList);
         adapter.notifyDataSetChanged();
+
         showEmptyViewWhenListEmpty();
+
+
     }
 
     public void finishLoadMore(){

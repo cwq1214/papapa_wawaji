@@ -6,13 +6,13 @@ package com.jyt.baseapp.api;
 
 public class Api {
 //    public static final String domain = "http://192.168.3.16/babymc/";
-        public static final String domain = "http://wwj.pppzww.cn/";
+    public static final String domain = "http://wwj.pppzww.cn/";
 
     public static final String domainText = "www.pppzww.cn";
 
     public static final String login = "api/login/do_login";
 
-    public static final String HomeToy = domain + "api/home/toy";
+    public static final String HomeToy = domain + "api/home/toy_2";
 
     public static final String register = "api/login/register";
 
@@ -55,7 +55,7 @@ public class Api {
     public static final String receiveOrder = "api/order/confirm";
 
     //提交发货
-    public static final String submitOrder = "api/order/submit";
+    public static final String submitOrder = "api/order/submit_2";
 
     //获取我的娃娃币内容（娃娃币流水）
     public static final String userCoinDetail = "api/user/water";
@@ -101,4 +101,6 @@ public class Api {
 
     //检测今日是否已经签到
     public static final String isSign = "api/user/check_sign";
+
+    public static final String exchangeCoin = "api/order/back_balance";
 }

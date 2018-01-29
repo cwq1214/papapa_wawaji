@@ -23,7 +23,7 @@ public class HomeToyModelImpl implements HomeToyModel {
     }
 
     @Override
-    public void getHomeToyData(String count, String type, Callback callback) {
-        OkHttpUtils.get().url(Api.HomeToy).addParams("count",count).addParams("type",type).tag(context).build().execute(callback);
+    public void getHomeToyData(String count, String type,String sequeue , Callback callback) {
+        OkHttpUtils.get().url(Api.HomeToy).addParams("count",count).addParams("type",type).addParams("sequeue",sequeue).tag(context).build().execute(callback);
     }
 }

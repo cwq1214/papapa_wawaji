@@ -2,6 +2,7 @@ package com.jyt.baseapp.bean.json;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import java.util.List;
 
@@ -27,6 +28,14 @@ public class Order implements Parcelable{
     private String status;//订单状态（中文）
     private List<OrderProgress> logistics;//物流信息
 
+
+    private boolean isCheck = false;
+
+    private String backFee;//可兑换的娃娃币
+
+    private String freight;//邮费
+
+
     protected Order(Parcel in) {
         toyName = in.readString();
         toyImg = in.readString();
@@ -42,6 +51,9 @@ public class Order implements Parcelable{
         comfrimStatus = in.readString();
         status = in.readString();
         logistics = in.createTypedArrayList(OrderProgress.CREATOR);
+        isCheck = in.readByte() != 0;
+        backFee = in.readString();
+        freight = in.readString();
     }
 
     @Override
@@ -60,6 +72,9 @@ public class Order implements Parcelable{
         dest.writeString(comfrimStatus);
         dest.writeString(status);
         dest.writeTypedList(logistics);
+        dest.writeByte((byte) (isCheck ? 1 : 0));
+        dest.writeString(backFee);
+        dest.writeString(freight);
     }
 
     @Override
@@ -189,6 +204,37 @@ public class Order implements Parcelable{
 
     public void setOrderType(int orderType) {
         this.orderType = orderType;
+    }
+
+    public boolean isCheck() {
+        return isCheck;
+    }
+
+    public void setCheck(boolean check) {
+        isCheck = check;
+    }
+
+    public String getBackFee() {
+        if (TextUtils.isEmpty(backFee)){
+            return "0";
+        }
+        return backFee;
+    }
+
+    public void setBackFee(String backFee) {
+
+        this.backFee = backFee;
+    }
+
+    public String getFreight() {
+        if (TextUtils.isEmpty(freight)){
+            return "0";
+        }
+        return freight;
+    }
+
+    public void setFreight(String freight) {
+        this.freight = freight;
     }
 
     public String getOrderTypeText(){

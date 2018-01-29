@@ -4,16 +4,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.util.CountDownUtil;
-import com.jyt.baseapp.util.TimerUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +32,8 @@ public class CaughtResultDialog extends Dialog {
     @BindView(R.id.text_resultMessage)
     TextView textResultMessage;
     OnDialogBtnClick onDialogBtnClick;
+    @BindView(R.id.img_close)
+    ImageView imgClose;
 
     String title;
     String message;
@@ -42,6 +43,7 @@ public class CaughtResultDialog extends Dialog {
 
     CountDownUtil countDownUtil;
 
+
     public CaughtResultDialog(@NonNull Context context) {
         this(context, R.style.pinkDimDialog);
     }
@@ -49,15 +51,15 @@ public class CaughtResultDialog extends Dialog {
     protected CaughtResultDialog(@NonNull Context context, @StyleRes int themeResId) {
         super(context, themeResId);
 
-        countDownUtil = new CountDownUtil(getContext(),5,1000);
+        countDownUtil = new CountDownUtil(getContext(), 5, 1000);
 
         countDownUtil.setCountDownCallback(new CountDownUtil.CountDownCallback() {
             @Override
             public void countDownCallback(boolean finish, int currentCount) {
-                if (finish){
-                        dismiss();
-                }else {
-//                    textShare.setText("   关    闭("+currentCount+")");
+                if (finish) {
+                    dismiss();
+                } else {
+                    textContinue.setText(continueText + "(" + currentCount + ")");
                 }
             }
         });
@@ -75,7 +77,7 @@ public class CaughtResultDialog extends Dialog {
         if (!TextUtils.isEmpty(message)) {
             textResultMessage.setText(message);
         }
-        if (!TextUtils.isEmpty(continueText)){
+        if (!TextUtils.isEmpty(continueText)) {
             textContinue.setText(continueText);
         }
     }
@@ -111,6 +113,10 @@ public class CaughtResultDialog extends Dialog {
                 break;
         }
     }
+    @OnClick(R.id.img_close)
+    public void onCloseClick(){
+        dismiss();
+    }
 
 
     public void setTitle(String title) {
@@ -121,7 +127,7 @@ public class CaughtResultDialog extends Dialog {
         this.message = message;
     }
 
-    public void setContinueText(String continueText){
+    public void setContinueText(String continueText) {
         this.continueText = continueText;
     }
 

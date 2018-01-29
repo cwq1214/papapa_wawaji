@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="300dp"
+    android:layout_height="198dp"
+    android:background="@drawable/bg_white_4radius"
+    android:gravity="center"
+    >
+
+    <TextView
+        android:id="@+id/text_title"
+        style="@style/commonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp" />
+
+    <ImageView
+        android:id="@+id/img_center"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="26dp" />
+
+    <TextView
+        android:id="@+id/text_desc"
+        style="@style/commonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/divider_pink" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+            android:id="@+id/text_left"
+            style="@style/smallText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="确定" />
+
+        <TextView
+            android:id="@+id/text_right"
+            style="@style/smallText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="取消" />
+    </LinearLayout>
+</LinearLayout>

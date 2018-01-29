@@ -27,6 +27,7 @@ import com.jyt.baseapp.util.DensityUtil;
 import com.jyt.baseapp.util.ImageLoader;
 import com.jyt.baseapp.util.ScreenUtils;
 import com.jyt.baseapp.util.T;
+import com.jyt.baseapp.util.UserInfo;
 import com.jyt.baseapp.view.dialog.SignDialog;
 import com.jyt.baseapp.view.fragment.PlayerShareExpFragment;
 import com.jyt.baseapp.view.fragment.RoomListFragment;
@@ -110,7 +111,7 @@ public class MainActivity extends BaseActivity {
         vTabLayout.setupWithViewPager(vViewPager);
 
         int bannerWidth = ScreenUtils.getScreenWidth(getContext()) - DensityUtil.dpToPx(getContext(), 10);
-        RelativeLayout.LayoutParams bannerParams = new RelativeLayout.LayoutParams(bannerWidth, bannerWidth * 193 / 366);
+        RelativeLayout.LayoutParams bannerParams = new RelativeLayout.LayoutParams(bannerWidth, bannerWidth * 170/ 730);
         vBanner.setLayoutParams(bannerParams);
 
         vBanner.setDelegate(new BGABanner.Delegate() {
@@ -150,15 +151,18 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        personalInfoModel.isSign(new BeanCallback<BaseJson<Boolean>>() {
-            @Override
-            public void response(boolean success, BaseJson<Boolean> response, int id) {
-                if (response.isRet()){
-                    setSignDrawable(response.getData());
+        if (UserInfo.isLogin()){
+            personalInfoModel.isSign(new BeanCallback<BaseJson<Boolean>>() {
+                @Override
+                public void response(boolean success, BaseJson<Boolean> response, int id) {
+                    if (response.isRet()){
+                        setSignDrawable(response.getData());
 
+                    }
                 }
-            }
-        });
+            });
+        }
+
     }
 
     @Override
@@ -176,6 +180,10 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.img_qiandao)
     public void onQianDaoClick(){
+        if(!UserInfo.isLogin()){
+            IntentHelper.openLoginActivity(getContext());
+            return;
+        }
 
         personalInfoModel.sign(new BeanCallback<BaseJson<SignResult>>() {
             @Override

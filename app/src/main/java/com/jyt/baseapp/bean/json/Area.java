@@ -7,8 +7,8 @@ package com.jyt.baseapp.bean.json;
 public class Area {
     //"is3cod":false,"name":"北京","cod":true,"id":1
     public boolean is3cod;
-    public String name;
-    public int id;
+//    public String name;
+//    public int id;
     public boolean cod;
 
 

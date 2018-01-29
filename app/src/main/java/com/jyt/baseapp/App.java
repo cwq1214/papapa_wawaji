@@ -21,6 +21,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.zego.zegoliveroom.ZegoLiveRoom;
+import com.zego.zegoliveroom.constants.ZegoConstants;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.log.LoggerInterceptor;
@@ -101,6 +102,8 @@ public class App  extends Application {
         initUtil();
         UserInfo.init(getApplicationContext());
 
+        ZegoApiManager.getInstance().getZegoLiveRoom().setAudioDeviceMode(ZegoConstants.AudioDeviceMode.General);
+        ZegoApiManager.getInstance().initSDK();
 
         ZegoLiveRoom.setTestEnv(false);
         ZegoLiveRoom.setVerbose(BuildConfig.DEBUG);
@@ -113,7 +116,11 @@ public class App  extends Application {
 
     }
 
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
 
+    }
 
     private void initUtil() {
 

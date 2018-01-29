@@ -20,6 +20,7 @@ import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
 import butterknife.BindView;
@@ -99,6 +100,7 @@ public class BrowserInviteCodeActivity extends BaseActivity {
             return;
         }
         UMWeb umWeb = new UMWeb(shareUrl);
+        umWeb.setThumb(new UMImage(getContext(),R.mipmap.icon));
         umWeb.setTitle("PPP抓娃娃");
         umWeb.setDescription("不一样的线上抓娃娃机");
         new ShareAction(getActivity()).withMedia(umWeb)
