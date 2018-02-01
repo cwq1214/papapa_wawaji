@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="ndkbitmap-x86-0.9.16">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.android/build-cache/9e8c8a7e0aad3e1b0c3a29c1ceffd489e8d9a620/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/9e8c8a7e0aad3e1b0c3a29c1ceffd489e8d9a620/output/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.ctiao/ndkbitmap-x86/0.9.16/26b324724f4c384ad4a7c6bbb74c2a7e0fc6a85/ndkbitmap-x86-0.9.16-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

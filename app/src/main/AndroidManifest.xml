@@ -62,6 +62,9 @@
             android:name="UMENG_APPKEY"
             android:value="5a40ec83b27b0a47d900007c" >
         </meta-data>
+
+
+
         <activity android:name=".view.activity.WelComeActivity" android:screenOrientation="portrait" android:theme="@style/FlashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN">
@@ -121,6 +124,8 @@
 
         <activity android:name="com.jyt.pppwawaji.wxapi.WXEntryActivity" android:exported="true" android:launchMode="singleInstance"></activity>
         <activity android:name="com.jyt.pppwawaji.wxapi.WXPayEntryActivity" android:exported="true"></activity>
+
+
     </application>
 
 </manifest>

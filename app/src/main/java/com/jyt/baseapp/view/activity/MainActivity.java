@@ -33,6 +33,7 @@ import com.jyt.baseapp.view.fragment.PlayerShareExpFragment;
 import com.jyt.baseapp.view.fragment.RoomListFragment;
 import com.jyt.baseapp.view.widget.NoScrollViewPager;
 import com.jyt.baseapp.view.widget.RoundRelativeLayout;
+import com.jyt.baseapp.zego.ZegoApiManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +89,8 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ZegoApiManager.getInstance().initSDK();
+
         Glide.with(this).load(R.mipmap.start).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(imgGifppp);
 
         dollFragment = new RoomListFragment();
@@ -106,7 +109,7 @@ public class MainActivity extends BaseActivity {
         vViewPager.setAdapter(adapter = new FragmentViewPagerAdapter(getSupportFragmentManager()));
         adapter.addFragment(dollFragment, "娃娃首页");
         adapter.addFragment(cabbageFragment, "白菜特抓");
-        adapter.addFragment(playerShareExpFragment, "玩家分享");
+//        adapter.addFragment(playerShareExpFragment, "玩家分享");
         adapter.notifyDataSetChanged();
         vTabLayout.setupWithViewPager(vViewPager);
 

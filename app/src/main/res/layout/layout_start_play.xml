@@ -97,7 +97,7 @@
         android:cropToPadding="true"
         android:padding="11dp"
         android:src="@mipmap/comment"
-        android:visibility="gone" />
+        />
 
 
 </RelativeLayout>

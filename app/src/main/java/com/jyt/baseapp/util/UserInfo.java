@@ -76,6 +76,9 @@ public class UserInfo extends UserInfoKey{
         return sharedPreferences.getBoolean(KEY_EFENABLE,true);
     }
 
+    public static String getUserName(){
+        return sharedPreferences.getString(KEY_USERNAME,"");
+    }
 
     private static void remove(String key){
         editor.remove(key);

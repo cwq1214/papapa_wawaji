@@ -103,8 +103,6 @@ public class App  extends Application {
         UserInfo.init(getApplicationContext());
 
         ZegoApiManager.getInstance().getZegoLiveRoom().setAudioDeviceMode(ZegoConstants.AudioDeviceMode.General);
-        ZegoApiManager.getInstance().initSDK();
-
         ZegoLiveRoom.setTestEnv(false);
         ZegoLiveRoom.setVerbose(BuildConfig.DEBUG);
         ZegoApiManager.getInstance().initSDK();
