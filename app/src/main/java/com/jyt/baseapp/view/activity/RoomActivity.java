@@ -91,6 +91,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -249,6 +250,10 @@ public class RoomActivity extends BaseActivity {
     TimerUtil timer;
 
 
+    //记录连接成功数 目前需要计数2次
+    AtomicInteger connectCount ;
+    final int MAX_CONNECT_COUNT = 2;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_room;
@@ -345,6 +350,7 @@ public class RoomActivity extends BaseActivity {
             @Override
             public void countDownCallback(boolean finish, int currentCount) {
                 if (finish && playing) {
+                    //抓取时间到  发送抓取信令
                     waitingDialog.show();
                     new Thread() {
                         @Override
@@ -379,15 +385,9 @@ public class RoomActivity extends BaseActivity {
 
             @Override
             public void start() {
-                loadingDialog.dismiss();
-                countDownUtil.start();
-                setWaWaControl(playing = true);
 
-                if (UserInfo.getRoomEffectBgEnable())
-                    waWaAudioPlayUtil.play(WaWaAudioPlayUtil.TYPE_START);
-
-
-
+                connectCount.incrementAndGet();
+                checkIsConnect();
             }
         });
         int dp_5 = DensityUtil.dpToPx(getContext(), 5);
@@ -609,6 +609,8 @@ public class RoomActivity extends BaseActivity {
             @Override
             public void onPublishStateUpdate(int errCode, String streamID, HashMap<String, Object> hashMap) {
                 L.e("[onPublishStateUpdate], streamID: " + streamID + ", errorCode: " + errCode);
+                connectCount.getAndIncrement();
+                checkIsConnect();
             }
 
             @Override
@@ -813,15 +815,31 @@ public class RoomActivity extends BaseActivity {
 
                     }
                 }
+                connectCount = new AtomicInteger(0);
                 loadingDialog.dismiss();
             }
         });
     }
 
+    /**
+     * 检查是否全部连接好
+     */
+    private void checkIsConnect(){
+        if (MAX_CONNECT_COUNT == connectCount.intValue()){//全部列检好后开始计时游戏
+
+            loadingDialog.dismiss();
+            countDownUtil.start();
+            setWaWaControl(playing = true);
+            if (UserInfo.getRoomEffectBgEnable()) {
+                waWaAudioPlayUtil.play(WaWaAudioPlayUtil.TYPE_START);
+            }
+
+        }
+    }
+
     //设置房间基本详情
     private void setRoomInfo(final ToyDetail toyDetail) {
         String camUrl = "";
-
         if (waWaAudioPlayUtil != null) {
             waWaAudioPlayUtil.stopPlayAction();
             waWaAudioPlayUtil.stopPlayBackgroundMusic();
@@ -829,15 +847,11 @@ public class RoomActivity extends BaseActivity {
         if (UserInfo.getRoomBgEnable())
             waWaAudioPlayUtil.setBackgroundMusicIndex(Integer.valueOf(toyDetail.getMusic()));
 //        waWaAudioPlayUtil.playBackgroundMusic();
-
         textToyName.setText(toyDetail.getToyName());
         textBalance.setText(toyDetail.getUserBalance());
         textPrice.setText(toyDetail.getNeedPay() + "/次");
-
-
         vRecordLayout.removeAllViews();
         for (GrabHistory grabHistory : toyDetail.getHist()) {
-
             GrabRecordItemView grabRecordItemView = new GrabRecordItemView(getContext());
             grabRecordItemView.setBean(grabHistory);
             vRecordLayout.addView(grabRecordItemView);
