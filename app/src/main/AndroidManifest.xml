@@ -92,7 +92,7 @@
 
         <activity android:name=".view.activity.OrderListActivity" android:screenOrientation="portrait" android:label="娃娃配送订单"></activity>
         
-        <activity android:name=".view.activity.RoomActivity" android:screenOrientation="portrait" android:label="抓娃娃">
+        <activity android:name=".view.activity.RoomActivity" android:screenOrientation="portrait" android:label="抓娃娃" >
 
 
         </activity>

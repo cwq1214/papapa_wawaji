@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    >
+    <EditText
+        android:singleLine="true"
+        android:id="@+id/text_inputDanmaku"
+        android:layout_margin="8dp"
+        android:background="@drawable/border_input"
+        android:textColor="#000"
+        android:textSize="14dp"
+        android:paddingLeft="8dp"
+        android:layout_width="0dp"
+        android:layout_height="25dp"
+        android:layout_weight="1" />
+    <TextView
+        android:id="@+id/btn_send"
+        android:textSize="14dp"
+        android:textColor="#000"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:layout_gravity="center"
+        android:text="发送"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

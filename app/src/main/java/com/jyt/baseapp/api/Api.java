@@ -103,4 +103,6 @@ public class Api {
     public static final String isSign = "api/user/check_sign";
 
     public static final String exchangeCoin = "api/order/back_balance";
+
+    public static final String checkedVersion = "api/login/check_version";
 }

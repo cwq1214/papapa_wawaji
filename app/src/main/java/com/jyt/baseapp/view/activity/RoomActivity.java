@@ -43,7 +43,6 @@ import com.jyt.baseapp.bean.json.RechargePrice;
 import com.jyt.baseapp.bean.json.ToyDetail;
 import com.jyt.baseapp.bean.json.User;
 import com.jyt.baseapp.bean.json.WxPayResult;
-import com.jyt.baseapp.danmaku.BiliDanmukuParser;
 import com.jyt.baseapp.helper.IntentHelper;
 import com.jyt.baseapp.helper.IntentKey;
 import com.jyt.baseapp.helper.WeChartHelper;
@@ -58,11 +57,13 @@ import com.jyt.baseapp.util.CountDownUtil;
 import com.jyt.baseapp.util.DensityUtil;
 import com.jyt.baseapp.util.ImageLoader;
 import com.jyt.baseapp.util.L;
+import com.jyt.baseapp.util.SoftInputUtil;
 import com.jyt.baseapp.util.T;
 import com.jyt.baseapp.util.TimerUtil;
 import com.jyt.baseapp.util.UserInfo;
 import com.jyt.baseapp.util.WaWaAudioPlayUtil;
 import com.jyt.baseapp.view.dialog.CaughtResultDialog;
+import com.jyt.baseapp.view.dialog.InputDanmakuDialog;
 import com.jyt.baseapp.view.dialog.InputTextDialog;
 import com.jyt.baseapp.view.dialog.LoadingDialog;
 import com.jyt.baseapp.view.dialog.PayDialog;
@@ -70,6 +71,7 @@ import com.jyt.baseapp.view.dialog.RechargeCoinDialog;
 import com.jyt.baseapp.view.dialog.WaitingDialog;
 import com.jyt.baseapp.view.widget.CircleProgressView;
 import com.jyt.baseapp.view.widget.GrabRecordItemView;
+import com.jyt.baseapp.view.widget.RoundLinearLayout;
 import com.jyt.baseapp.waWaJiControl.WaWaJiControlClient;
 import com.jyt.baseapp.zego.ZegoApiManager;
 import com.jyt.baseapp.zego.ZegoStream;
@@ -82,6 +84,7 @@ import com.zego.zegoliveroom.ZegoLiveRoom;
 import com.zego.zegoliveroom.callback.IZegoLivePlayerCallback;
 import com.zego.zegoliveroom.callback.IZegoLivePublisherCallback;
 import com.zego.zegoliveroom.callback.IZegoLoginCompletionCallback;
+import com.zego.zegoliveroom.callback.IZegoRoomCallback;
 import com.zego.zegoliveroom.callback.chatroom.IZegoChatRoomCallback;
 import com.zego.zegoliveroom.callback.im.IZegoIMCallback;
 import com.zego.zegoliveroom.callback.im.IZegoRoomMessageCallback;
@@ -96,7 +99,6 @@ import com.zego.zegoliveroom.entity.ZegoStreamQuality;
 import com.zego.zegoliveroom.entity.ZegoUser;
 import com.zego.zegoliveroom.entity.ZegoUserState;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,20 +109,13 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
 import master.flame.danmaku.controller.DrawHandler;
-import master.flame.danmaku.danmaku.loader.ILoader;
-import master.flame.danmaku.danmaku.loader.IllegalDataException;
-import master.flame.danmaku.danmaku.loader.android.DanmakuLoaderFactory;
 import master.flame.danmaku.danmaku.model.BaseDanmaku;
-import master.flame.danmaku.danmaku.model.Danmaku;
 import master.flame.danmaku.danmaku.model.DanmakuTimer;
 import master.flame.danmaku.danmaku.model.Duration;
 import master.flame.danmaku.danmaku.model.IDanmakus;
-import master.flame.danmaku.danmaku.model.IDisplayer;
 import master.flame.danmaku.danmaku.model.android.DanmakuContext;
 import master.flame.danmaku.danmaku.model.android.Danmakus;
-import master.flame.danmaku.danmaku.model.android.SpannedCacheStuffer;
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
-import master.flame.danmaku.danmaku.parser.IDataSource;
 import master.flame.danmaku.ui.widget.DanmakuView;
 
 
@@ -130,10 +125,6 @@ import master.flame.danmaku.ui.widget.DanmakuView;
 @ActivityAnnotation(showActionBar = false)
 public class RoomActivity extends BaseActivity {
     //region view
-    @BindView(R.id.img_back2)
-    ImageView imgBack2;
-    @BindView(R.id.text_roomIndex)
-    TextView textRoomIndex;
     @BindView(R.id.v_changeRoom)
     LinearLayout vChangeRoom;
     @BindView(R.id.img_changeChannel)
@@ -196,8 +187,6 @@ public class RoomActivity extends BaseActivity {
     FrameLayout vBgLayout;
     @BindView(R.id.v_recordLayout)
     LinearLayout vRecordLayout;
-    @BindView(R.id.v_selfPreview)
-    TextureView vSelfPreview;
     @BindView(R.id.img_pppgif)
     ImageView imgPppgif;
     @BindView(R.id.img_help)
@@ -210,6 +199,17 @@ public class RoomActivity extends BaseActivity {
     LinearLayout vPeopleCountAndChangeRoomLayout;
     @BindView(R.id.v_danmaku)
     DanmakuView mDanmakuView;
+    @BindView(R.id.img_back2)
+    ImageView imgBack2;
+    @BindView(R.id.text_playerName)
+    TextView textPlayerName;
+    @BindView(R.id.v_playerView)
+    TextureView vPlayerView;
+    @BindView(R.id.v_previewLayout)
+    RoundLinearLayout vPreviewLayout;
+    @BindView(R.id.text_roomIndex)
+    TextView textRoomIndex;
+
     //endregion
     //充值对话框
     RechargeCoinDialog rechargeCoinDialog;
@@ -279,7 +279,7 @@ public class RoomActivity extends BaseActivity {
 
     //定时循环
     TimerUtil timer;
-
+    InputDanmakuDialog inputDanmakuDialog;
 
     //记录连接成功数 目前需要计数2次
     AtomicInteger connectCount;
@@ -333,31 +333,57 @@ public class RoomActivity extends BaseActivity {
         }
 
         checkPublishPermission();
-        inputTextDialog = new InputTextDialog(getContext());
-        inputTextDialog.setOnDialogBtnClickListener(new InputTextDialog.OnDialogBtnClickListener() {
+
+        initZego();
+
+        inputDanmakuDialog = new InputDanmakuDialog(getContext());
+        inputDanmakuDialog.setOnDialogBtnClickListener(new InputDanmakuDialog.OnDialogBtnClickListener() {
             @Override
-            public void onClick(Dialog dialog, int index, final String text) {
-                if (index == 0) {
-                    dialog.dismiss();
-                } else {
-                    mZegoLiveRoom.sendRoomMessage(ZegoIM.MessageType.Text, ZegoIM.MessageCategory.Chat, ZegoIM.MessagePriority.Default, text, new IZegoRoomMessageCallback() {
-                        @Override
-                        public void onSendRoomMessage(int i, String s, long l) {
-                            if (i == 0) {
-                                T.showShort(getContext(), "发送成功");
-                                inputTextDialog.dismiss();
-//                                mDanmakuView.addDanmaku(new Danmaku(text));
-                                addDanmaku(text,false);
-                                return;
-                            }else {
-                                T.showShort(getContext(),"发送失败");
-                            }
-                            L.e("[onSendRoomMessage]", "i" + i + ",s " + s + ", l" + l);
+            public void onClick(Dialog dialog, int index, String text) {
+                final String danmaku = UserInfo.getUserName()+": "+text;
+                mZegoLiveRoom.sendRoomMessage(ZegoIM.MessageType.Text, ZegoIM.MessageCategory.Chat, ZegoIM.MessagePriority.Default, danmaku, new IZegoRoomMessageCallback() {
+                    @Override
+                    public void onSendRoomMessage(int i, String s, long l) {
+                        if (i == 0) {
+                            T.showShort(getContext(), "发送成功");
+                            addDanmaku(danmaku, false);
+                            SoftInputUtil.hideSoftKeyboard(getContext());
+                            inputDanmakuDialog.dismiss();
+
+                            return;
+                        } else {
+                            T.showShort(getContext(), "发送失败");
                         }
-                    });
-                }
+                        L.e("[onSendRoomMessage]", "i" + i + ",s " + s + ", l" + l);
+                    }
+                });
             }
         });
+//        inputTextDialog = new InputTextDialog(getContext());
+//        inputTextDialog.setOnDialogBtnClickListener(new InputTextDialog.OnDialogBtnClickListener() {
+//            @Override
+//            public void onClick(Dialog dialog, int index, final String text) {
+//                if (index == 0) {
+//                    dialog.dismiss();
+//                } else {
+//                    mZegoLiveRoom.sendRoomMessage(ZegoIM.MessageType.Text, ZegoIM.MessageCategory.Chat, ZegoIM.MessagePriority.Default, text, new IZegoRoomMessageCallback() {
+//                        @Override
+//                        public void onSendRoomMessage(int i, String s, long l) {
+//                            if (i == 0) {
+//                                T.showShort(getContext(), "发送成功");
+//                                inputTextDialog.dismiss();
+////                                mDanmakuView.addDanmaku(new Danmaku(text));
+//                                addDanmaku(text, false);
+//                                return;
+//                            } else {
+//                                T.showShort(getContext(), "发送失败");
+//                            }
+//                            L.e("[onSendRoomMessage]", "i" + i + ",s " + s + ", l" + l);
+//                        }
+//                    });
+//                }
+//            }
+//        });
 
         Glide.with(this).load(R.drawable.room_loading_gif).asGif().diskCacheStrategy(DiskCacheStrategy.NONE).into(imgPppgif);
         Glide.with(this).load(R.mipmap.start).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(imgGif);
@@ -526,8 +552,8 @@ public class RoomActivity extends BaseActivity {
         return true;
     }
 
-    //初始化播放器
-    private void initPlayer() {
+
+    private void initZego() {
         int properties = ZegoConstants.ZegoTrafficControlProperty.ZEGOAPI_TRAFFIC_FPS
                 | ZegoConstants.ZegoTrafficControlProperty.ZEGOAPI_TRAFFIC_RESOLUTION;
 
@@ -536,15 +562,23 @@ public class RoomActivity extends BaseActivity {
 //                mZegoLiveRoom.setPreviewView(vSelfPreview);
 //                mZegoLiveRoom.startPreview();
         mZegoLiveRoom.enableMic(false);
-        mZegoLiveRoom.enableCamera(false);
+        mZegoLiveRoom.enableCamera(true);
         mZegoLiveRoom.enableSpeaker(false);
+        mZegoLiveRoom.setPreviewView(vPlayerView);
         mZegoLiveRoom.setAudioChannelCount(0);
-
+        mZegoLiveRoom.setPreviewViewMode(ZegoVideoViewMode.ScaleAspectFill);
         mZegoLiveRoom.setRoomConfig(true, true);
+    }
+
+    //初始化播放器
+    private void initPlayer() {
+        L.e("MachineId",homeToyResult.getMachineList().get(currentRoom).getMachineId());
         mZegoLiveRoom.loginRoom(homeToyResult.getMachineList().get(currentRoom).getMachineId(), ZegoConstants.RoomRole.Anchor, new IZegoLoginCompletionCallback() {
             @Override
             public void onLoginCompletion(int errCode, ZegoStreamInfo[] zegoStreamInfos) {
                 if (errCode == 0) {
+                    final String inMesg = "进入房间";
+                    sendRoomMsg(UserInfo.getUserName()+" "+inMesg);
                     for (ZegoStreamInfo streamInfo : zegoStreamInfos) {
                         if (!TextUtils.isEmpty(streamInfo.extraInfo)) {
 //                            CommandUtil.getInstance().printLog("[onLoginCompletion], streamID: " + streamInfo.streamID + ", extraInfo: " + streamInfo.extraInfo);
@@ -566,6 +600,7 @@ public class RoomActivity extends BaseActivity {
                                 int total = ((Double) map.get("total")).intValue();
 
                             }
+                            setPreviewVideoView(false, true, streamInfo.userName, streamInfo.streamID);
                         }
                     }
                     imgChangeChannel.setEnabled(true);
@@ -716,7 +751,6 @@ public class RoomActivity extends BaseActivity {
 
             }
         });
-
         mZegoLiveRoom.setZegoIMCallback(new IZegoIMCallback() {
             @Override
             public void onUserUpdate(ZegoUserState[] zegoUserStates, int i) {
@@ -726,11 +760,10 @@ public class RoomActivity extends BaseActivity {
             @Override
             public void onRecvRoomMessage(String s, ZegoRoomMessage[] zegoRoomMessages) {
                 for (int i = 0; i < zegoRoomMessages.length; i++) {
-                    L.e(zegoRoomMessages[i].content);
-                    addDanmaku(zegoRoomMessages[i].content,false);
+//                    L.e(zegoRoomMessages[i].content);
+                    addDanmaku(zegoRoomMessages[i].content, false);
 
                 }
-                mDanmakuView.show();
             }
 
             @Override
@@ -780,51 +813,59 @@ public class RoomActivity extends BaseActivity {
 //        });
 //    }
 //});
-//        mZegoLiveRoom.setZegoRoomCallback(new IZegoRoomCallback() {
-//            @Override
-//            public void onKickOut(int reason, String roomID) {
-//
-//            }
-//
-//            @Override
-//            public void onDisconnect(int errorCode, String roomID) {
-//            }
-//
-//            @Override
-//            public void onReconnect(int i, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onTempBroken(int i, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onStreamUpdated(final int type, final ZegoStreamInfo[] listStream, final String roomID) {
-//            }
-//
-//            @Override
-//            public void onStreamExtraInfoUpdated(ZegoStreamInfo[] zegoStreamInfos, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onRecvCustomCommand(String userID, String userName, String content, String roomID) {
-//                // 只接收当前房间，当前主播发来的消息
-////                if (CommandUtil.getInstance().isCommandFromAnchor(userID) && mRoom.roomID.equals(roomID)) {
+        mZegoLiveRoom.setZegoRoomCallback(new IZegoRoomCallback() {
+            @Override
+            public void onKickOut(int reason, String roomID) {
+
+            }
+
+            @Override
+            public void onDisconnect(int errorCode, String roomID) {
+            }
+
+            @Override
+            public void onReconnect(int i, String s) {
+
+            }
+
+            @Override
+            public void onTempBroken(int i, String s) {
+
+            }
+
+            @Override
+            public void onStreamUpdated(final int type, final ZegoStreamInfo[] listStream, final String roomID) {
+//                T.showShort(getContext(),type+"");
+                if (type == 2001) {
+
+                    setPreviewVideoView(false, true, listStream[0].userName, listStream[0].streamID);
+
+                } else if (type == 2002) {
+                    setPreviewVideoView(false, false, null, null);
+                }
+            }
+
+            @Override
+            public void onStreamExtraInfoUpdated(ZegoStreamInfo[] zegoStreamInfos, String s) {
+
+            }
+
+            @Override
+            public void onRecvCustomCommand(String userID, String userName, String content, String roomID) {
+                // 只接收当前房间，当前主播发来的消息
+//                if (CommandUtil.getInstance().isCommandFromAnchor(userID) && mRoom.roomID.equals(roomID)) {
 //                    if (!TextUtils.isEmpty(content)) {
 //                        T.showShort(getContext(),content);
 //                        L.e(content);
-////                        handleRecvCustomCMD(content);
+//                        handleRecvCustomCMD(content);
 //                    }
-////                }
-//            }
-//        });
+//                }
+            }
+        });
     }
 
     /**
-     * 机构 退出房间是调用  停止机构推流
+     * 机构 退出房间时调用  停止机构推流
      */
     private void zegoDoLogout() {
 
@@ -834,8 +875,10 @@ public class RoomActivity extends BaseActivity {
         for (ZegoStream zegoStream : mListStream) {
             zegoStream.stopPlayStream();
         }
+        sendRoomMsg(UserInfo.getUserName()+" "+"离开房间");
 
         mZegoLiveRoom.stopPublishing();
+        setPreviewVideoView(true,false,null,null);
         mZegoLiveRoom.logoutRoom();
 //        CommandUtil.getInstance().reset();
 
@@ -846,6 +889,23 @@ public class RoomActivity extends BaseActivity {
 //        if (mCountDownTimerBoarding != null) {
 //            mCountDownTimerBoarding.cancel();
 //        }
+    }
+
+    private void sendRoomMsg(final String msg){
+        mZegoLiveRoom.sendRoomMessage(ZegoIM.MessageType.Text, ZegoIM.MessageCategory.OtherCategory, ZegoIM.MessagePriority.Default, msg, new IZegoRoomMessageCallback() {
+            @Override
+            public void onSendRoomMessage(int i, String s, long l) {
+                if (i == 0) {
+//                    T.showShort(getContext(), "发送成功");
+//                                mDanmakuView.addDanmaku(new Danmaku(text));
+                    addDanmaku(msg, false);
+                    return;
+                } else {
+//                    T.showShort(getContext(), "发送失败");
+                }
+                L.e("[onSendRoomMessage]", "i" + i + ",s " + s + ", l" + l);
+            }
+        });
     }
 
     private Map<String, Object> getMapFromJson(String json) {
@@ -967,7 +1027,8 @@ public class RoomActivity extends BaseActivity {
      * 检查是否全部连接好
      */
     private void checkIsConnect() {
-        if (MAX_CONNECT_COUNT == connectCount.intValue()) {//全部列检好后开始计时游戏
+
+        if (dialogPlayContinue || (MAX_CONNECT_COUNT == connectCount.intValue())) {//全部列检好后开始计时游戏
 
             loadingDialog.dismiss();
             countDownUtil.start();
@@ -1191,7 +1252,8 @@ public class RoomActivity extends BaseActivity {
                 playWaWaJi();
                 break;
             case R.id.img_sendDanMu:
-                inputTextDialog.show();
+//                inputTextDialog.show();
+                inputDanmakuDialog.show();
                 break;
         }
     }
@@ -1212,9 +1274,8 @@ public class RoomActivity extends BaseActivity {
 
                         if (!dialogPlayContinue) {
                             // 开启流量自动控制
-
                             mZegoLiveRoom.startPublishing(toyDetail.getMachineId() + UserInfo.getToken() + System.currentTimeMillis(), "主动连接", 0);
-
+                            setPreviewVideoView(true,true,null,null);
                             L.e(TAG, "dialogPlayContinue");
                         }
                     } else {
@@ -1347,6 +1408,8 @@ public class RoomActivity extends BaseActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                dialogPlayContinue = false;
+
                 CaughtResultDialog successDialog = new CaughtResultDialog(getContext());
                 successDialog.setOnDialogBtnClick(new CaughtResultDialog.OnDialogBtnClick() {
                     @Override
@@ -1366,23 +1429,27 @@ public class RoomActivity extends BaseActivity {
                 successDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialogInterface) {
+                        connectCount.set(0);
                         if (!dialogPlayContinue) {
                             setMachineFree();
-
                             mZegoLiveRoom.stopPublishing();
+                            setPreviewVideoView(false,false,null,null);
 //                            dialogPlayContinue = true;
+                        } else {
+
                         }
-                        dialogPlayContinue = false;
                     }
                 });
                 if (caught) {
                     successDialog.setTitle("抓取成功");
                     successDialog.setMessage("恭喜抓取成功！");
                     successDialog.setContinueText("好运继续");
+                    sendRoomMsg(UserInfo.getUserName()+" "+"抓取成功");
                 } else {
                     successDialog.setTitle("抓取失败");
                     successDialog.setMessage("抓取失败！");
                     successDialog.setContinueText("再接再厉");
+                    sendRoomMsg(UserInfo.getUserName()+" "+"抓取失败");
 
                 }
 //                successDialog.setCancelable(false);
@@ -1559,6 +1626,7 @@ public class RoomActivity extends BaseActivity {
 
     private void initDanmaku() {
         mDanmakuView.enableDanmakuDrawingCache(true);
+
         mDanmakuView.setCallback(new DrawHandler.Callback() {
             @Override
             public void prepared() {
@@ -1588,9 +1656,9 @@ public class RoomActivity extends BaseActivity {
         BaseDanmaku danmaku = mDanmakuContext.mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
         danmaku.text = content;
         danmaku.padding = 5;
-        danmaku.textSize = DensityUtil.dpToPx(getApplicationContext(),18);
+        danmaku.textSize = DensityUtil.dpToPx(getApplicationContext(), 18);
         danmaku.textColor = Color.WHITE;
-        danmaku.setDuration(new Duration(6000));
+        danmaku.setDuration(new Duration(8000));
         danmaku.setTime(mDanmakuView.getCurrentTime());
         if (withBorder) {
             danmaku.borderColor = Color.GREEN;
@@ -1598,4 +1666,23 @@ public class RoomActivity extends BaseActivity {
         mDanmakuView.addDanmaku(danmaku);
     }
 
+    private void setPreviewVideoView(boolean isSelf, boolean isPlayed, String userName, String streamId) {
+        if (isPlayed) {
+            if (isSelf){
+                mZegoLiveRoom.startPreview();
+                textPlayerName.setText(UserInfo.getUserName());
+            }else {
+                mZegoLiveRoom.startPlayingStream(streamId, vPlayerView);
+                mZegoLiveRoom.setViewMode(ZegoVideoViewMode.ScaleAspectFill, streamId);
+
+                textPlayerName.setText(userName);
+            }
+
+
+            vPreviewLayout.setVisibility(View.VISIBLE);
+        } else {
+
+            vPreviewLayout.setVisibility(View.GONE);
+        }
+    }
 }

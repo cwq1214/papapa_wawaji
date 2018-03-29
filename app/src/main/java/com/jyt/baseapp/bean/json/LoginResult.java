@@ -8,6 +8,7 @@ public class LoginResult {
     private String userId;
     private String tokenSession;
     private String inviteShare;
+    private String nickname;
 
     public String getUserId() {
         return userId;
@@ -31,6 +32,14 @@ public class LoginResult {
 
     public void setInviteShare(String inviteShare) {
         this.inviteShare = inviteShare;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getNickname() {
+        return nickname;
     }
 
     @Override

@@ -490,14 +490,31 @@ public class SelAddressDialog extends AlertDialog {
 
     //获取省列表
     public static void getProvinceList(Context context,BeanCallback callback){
-        OkHttpUtils.get().url("https://api.jd.com/routerjson").addParams("v","2.0").addParams("app_key","D12788CCEAD3329DB8A4BC72A7B6846C").addParams("method","jingdong.areas.province.get").addParams("app_secret","5e88dae81132459e9e128c50d228dab1").build().execute(callback);
+        OkHttpUtils.get().url("https://api.jd.com/routerjson")
+                .addParams("v","2.0")
+                .addParams("app_key","D12788CCEAD3329DB8A4BC72A7B6846C")
+                .addParams("method","jingdong.areas.province.get")
+                .addParams("app_secret","5e88dae81132459e9e128c50d228dab1")
+                .build().execute(callback);
     }
     //获取市列表
     public static void getCityList(Context context,String parentId,BeanCallback callback){
-        OkHttpUtils.get().url("https://api.jd.com/routerjson").addParams("v","2.0").addParams("parent_id",parentId).addParams("method","jingdong.areas.city.get").addParams("app_key","D12788CCEAD3329DB8A4BC72A7B6846C").addParams("app_secret","5e88dae81132459e9e128c50d228dab1").build().execute(callback);
+        OkHttpUtils.get().url("https://api.jd.com/routerjson")
+                .addParams("v","2.0")
+                .addParams("parent_id",parentId)
+                .addParams("method","jingdong.areas.city.get")
+                .addParams("app_key","D12788CCEAD3329DB8A4BC72A7B6846C")
+                .addParams("app_secret","5e88dae81132459e9e128c50d228dab1")
+                .build().execute(callback);
     }
     //获取区列表
     public static void getCountryList(Context context,String parentId,BeanCallback callback){
-        OkHttpUtils.get().url("https://api.jd.com/routerjson").addParams("v","2.0").addParams("parent_id",parentId).addParams("method","jingdong.areas.county.get").addParams("app_key","D12788CCEAD3329DB8A4BC72A7B6846C").addParams("app_secret","5e88dae81132459e9e128c50d228dab1").build().execute(callback);
+        OkHttpUtils.get().url("https://api.jd.com/routerjson")
+                .addParams("v","2.0")
+                .addParams("parent_id",parentId)
+                .addParams("method","jingdong.areas.county.get")
+                .addParams("app_key","D12788CCEAD3329DB8A4BC72A7B6846C")
+                .addParams("app_secret","5e88dae81132459e9e128c50d228dab1")
+                .build().execute(callback);
     }
 }

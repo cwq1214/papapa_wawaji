@@ -59,6 +59,7 @@ public class UserInfo extends UserInfoKey{
     public static void setUserInfo(LoginResult result){
         setToken(result.getTokenSession());
         setShareLink(result.getInviteShare());
+        setUserName(result.getNickname());
     }
 
     public static void setRoomBgEnable(boolean enable){
@@ -76,8 +77,12 @@ public class UserInfo extends UserInfoKey{
         return sharedPreferences.getBoolean(KEY_EFENABLE,true);
     }
 
+    public static void setUserName(String userName){
+        put(KEY_USERNAME,userName);
+    }
+
     public static String getUserName(){
-        return sharedPreferences.getString(KEY_USERNAME,"");
+        return get(KEY_USERNAME,"");
     }
 
     private static void remove(String key){

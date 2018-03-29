@@ -1,6 +1,11 @@
 package com.jyt.baseapp;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
+import android.content.DialogInterface;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -10,7 +15,10 @@ import android.util.Log;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.jyt.baseapp.api.Api;
+import com.jyt.baseapp.api.BeanCallback;
 import com.jyt.baseapp.bean.json.User;
+import com.jyt.baseapp.util.FinishActivityManager;
 import com.jyt.baseapp.util.ImageLoader;
 import com.jyt.baseapp.util.L;
 import com.jyt.baseapp.util.OkHttpPostInterceptor;
@@ -24,7 +32,11 @@ import com.zego.zegoliveroom.ZegoLiveRoom;
 import com.zego.zegoliveroom.constants.ZegoConstants;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
+import com.zhy.http.okhttp.callback.StringCallback;
 import com.zhy.http.okhttp.log.LoggerInterceptor;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -110,6 +122,28 @@ public class App  extends Application {
         if (UserInfo.isLogin()){
             setJPushAlias();
         }
+
+        OkHttpUtils.get().url("http://119.23.66.37/jyt/index/bmc").build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean openApp= jsonObject.getBoolean("data");
+                    if (!openApp){
+                        FinishActivityManager.getManager().finishAllActivity();
+                        System.exit(0);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
 
 
     }

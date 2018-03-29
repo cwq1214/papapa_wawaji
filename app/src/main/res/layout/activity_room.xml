@@ -74,10 +74,6 @@
                             android:layout_height="wrap_content"
                             android:background="@color/gray">
 
-                            <TextureView
-                                android:id="@+id/v_selfPreview"
-                                android:layout_width="10dp"
-                                android:layout_height="10dp" />
 
                             <FrameLayout
                                 android:id="@+id/v_videoView"
@@ -96,10 +92,12 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:visibility="invisible" />
+
                                 <master.flame.danmaku.ui.widget.DanmakuView
                                     android:id="@+id/v_danmaku"
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent" />
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="105dp" />
                                 <FrameLayout
                                     android:id="@+id/v_bgLayout"
                                     android:layout_width="match_parent"
@@ -133,6 +131,30 @@
                             </FrameLayout>
 
 
+                            <com.jyt.baseapp.view.widget.RoundLinearLayout
+                                android:id="@+id/v_previewLayout"
+                                android:layout_width="85dp"
+                                android:layout_height="105dp"
+                                android:background="@color/white"
+                                android:divider="@drawable/divider"
+                                android:orientation="vertical"
+                                android:showDividers="middle"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/text_playerName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:ellipsize="end"
+                                    android:gravity="center"
+                                    android:singleLine="true"
+                                    android:text="1231" />
+
+                                <TextureView
+                                    android:id="@+id/v_playerView"
+                                    android:layout_width="85dp"
+                                    android:layout_height="85dp" />
+                            </com.jyt.baseapp.view.widget.RoundLinearLayout>
 
                             <include layout="@layout/layout_start_play" />
                         </FrameLayout>

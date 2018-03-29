@@ -1,5 +1,13 @@
 package com.jyt.baseapp.view.activity;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -12,6 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jyt.baseapp.R;
 import com.jyt.baseapp.adapter.FragmentViewPagerAdapter;
 import com.jyt.baseapp.annotation.ActivityAnnotation;
+import com.jyt.baseapp.api.Api;
 import com.jyt.baseapp.api.BeanCallback;
 import com.jyt.baseapp.bean.BaseJson;
 import com.jyt.baseapp.bean.json.Banner;
@@ -24,6 +33,7 @@ import com.jyt.baseapp.model.PersonalInfoModel;
 import com.jyt.baseapp.model.impl.MainActModelImpl;
 import com.jyt.baseapp.model.impl.PersonalInfoModelImpl;
 import com.jyt.baseapp.util.DensityUtil;
+import com.jyt.baseapp.util.FinishActivityManager;
 import com.jyt.baseapp.util.ImageLoader;
 import com.jyt.baseapp.util.ScreenUtils;
 import com.jyt.baseapp.util.T;
@@ -34,6 +44,11 @@ import com.jyt.baseapp.view.fragment.RoomListFragment;
 import com.jyt.baseapp.view.widget.NoScrollViewPager;
 import com.jyt.baseapp.view.widget.RoundRelativeLayout;
 import com.jyt.baseapp.zego.ZegoApiManager;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +56,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.bingoogolapple.bgabanner.BGABanner;
+import okhttp3.Call;
 
 /**
  * Created by chenweiqi on 2017/11/6.
@@ -148,6 +164,64 @@ public class MainActivity extends BaseActivity {
                 T.showShort(getContext(), response.getForUser());
             }
         });
+
+
+        OkHttpUtils.get().url(Api.domain+Api.checkedVersion).build().execute(new StringCallback() {
+
+            @Override
+            public void onError(Call call, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONObject androidVersion = jsonObject.getJSONObject("data").getJSONObject("androidVersion");
+                    String version = androidVersion.getString("version");
+                    final boolean isClose = "1".equals(androidVersion.getString("isClose"));
+                    final String link = androidVersion.getString("link");
+
+                    PackageManager pm = getContext().getPackageManager();
+                    PackageInfo pi = pm.getPackageInfo(getContext().getPackageName(), 0);
+
+                    float versionCode = Float.valueOf(version);
+                    if (versionCode > pi.versionCode){
+
+                        Activity currentActivity = FinishActivityManager.getManager().currentActivity();
+                        final Boolean[] clickResult = {false};
+                        new AlertDialog.Builder(currentActivity).setTitle("发现新版本,是否更新").setPositiveButton("去下载", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                clickResult[0] = true;
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse(link));
+                                startActivity(intent);
+                                dialog.dismiss();
+                            }
+                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                if (isClose && !clickResult[0]){
+                                    FinishActivityManager.getManager().finishAllActivity();
+                                }
+                            }
+                        }).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
 

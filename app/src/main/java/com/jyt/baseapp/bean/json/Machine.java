@@ -11,6 +11,7 @@ public class Machine implements Parcelable{
     private String machineStatus;
     private String machineId;
 
+
     protected Machine(Parcel in) {
         machineStatus = in.readString();
         machineId = in.readString();
